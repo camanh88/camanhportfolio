@@ -1,0 +1,117 @@
+---
+import Photo from './Photo.astro';
+import { ui, photoIds } from '../lib/data';
+const pages = photoIds('ch02-catalogue');
+const leaves = Array.from({ length: Math.ceil(pages.length / 2) }, (_, i) => ({ front: pages[2 * i], back: pages[2 * i + 1] }));
+---
+<div class="cat" id="catalogue" role="group" aria-label={ui['catalogue pages']} data-cat data-pages={pages.length}>
+  <div class="stagebook">
+    <div class="book" data-book>
+      {leaves.map((l, i) => (
+        <div class="leaf" data-leaf={i} style={`--i:${i};--n:${leaves.length}`}>
+          <div class="face front"><Photo id={l.front} sizes="(min-width: 800px) 26rem, 90vw" /></div>
+          <div class="face back">{l.back ? <Photo id={l.back} sizes="(min-width: 800px) 26rem, 90vw" /> : <span class="blank"></span>}</div>
+        </div>
+      ))}
+      <div class="under" aria-hidden="true"></div>
+    </div>
+
+    <div class="single" data-single>
+      {pages.map((id, i) => <figure class="sp-page" hidden={i !== 0} data-page={i}><Photo id={id} sizes="90vw" /></figure>)}
+    </div>
+  </div>
+  <div class="ctrl">
+    <button type="button" class="nb" data-prev aria-label={ui.previous}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="count mono" data-count aria-live="polite"></p>
+    <button type="button" class="nb" data-next aria-label={ui.next}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div>
+
+<style>
+  .cat { display: grid; gap: 1.25rem; justify-items: center; }
+  .stagebook { width: 100%; display: grid; justify-items: center; }
+  .book { display: none; }
+  .single { width: min(100%, 24rem); position: relative; touch-action: pan-y; }
+  .sp-page { background: var(--paper-light); padding: .5rem; box-shadow: var(--shadow-paper); }
+  .sp-page :global(img) { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; }
+  .ctrl { display: flex; align-items: center; gap: 1rem; }
+  .count { min-width: 6.5rem; text-align: center; color: var(--ink-soft); }
+  .nb { appearance: none; width: 3rem; height: 3rem; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--paper-light); display: grid; place-items: center; cursor: pointer; transition: background .2s, color .2s; }
+  .nb:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+  .nb:disabled { opacity: .35; cursor: default; }
+
+  @media (min-width: 800px) {
+    .single { display: none; }
+    .book { display: block; position: relative; width: min(100%, 56rem); aspect-ratio: 8 / 5; perspective: 2600px; transition: transform .9s var(--ease); }
+    .book[data-s='0'] { transform: translateX(-25%); }
+    .book[data-s='0'] .under { left: 50%; }
+    .book[data-s='end'] { transform: translateX(25%); }
+    .book[data-s='end'] .under { right: 50%; }
+    .leaf { position: absolute; top: 0; left: 50%; width: 50%; height: 100%; transform-style: preserve-3d; transform-origin: left center; transition: transform .9s var(--ease), z-index 0s .45s; z-index: calc(100 - var(--i)); }
+    .leaf.flipped { transform: rotateY(-180deg); z-index: calc(100 + var(--i)); }
+    .face { position: absolute; inset: 0; background: var(--paper-light); padding: .5rem; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 10px 24px -14px rgb(30 27 24 / .6); overflow: hidden; }
+    .face :global(img) { width: 100%; height: 100%; object-fit: cover; }
+    .face.front::after, .face.back::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+    .face.front::after { background: linear-gradient(90deg, rgb(30 27 24 / .22), transparent 7%); }
+    .face.back { transform: rotateY(180deg); }
+    .face.back::after { background: linear-gradient(270deg, rgb(30 27 24 / .22), transparent 7%); }
+    .blank { display: block; width: 100%; height: 100%; background: var(--paper-deep); }
+    .under { position: absolute; inset: 1% 0 -1% 0; transition: left .9s var(--ease), right .9s var(--ease); background: var(--paper-deep); z-index: 0; box-shadow: var(--shadow-paper); transform: translateZ(-2px); }
+  }
+  @media (prefers-reduced-motion: reduce) { .book, .leaf { transition: none !important; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-cat]').forEach((root) => {
+    const book = root.querySelector<HTMLElement>('[data-book]')!;
+    const leaves = [...root.querySelectorAll<HTMLElement>('[data-leaf]')];
+    const singles = [...root.querySelectorAll<HTMLElement>('[data-page]')];
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const count = root.querySelector<HTMLElement>('[data-count]')!;
+    const total = Number(root.dataset.pages);
+    const wide = matchMedia('(min-width: 800px)');
+    let s = 0;   // flipped leaves (book)
+    let p = 0;   // current page (single)
+
+    function render() {
+      if (wide.matches) {
+        leaves.forEach((l, i) => l.classList.toggle('flipped', i < s));
+        book.dataset.s = s === 0 ? '0' : s === leaves.length ? 'end' : 'mid';
+        prev.disabled = s === 0; next.disabled = s === leaves.length;
+        const left = 2 * s, right = 2 * s + 1;
+        count.textContent = s === 0 ? `1 / ${total}` : s === leaves.length ? `${total} / ${total}` : `${left} – ${right} / ${total}`;
+      } else {
+        singles.forEach((f, i) => (f.hidden = i !== p));
+        prev.disabled = p === 0; next.disabled = p === total - 1;
+        count.textContent = `${p + 1} / ${total}`;
+      }
+    }
+    const go = (d: number) => {
+      if (wide.matches) s = Math.min(leaves.length, Math.max(0, s + d));
+      else p = Math.min(total - 1, Math.max(0, p + d));
+      render();
+    };
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    });
+    let x0: number | null = null;
+    root.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+    root.addEventListener('pointerup', (e) => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0; x0 = null;
+      if (Math.abs(dx) > 45 && (e.target as HTMLElement).closest('.stagebook')) go(dx < 0 ? 1 : -1);
+    });
+    wide.addEventListener('change', render);
+    // the "Flip through the catalogue" button in the text opens the first spread
+    document.querySelectorAll('[data-open-catalogue]').forEach((b) => b.addEventListener('click', () => {
+      root.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+      if (wide.matches && s === 0) { s = 1; render(); }
+      next.focus({ preventScroll: true });
+    }));
+    render();
+  });
+</script>
