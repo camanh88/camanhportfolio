@@ -36,6 +36,11 @@ If your plan has no build step for GitHub (plain Shared hosting), use the GitHub
 - Optimised photos are already in `site/public/img/` and are committed, so the server never needs the originals.
 - `public/.htaccess` turns on compression and caching on Apache (Hostinger shared plans).
 
-## Which Hostinger plan do you have?
+## Your plan: Hostinger Business
 
-Please tell me your plan (Premium / Business / Cloud / VPS). Route B's built-in build step needs Business or higher; on Premium route A is the reliable one.
+Business includes Git deployment in hPanel, so route B is available. Recommended order:
+
+1. First go live with **route A** (upload `dist/`): it needs nothing but File Manager and is the quickest way to see the real domain.
+2. When you create the GitHub repository, switch to **route B** so every push redeploys.
+
+Because the build reads `../content/*.md`, route B only works if the repository root contains both `content/` and `site/` (the whole `PORT 26` folder minus the heavy originals `02/`, `04/`, `Design Style/` and the `.docx`). When you are ready, tell Claude and the repository will be set up that way; the build directory in hPanel is then `site` and the output is `site/dist`. The exact menu names in hPanel change from time to time, so check them when you get there.
