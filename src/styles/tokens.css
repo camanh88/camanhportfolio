@@ -1,0 +1,31 @@
+:root {
+  /* paper & ink */
+  --paper: #F3EBDD;
+  --paper-light: #FAF5EA;
+  --paper-deep: #E8DCC6;
+  --ink: #1E1B18;
+  --ink-soft: #4A433C;
+  /* accents */
+  --tomato: #C8442F;
+  --oxblood: #7A1F26;
+  --mustard: #E0A82E;
+  --teal: #1F5A66;
+  --forest: #2F5D3A;
+  --blush: #E9B9B0;
+  --navy: #17233A; /* drawn from the gallery walls in the photos */
+  /* placeholder [ ... ] */
+  --ph-bg: #F6EDE6;
+  --ph-ink: #8A4B2A;
+
+  --serif: 'Newsreader', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --display: 'Fraunces', 'Newsreader', Georgia, serif;
+  --script: 'Vujahday Script', 'Mynerve', cursive;
+  --hand: 'Mynerve', 'Vujahday Script', cursive;
+  --mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --gutter: clamp(1.25rem, 5vw, 3rem);
+  --measure: 38rem;
+  --wide: 76rem;
+  --ease: cubic-bezier(.22, .7, .2, 1);
+  --shadow-paper: 0 1px 1px rgb(30 27 24 / .08), 0 8px 18px -6px rgb(30 27 24 / .28), 0 22px 40px -22px rgb(30 27 24 / .35);
+}

@@ -1,0 +1,140 @@
+---
+import '@fontsource/newsreader/latin-400.css';
+import '@fontsource/newsreader/latin-ext-400.css';
+import '@fontsource/newsreader/vietnamese-400.css';
+import '@fontsource/newsreader/latin-400-italic.css';
+import '@fontsource/newsreader/latin-ext-400-italic.css';
+import '@fontsource/newsreader/vietnamese-400-italic.css';
+import '@fontsource/newsreader/latin-600.css';
+import '@fontsource/newsreader/latin-ext-600.css';
+import '@fontsource/newsreader/vietnamese-600.css';
+import '@fontsource/fraunces/latin-300.css';
+import '@fontsource/fraunces/latin-ext-300.css';
+import '@fontsource/fraunces/vietnamese-300.css';
+import '@fontsource/fraunces/latin-300-italic.css';
+import '@fontsource/fraunces/latin-ext-300-italic.css';
+import '@fontsource/fraunces/vietnamese-300-italic.css';
+import '@fontsource/fraunces/latin-600.css';
+import '@fontsource/fraunces/latin-ext-600.css';
+import '@fontsource/fraunces/vietnamese-600.css';
+import '@fontsource/vujahday-script/latin-400.css';
+import '@fontsource/vujahday-script/latin-ext-400.css';
+import '@fontsource/vujahday-script/vietnamese-400.css';
+import '@fontsource/mynerve/latin-400.css';
+import '@fontsource/mynerve/latin-ext-400.css';
+import '@fontsource/mynerve/vietnamese-400.css';
+import '@fontsource/dm-mono/latin-400.css';
+import '@fontsource/dm-mono/latin-ext-400.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import { cover, sidePages, ui } from '../lib/data';
+import { inline, textOf } from '../lib/md';
+const title = `${cover.hero} ${cover.label}`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={textOf(cover.quote)} />
+    <meta name="theme-color" content="#F3EBDD" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23C8442F'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F3EBDD' font-family='Georgia' font-style='italic'%3EC%3C/text%3E%3C/svg%3E" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip" href="#contents">{ui.skip}</a>
+    <slot />
+
+    <dialog id="sp" class="sp-dialog" aria-labelledby="sp-title" data-soon={ui['coming soon']}>
+      <div class="sp-sheet">
+        <header class="sp-head">
+          <span class="sp-kicker mono">{ui['side note']}</span>
+          <button type="button" class="sp-close" aria-label={ui.close}>
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+          </button>
+        </header>
+        <div class="sp-content" id="sp-content" tabindex="-1"></div>
+      </div>
+    </dialog>
+
+    {sidePages.map((p) => (
+      <template id={`sp-tpl-${p.slug}`}>
+        <h2 class="sp-title" id="sp-title">{p.name}</h2>
+        {p.wantsPhoto && <div class="sp-slot" aria-hidden="true"></div>}
+        {p.body.map((t) => <p set:html={inline(t)} />)}
+      </template>
+    ))}
+  </body>
+</html>
+
+<style is:global>
+  .sp-dialog { border: 0; padding: 0; margin: 0; background: transparent; color: var(--ink); max-width: none; max-height: none; width: 100%; height: 100%; overflow: hidden; }
+  .sp-dialog::backdrop { background: rgb(30 27 24 / 0); transition: background .35s var(--ease); }
+  .sp-dialog.is-open::backdrop { background: rgb(30 27 24 / .5); }
+  .sp-sheet { position: absolute; background: var(--paper-light); box-shadow: -12px 0 40px -12px rgb(30 27 24 / .45); display: flex; flex-direction: column;
+    background-image: linear-gradient(var(--paper-light), var(--paper-light));
+    inset: auto 0 0 0; max-height: 86svh; border-radius: 14px 14px 0 0; transform: translateY(100%); transition: transform .4s var(--ease); }
+  .sp-dialog.is-open .sp-sheet { transform: none; }
+  .sp-sheet::before { content: ''; position: absolute; top: -.7rem; left: 50%; width: 5rem; height: 1.5rem; transform: translateX(-50%) rotate(-2deg); background: rgb(224 168 46 / .75); }
+  .sp-head { display: flex; align-items: center; justify-content: space-between; padding: 1.4rem 1.25rem .4rem 1.5rem; }
+  .sp-kicker { color: var(--oxblood); }
+  .sp-close { appearance: none; border: 1.5px solid var(--ink); background: transparent; width: 2.75rem; height: 2.75rem; border-radius: 50%; display: grid; place-items: center; cursor: pointer; }
+  .sp-close:hover { background: var(--ink); color: var(--paper); }
+  .sp-content { padding: .5rem 1.5rem 2.5rem; overflow-y: auto; overscroll-behavior: contain; outline: none; }
+  .sp-title { font-family: var(--display); font-weight: 300; font-size: clamp(2rem, 7vw, 2.8rem); line-height: 1.05; margin-bottom: 1rem; }
+  .sp-content p { margin-bottom: 1rem; max-width: 34rem; }
+  .sp-slot { aspect-ratio: 4 / 3; margin-bottom: 1.25rem; border: 1.5px dashed rgb(138 75 42 / .5); background: repeating-linear-gradient(135deg, transparent 0 9px, rgb(138 75 42 / .08) 9px 10px); }
+  @media (min-width: 760px) {
+    .sp-sheet { inset: 0 0 0 auto; width: min(34rem, 92vw); max-height: none; border-radius: 0; transform: translateX(100%); }
+    .sp-sheet::before { top: 1.2rem; left: -1.6rem; transform: rotate(-82deg); width: 4.5rem; }
+    .sp-content { padding: .5rem 2.25rem 3rem; }
+    .sp-head { padding: 1.5rem 1.5rem .4rem 2.25rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .sp-sheet, .sp-dialog::backdrop { transition: none; } }
+</style>
+
+<script>
+  // Sidepath panel: one native <dialog> (focus trap + Esc), content cloned from <template>s.
+  const dlg = document.getElementById('sp') as HTMLDialogElement;
+  const content = document.getElementById('sp-content')!;
+  let opener: HTMLElement | null = null;
+  const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function open(btn: HTMLElement) {
+    const slug = btn.dataset.sp!;
+    const tpl = document.getElementById(`sp-tpl-${slug}`) as HTMLTemplateElement | null;
+    content.replaceChildren();
+    if (tpl) content.append(tpl.content.cloneNode(true));
+    else {
+      const name = (btn.firstChild?.textContent ?? '').trim();
+      const h = document.createElement('h2'); h.className = 'sp-title'; h.id = 'sp-title'; h.textContent = name;
+      const p = document.createElement('p'); const ph = document.createElement('span'); ph.className = 'ph'; ph.textContent = `[${dlg.dataset.soon}]`; p.append(ph);
+      content.append(h, p);
+    }
+    opener = btn;
+    dlg.showModal();
+    document.documentElement.classList.add('sp-open');
+    content.scrollTop = 0;
+    requestAnimationFrame(() => dlg.classList.add('is-open'));
+  }
+  function close() {
+    dlg.classList.remove('is-open');
+    const done = () => { dlg.close(); document.documentElement.classList.remove('sp-open'); opener?.focus(); };
+    reduce() ? done() : setTimeout(done, 300);
+  }
+  document.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    const btn = t.closest<HTMLElement>('.sp[data-sp]');
+    if (btn) { e.preventDefault(); open(btn); return; }
+    if (t.closest('.sp-close')) close();
+    else if (t === dlg || t.classList.contains('sp-dialog')) close();
+  });
+  dlg.addEventListener('cancel', (e) => { e.preventDefault(); close(); });
+  // clicking the dimmed area (outside the sheet)
+  dlg.addEventListener('click', (e) => { if (!(e.target as HTMLElement).closest('.sp-sheet')) close(); });
+
+  // Reveal on scroll
+  const io = new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>

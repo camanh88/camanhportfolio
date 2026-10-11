@@ -1,0 +1,25 @@
+---
+import { backLabel } from '../lib/data';
+import { inline } from '../lib/md';
+interface Props { id: string; num: string; title: string; teaser?: string }
+const { id, num, title, teaser } = Astro.props;
+---
+<a class="back mono" href="#contents">{backLabel}</a>
+<header class="chead wrap">
+  <h2 id={`${id}-title`} class="ctitle">
+    <span class="cnum">{num}</span>
+    <span class="ctext" set:html={inline(title)} />
+  </h2>
+  {teaser && <p class="cteaser" set:html={inline(teaser)} />}
+</header>
+
+<style>
+  .back { position: sticky; top: .75rem; z-index: 30; width: fit-content; margin: 0 max(var(--gutter), calc((100% - var(--wide)) / 2)) 0 auto;
+    padding: .6rem .9rem; min-height: 44px; display: flex; align-items: center; text-decoration: none; background: var(--paper-light); color: var(--ink);
+    border: 1.5px solid var(--ink); border-radius: 3px 3px 12px 3px; box-shadow: 2px 3px 0 var(--ink); font-size: .74rem; transition: transform .25s var(--ease), box-shadow .25s var(--ease); }
+  .back:hover { transform: translate(-1px, -1px); box-shadow: 3px 4px 0 var(--ink); }
+  .chead { padding: clamp(2rem, 6vw, 4rem) 0 clamp(1.5rem, 4vw, 3rem); }
+  .ctitle { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1em .35em; font-family: var(--display); font-weight: 300; font-size: clamp(2.6rem, 10vw, 6rem); line-height: .98; letter-spacing: -.03em; }
+  .cnum { font-family: var(--script); font-size: 1.5em; line-height: .7; color: var(--tomato); letter-spacing: 0; }
+  .cteaser { margin-top: 1rem; font-style: italic; font-size: clamp(1.2rem, 3vw, 1.65rem); color: var(--ink-soft); max-width: 36rem; }
+</style>
