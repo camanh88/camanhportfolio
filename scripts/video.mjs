@@ -1,4 +1,4 @@
-// Cover video: makes web-sized copies (720p for desktop, 540p for phones) and a poster image.
+// Cover video: makes web-sized copies (1080p for desktop, 540p for phones) and a poster image.
 // The original stays in Photo/ untouched. macOS only (avconvert + qlmanage ship with the system).
 import { execFileSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
@@ -10,7 +10,7 @@ const src = path.join(PROJECT, 'Photo', 'Cover & Introduction', 'COVER.mp4');
 const outDir = path.join(ROOT, 'public', 'video');
 mkdirSync(outDir, { recursive: true });
 mkdirSync(TMP, { recursive: true });
-for (const [name, preset] of [['cover-720', 'Preset1280x720'], ['cover-540', 'Preset960x540']]) {
+for (const [name, preset] of [['cover-1080', 'Preset1920x1080'], ['cover-540', 'Preset960x540']]) {
   execFileSync('avconvert', ['-s', src, '-p', preset, '-o', path.join(outDir, `${name}.mp4`), '--replace'], { stdio: 'ignore' });
 }
 execFileSync('qlmanage', ['-t', '-s', '1920', '-o', TMP, src], { stdio: 'ignore' });
