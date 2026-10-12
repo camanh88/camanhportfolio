@@ -115,7 +115,7 @@ export const ch01 = (() => {
   const note = bs.filter((b) => b.t === 'note').map((b) => (b as { text: string }).text).join(' ');
   return {
     num: num.trim(), title: t.join('·').trim(),
-    hint: top[0], role: top[1], where: top[2], story: top[3],
+    hint: top[0], role: top[1], where: top[2], story: top[3], story2: top[4],
     accTitle: (vis.find((b) => b.t === 'h2') as { text: string }).text, hlTitle: (vis.filter((b) => b.t === 'h2')[1] as { text: string }).text, accSub: ps('acculturation').find((p) => !/^\*\*/.test(p)) ?? '',
     mission: groups[0], part: groups[1],
     highlights: ps('highlights').map((p) => leadSplit(p)),

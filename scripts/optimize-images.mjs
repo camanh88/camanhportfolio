@@ -27,8 +27,9 @@ for (const [id, [rel, alt, opts = {}]] of Object.entries(photos)) {
   }
   const meta = await sharp(await img.clone().toBuffer()).metadata();
   const [W, H] = [meta.width, meta.height];
-  const widths = (opts.hero ? HERO_WIDTHS : WIDTHS).filter((w) => w < W);
-  if (!widths.length || widths[widths.length - 1] < Math.min(W, 1600)) widths.push(Math.min(W, 1600));
+  const widths = (opts.hero ? HERO_WIDTHS : WIDTHS).filter((w) => w < W && (!opts.max || w <= opts.max));
+  const cap = Math.min(W, opts.max ?? 1600);
+  if (!widths.length || widths[widths.length - 1] < cap) widths.push(cap);
   for (const w of widths) {
     await img.clone().resize({ width: w, withoutEnlargement: true }).webp({ quality: w <= 480 ? 72 : 78 }).toFile(path.join(OUT, `${id}-${w}.webp`));
   }

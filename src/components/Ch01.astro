@@ -4,344 +4,352 @@ import { ch01, ui, sidePageBody, imageMeta } from '../lib/data';
 import { inline } from '../lib/md';
 
 const definition = sidePageBody('Acculturation')[0] ?? '';
-// the intro paragraph opens with a drop cap
-const story = ch01.story ?? '';
-const dropLetter = story.charAt(0);
-const storyRest = story.slice(1);
 const high = Object.fromEntries(ch01.highlights.map((h) => [h.lead.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim(), h]));
 const studio = high['studio visits'], living = high['two living spaces'], cat = high['catalogue 03'], gallery = high['in the gallery'];
-
-const studioPics = ['c1-studio-1', 'c1-studio-2', 'c1-studio-3', 'c1-studio-4', 'c1-studio-5', 'c1-studio-6'];
+const partLead = (ch01.part?.lead ?? '').replace(/:$/, '');
+const [partSmall, ...partBig] = partLead.split(':').length > 1 ? partLead.split(':').map((x) => x.trim()) : [partLead, ''];
+const partWords = [partSmall, partBig.join(': ')];
+const missionPics = ['p2-1', 'p2-2', 'p2-3'];
 const albums = [
-  { key: 'villa', label: ui['album villa'], ids: ['c1-villa-1', 'c1-villa-2', 'c1-villa-3', 'c1-villa-4', 'c1-villa-5', 'c1-villa-6', 'c1-villa-7', 'c1-villa-8'], cover: ['c1-villa-1', 'c1-villa-2'] },
-  { key: 'apt', label: ui['album apartment'], ids: ['c1-apt-1', 'c1-apt-2', 'c1-apt-3', 'c1-apt-4', 'c1-apt-5', 'c1-apt-6', 'c1-apt-7'], cover: ['c1-apt-1', 'c1-apt-2'] },
+  { key: 'villa', label: ui['album villa'], ids: Object.keys(imageMeta).filter((k) => k.startsWith('a1-')) },
+  { key: 'apt', label: ui['album apartment'], ids: Object.keys(imageMeta).filter((k) => k.startsWith('a2-')) },
 ];
+const count = (k: string) => albums.find((a) => a.key === k)!.ids.length;
 ---
 <article id="ch-01" class="c1" aria-labelledby="c1-title">
   <a class="back label" href="#contents">{ui.back}</a>
 
-  <!-- 1. Opener spread: one tall photo, the title on white -->
-  <header class="open">
-    <figure class="open-photo"><Photo id="c1-open" sizes="(min-width: 900px) 50vw, 100vw" loading="eager" /></figure>
-    <div class="open-text">
-      <p class="folio label">{ch01.num}</p>
-      <h2 id="c1-title" class="title">{ch01.title}</h2>
-      <p class="hint">{ch01.hint}</p>
-      <p class="role label">{ch01.role}</p>
-      <p class="where" set:html={inline(ch01.where)} />
+  <!-- PAGE 1 (Layout 1): big 01, one photo, title and words on a colour slide -->
+  <section class="p1">
+    <p class="p1-num" aria-hidden="true">{ch01.num}</p>
+    <figure class="p1-photo"><Photo id="p1" sizes="(min-width: 900px) 40vw, 100vw" loading="eager" /></figure>
+    <div class="p1-head">
+      <h2 id="c1-title" class="p1-title">{ch01.title}</h2>
+      <p class="p1-hint">{ch01.hint}</p>
     </div>
-  </header>
-
-  <!-- 2. Drop-cap spread -->
-  <section class="story-spread">
-    <figure class="story-photo"><Photo id="c1-intro" sizes="(min-width: 900px) 40vw, 100vw" /></figure>
-    <div class="story-col">
-      <p class="story"><span class="drop" aria-hidden="true">{dropLetter}</span><span class="sr-only">{dropLetter}</span>{storyRest}</p>
+    <div class="p1-role">
+      <p>{ch01.role}</p>
+      <p set:html={inline(ch01.where)} />
+    </div>
+    <div class="p1-body">
+      <p>{ch01.story}</p>
+      <p>{ch01.story2}</p>
     </div>
   </section>
 
-  <!-- 3. ACCULTURATION: the title over one big photo -->
-  <section class="acc" aria-labelledby="acc-title">
-    <Photo id="c1-big" sizes="100vw" />
-    <div class="acc-cover">
-      <h3 id="acc-title" class="acc-title">{ch01.accTitle}</h3>
-      <p class="acc-sub">{ch01.accSub}</p>
-    </div>
-    {definition && <p class="acc-def" set:html={inline(definition)} />}
-  </section>
-
-  <!-- 4. The mission / my part, as a quiet data row -->
-  <section class="data">
-    <div class="data-in wrap">
+  <!-- PAGE 2 (Layout 2): ACCULTURATION, the big photo, the mission on three photos -->
+  <section class="p2" aria-labelledby="acc-title">
+    <figure class="p2-big">
+      <Photo id="p2-big" sizes="100vw" />
+      <p class="p2-label label">{ui['label campaign']}</p>
+    </figure>
+    <div class="p2-dark">
+      <div class="p2-title">
+        <h3 id="acc-title">{ch01.accTitle}</h3>
+        <p class="p2-sub">{ch01.accSub}</p>
+        {definition && <p class="p2-def" set:html={inline(definition)} />}
+      </div>
       {ch01.mission && (
-        <div class="col">
-          <h3 class="dh">{ch01.mission.lead}</h3>
-          <ol class="dl">{ch01.mission.items.map((t, i) => <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span set:html={inline(t)} /></li>)}</ol>
+        <div class="p2-mission">
+          <h3 class="p2-ml label">{ch01.mission.lead.replace(/:$/, '')}</h3>
+          <ul class="cards">
+            {ch01.mission.items.map((t, i) => (
+              <li class="card">
+                <Photo id={missionPics[i]} sizes="(min-width: 900px) 18vw, 30vw" />
+                <p class="ct">{t}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
-      {ch01.part && (
-        <div class="col">
-          <h3 class="dh">{ch01.part.lead}</h3>
-          <ol class="dl">{ch01.part.items.map((t, i) => <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span set:html={inline(t)} /></li>)}</ol>
-        </div>
-      )}
-    </div>
-    <div class="tri wrap" role="group">
-      <figure><Photo id="c1-mood-1" sizes="(min-width: 900px) 28vw, 33vw" /></figure>
-      <figure class="mid"><Photo id="c1-shoot-1" sizes="(min-width: 900px) 28vw, 33vw" /></figure>
-      <figure><Photo id="c1-mood-2" sizes="(min-width: 900px) 28vw, 33vw" /></figure>
     </div>
   </section>
 
-  <!-- 5. Highlights: a feature page -->
-  <section class="hl wrap" aria-labelledby="hl-title">
-    <header class="hl-head">
-      <h3 id="hl-title" class="hl-title">{ch01.hlTitle}</h3>
-    </header>
+  <!-- PAGE 3 (Layout 3): my part, the visual voice -->
+  <section class="p3" aria-labelledby="p3-title">
+    <h3 id="p3-title" class="sr-only">{partLead}</h3>
+    <div class="p3-photos">
+      <figure class="a"><Photo id="p3-a" sizes="(min-width: 900px) 24vw, 52vw" /></figure>
+      <figure class="b"><Photo id="p3-b" sizes="(min-width: 900px) 18vw, 40vw" /></figure>
+    </div>
+    {ch01.part && <ul class="p3-list">{ch01.part.items.map((t) => <li set:html={inline(t)} />)}</ul>}
+    <p class="p3-line" aria-hidden="true"><span class="s">{partWords[0]}</span><span class="big">{partWords[1]}</span></p>
+  </section>
 
-    {studio && (
-      <div class="feat studio">
-        <div class="ft">
-          <h4 class="fh">{studio.lead}</h4>
-          <p set:html={inline(studio.rest)} />
-        </div>
-        <div class="grid6">
-          {studioPics.map((id, i) => <figure class={`g g${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 24vw, 46vw" /></figure>)}
+  <!-- PAGE 4 (Layout 4): Studio visits, a magazine spread -->
+  {studio && (
+    <section class="p4 wrap" aria-labelledby="p4-title">
+      <div class="spread">
+        <header class="p4-text">
+          <p class="p4-kick label">{ui['label highlight']}</p>
+          <h3 id="p4-title" class="p4-title">{studio.lead.replace(/\.$/, '')}</h3>
+          <p class="p4-intro" set:html={inline(studio.rest)} />
+        </header>
+        <figure class="s s-tubes"><Photo id="p4-tubes" sizes="(min-width: 900px) 12vw, 40vw" /></figure>
+        <figure class="s s-shelf"><Photo id="p4-shelf" sizes="(min-width: 900px) 36vw, 80vw" /></figure>
+        <figure class="s s-palette"><Photo id="p4-palette" sizes="(min-width: 900px) 17vw, 40vw" /></figure>
+        <figure class="s s-talk"><Photo id="p4-talk" sizes="(min-width: 900px) 18vw, 50vw" /></figure>
+        <figure class="s s-hold"><Photo id="p4-hold" sizes="(min-width: 900px) 13vw, 40vw" /></figure>
+        <figure class="s s-flowers"><Photo id="p4-flowers" sizes="(min-width: 900px) 25vw, 60vw" /></figure>
+        <figure class="s s-draw"><Photo id="p4-draw" sizes="(min-width: 900px) 18vw, 50vw" /></figure>
+      </div>
+    </section>
+  )}
+
+  <!-- PAGE 5 (Layout 5): Two living spaces, two albums that open as galleries -->
+  {living && (
+    <section class="p5" aria-labelledby="p5-title">
+      <div class="p5-left">
+        <button type="button" class="album" data-album="apt" aria-haspopup="dialog" aria-label={`${ui['open album']}: ${albums[1].label}`}>
+          <Photo id="p5-vase" sizes="(min-width: 900px) 50vw, 100vw" />
+          <span class="badge label" aria-hidden="true">+ {count('apt')}</span>
+        </button>
+      </div>
+      <div class="p5-right">
+        <button type="button" class="album wide" data-album="villa" aria-haspopup="dialog" aria-label={`${ui['open album']}: ${albums[0].label}`}>
+          <Photo id="p5-console" sizes="(min-width: 900px) 50vw, 100vw" />
+          <span class="badge label" aria-hidden="true">+ {count('villa')}</span>
+        </button>
+        <div class="p5-row">
+          <div class="p5-text">
+            <h3 id="p5-title" class="p5-title">{living.lead}</h3>
+            <p set:html={inline(living.rest)} />
+          </div>
+          <button type="button" class="album inset" data-album="villa" aria-haspopup="dialog" aria-label={`${ui['open album']}: ${albums[0].label}`} tabindex="-1">
+            <Photo id="p5-blur" sizes="(min-width: 900px) 22vw, 50vw" />
+          </button>
         </div>
       </div>
-    )}
+    </section>
+  )}
 
-    {living && (
-      <div class="feat living">
-        <div class="ft">
-          <h4 class="fh">{living.lead}</h4>
-          <p set:html={inline(living.rest)} />
-        </div>
-        <div class="albums">
-          {albums.map((a, i) => (
-            <div class={`album a${i + 1}`}>
-              <p class="no" aria-hidden="true">{i + 1}.</p>
-              <button type="button" class="open-album" data-album={a.key} aria-haspopup="dialog" aria-label={`${ui['open album']}: ${a.label}`}>
-                <span class="pair">
-                  <Photo id={a.cover[0]} sizes="(min-width: 900px) 18vw, 36vw" />
-                  <Photo id={a.cover[1]} sizes="(min-width: 900px) 24vw, 48vw" />
-                </span>
-                <span class="more label" aria-hidden="true">+ {a.ids.length}</span>
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-    )}
-
+  <!-- PAGE 6 (Layout 6): Catalogue 03 and In the gallery -->
+  <section class="p6">
     {cat && (
-      <div class="feat catalogue">
-        <a class="cat-photo" href={ch01.catalogueUrl} target="_blank" rel="noopener noreferrer" aria-label={`${cat.lead} ${ui['open catalogue']} (${ui['new tab']})`}>
-          <Photo id="c1-catalogue" sizes="(min-width: 900px) 40vw, 100vw" />
-          <span class="out" aria-hidden="true">↗</span>
-        </a>
-        <div class="ft">
-          <h4 class="fh"><a href={ch01.catalogueUrl} target="_blank" rel="noopener noreferrer">{cat.lead}<span class="arrow" aria-hidden="true"> ↗</span></a></h4>
-        </div>
-      </div>
+      <a class="p6-cat" href={ch01.catalogueUrl} target="_blank" rel="noopener noreferrer" aria-label={`${cat.lead} ${ui['open catalogue']} (${ui['new tab']})`}>
+        <span class="p6-ct">{cat.lead}<span class="arrow" aria-hidden="true"> ↗</span></span>
+        <Photo id="p6-catalogue" sizes="(min-width: 900px) 40vw, 100vw" />
+      </a>
     )}
-
     {gallery && (
-      <div class="feat gallery">
-        <figure class="gal-wide"><Photo id="c1-gal-1" sizes="100vw" /></figure>
-        <div class="gal-cap">
-          <h4 class="fh">{gallery.lead}</h4>
-          <p set:html={inline(gallery.rest)} />
-        </div>
-        <div class="gal-two">
-          <figure><Photo id="c1-gal-2" sizes="(min-width: 900px) 24vw, 46vw" /></figure>
-          <figure><Photo id="c1-gal-3" sizes="(min-width: 900px) 24vw, 46vw" /></figure>
-        </div>
+      <div class="p6-gal">
+        <Photo id="p6-hall" sizes="(min-width: 900px) 60vw, 100vw" />
+        <h3 class="p6-gt">{gallery.lead}</h3>
+        <p class="p6-text" set:html={inline(gallery.rest)} />
       </div>
     )}
   </section>
 
-  <!-- 6. Closing: a quiet page that turns to the next chapter -->
+  <!-- CLOSING (Layout 7): staggered lines, accent words -->
   <footer class="close">
-    <div class="wrap">
-      {ch01.closing.slice(0, -1).map((t) => <p class="cl" set:html={inline(t, { accent: [] })} />)}
-      <p class="dream">{ch01.closing[ch01.closing.length - 1]}</p>
+    <div class="close-in">
+      <p class="l l1">{ch01.closing[0]?.split('. ')[0]}.</p>
+      <p class="l l2">{ch01.closing[0]?.split('. ').slice(1).join('. ')}</p>
+      <p class="l l3" set:html={inline(ch01.closing[1] ?? '', { accent: ['exquisite', 'tranquil'] })} />
+      <p class="l l4">{ch01.closing[ch01.closing.length - 1]}</p>
       <a class="next" href="#ch-02" aria-label={ui['chapter nav']}><span class="line" aria-hidden="true"></span></a>
     </div>
   </footer>
 
-  <!-- album viewer -->
+  <!-- album gallery: the whole album at once -->
   {albums.map((a) => (
-    <dialog class="viewer" data-viewer={a.key} aria-label={a.label}>
-      <button type="button" class="vx" aria-label={ui.close}><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg></button>
-      <div class="vstage">
-        {a.ids.map((id, i) => <figure class="vslide" hidden={i !== 0} data-slide={i}><Photo id={id} sizes="100vw" loading="lazy" /></figure>)}
-      </div>
-      <div class="vbar">
-        <button type="button" class="vb" data-prev aria-label={ui['previous photo']}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <p class="vc label" data-count aria-live="polite"></p>
-        <button type="button" class="vb" data-next aria-label={ui['next photo']}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <dialog class="gal" data-gallery={a.key} aria-label={a.label}>
+      <header class="gal-head">
+        <p class="gal-name">{a.label} <span class="gal-n label">{a.ids.length} {ui['album count']}</span></p>
+        <button type="button" class="gx" aria-label={ui.close}><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg></button>
+      </header>
+      <div class="gal-grid">
+        {a.ids.map((id) => <figure class="gi"><Photo id={id} sizes="(min-width: 900px) 33vw, 50vw" loading="lazy" /></figure>)}
       </div>
     </dialog>
   ))}
 </article>
 
 <style>
-  .c1 { background: var(--paper); position: relative; }
+  .c1 { background: var(--paper); position: relative; overflow-x: clip; --pad: clamp(1.25rem, 4vw, 4rem); }
   .back { position: sticky; top: .75rem; z-index: 30; width: fit-content; margin: 0 var(--gutter) 0 auto; padding: .7rem 1rem; min-height: 44px; display: flex; align-items: center; text-decoration: none; background: var(--paper); border: 1px solid var(--ink); color: var(--ink); transition: background .3s, color .3s; }
   .back:hover { background: var(--ink); color: var(--paper); }
   .c1 :global(img) { display: block; width: 100%; height: auto; }
   .c1 figure { margin: 0; }
-  .fh { font-family: var(--display); font-weight: 600; font-size: clamp(1.7rem, 2.6vw, 2.3rem); line-height: 1.05; letter-spacing: -.01em; margin-bottom: .9rem; }
 
-  /* 1. opener */
-  .open { display: grid; margin-top: -2.75rem; }
-  .open-photo { aspect-ratio: 4 / 5; overflow: hidden; }
-  .open-photo :global(img) { height: 100%; object-fit: cover; }
-  .open-text { padding: clamp(3rem, 8vw, 6rem) var(--gutter) clamp(4rem, 9vw, 7rem); display: grid; align-content: center; gap: 0; }
-  .folio { color: var(--pink); margin-bottom: 1.5rem; }
-  .title { font-size: clamp(3.4rem, 9.5vw, 8.2rem); line-height: .92; letter-spacing: -.04em; font-weight: 300; max-width: 9ch; }
-  .hint { font-family: var(--display); font-weight: 600; font-size: clamp(1.3rem, 2vw, 1.7rem); line-height: 1.25; margin-top: clamp(2rem, 4vw, 3.5rem); max-width: 22ch; }
-  .role { margin-top: clamp(3rem, 6vw, 5rem); color: var(--ink-soft); }
-  .where { margin-top: .5rem; font-size: .95rem; }
+  /* PAGE 1: Layout 1 */
+  .p1 { margin-top: -2.75rem; background: var(--plum); color: var(--cream); display: grid; gap: 2rem; padding: 5.5rem var(--pad) var(--pad); }
+  .p1-num { font-family: var(--display); font-weight: 300; font-size: clamp(6rem, 18vw, 14rem); line-height: .8; letter-spacing: -.04em; color: #fff; }
+  .p1-photo { aspect-ratio: 1; }
+  .p1-photo :global(img) { height: 100%; object-fit: cover; }
+  .p1-title { font-size: clamp(2.8rem, 5.4vw, 5.2rem); line-height: .98; letter-spacing: -.03em; font-weight: 400; color: #fff; }
+  .p1-hint { font-family: var(--display); font-style: italic; font-size: clamp(1.25rem, 1.8vw, 1.6rem); line-height: 1.25; margin-top: 1.5rem; max-width: 18ch; color: var(--blush); }
+  .p1-role { font-size: .95rem; line-height: 1.5; display: grid; gap: .1rem; max-width: 22rem; }
+  .p1-role :global(.sp) { text-decoration-color: var(--lime); }
+  .p1-body { display: grid; gap: 1rem; font-size: .95rem; line-height: 1.6; max-width: 22rem; }
   @media (min-width: 900px) {
-    .open { grid-template-columns: 1fr 1fr; min-height: 100svh; }
-    .open-photo { aspect-ratio: auto; height: 100%; min-height: 100svh; }
-    .open-text { padding: 7rem clamp(2rem, 6vw, 6rem) 5rem 4vw; }
+    .p1 { min-height: 100svh; grid-template-columns: 3fr 5.2fr 3.4fr; grid-template-rows: auto 1fr auto; column-gap: clamp(2rem, 3.5vw, 4rem); padding: 6rem var(--pad) var(--pad); }
+    .p1-num { grid-column: 1; grid-row: 1; }
+    .p1-photo { grid-column: 2; grid-row: 1 / 4; aspect-ratio: auto; height: min(78svh, 46rem); align-self: start; }
+    .p1-head { grid-column: 3; grid-row: 1; }
+    .p1-role { grid-column: 1; grid-row: 3; align-self: end; }
+    .p1-body { grid-column: 3; grid-row: 3; align-self: end; }
   }
 
-  /* 2. drop-cap spread */
-  .story-spread { display: grid; padding: var(--section) 0; gap: 3rem; }
-  .story-photo { padding: 0 var(--gutter); }
-  .story-col { padding: 0 var(--gutter); }
-  .story { font-size: clamp(1.15rem, 1.5vw, 1.35rem); line-height: 1.7; max-width: 34rem; }
-  .drop { float: left; font-family: var(--display); font-weight: 500; font-size: 5.6em; line-height: .72; padding: .06em .14em 0 0; color: var(--plum); }
+  /* PAGE 2: Layout 2 */
+  .p2-big { position: relative; }
+  .p2-big :global(img) { aspect-ratio: 4 / 3; object-fit: cover; }
+  .p2-label { position: absolute; left: var(--pad); top: var(--pad); color: #fff; text-shadow: 0 1px 8px rgb(0 0 0 / .5); }
+  .p2-dark { background: var(--dark); color: #fff; padding: clamp(3rem, 6vw, 6rem) var(--pad); display: grid; gap: 3rem; }
+  .p2-title h3 { font-size: clamp(2.2rem, 11vw, 8rem); overflow-wrap: normal; line-height: .92; letter-spacing: -.02em; font-weight: 300; }
+  .p2-sub { font-family: var(--display); font-style: italic; font-size: clamp(1.3rem, 2.2vw, 1.9rem); margin-top: 1rem; color: var(--blush); }
+  .p2-def { margin-top: 2rem; font-size: .9rem; line-height: 1.55; max-width: 24rem; color: rgb(255 255 255 / .85); border-top: 1px solid rgb(255 255 255 / .4); padding-top: .9rem; }
+  .p2-ml { color: var(--lime); margin-bottom: 1rem; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(.5rem, 1.4vw, 1.2rem); }
+  .card { position: relative; background: #000; }
+  .card::after { content: ''; position: absolute; inset: 40% 0 0 0; background: linear-gradient(transparent, rgb(0 0 0 / .75)); }
+  .card :global(img) { aspect-ratio: 3 / 5; object-fit: cover; filter: brightness(.8); }
+  .ct { z-index: 1; position: absolute; left: .7rem; right: .7rem; bottom: .8rem; font-family: var(--display); font-size: clamp(.95rem, 1.5vw, 1.35rem); line-height: 1.15; }
   @media (min-width: 900px) {
-    .story-spread { grid-template-columns: 5fr 7fr; padding-left: 0; gap: clamp(3rem, 8vw, 9rem); align-items: center; }
-    .story-photo { padding: 0; }
-    .story-photo :global(img) { max-height: 90svh; object-fit: cover; }
-    .story-col { padding: 0 clamp(2rem, 6vw, 8rem) 0 0; }
-    .story { font-size: 1.3rem; }
+    .p2-big :global(img) { aspect-ratio: 21 / 9; }
+    .p2-dark { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: end; column-gap: clamp(2rem, 4vw, 5rem); min-height: 80svh; }
+    .p2-title h3 { font-size: clamp(2.2rem, 4.5vw, 5.4rem); }
+    .p2-title { align-self: center; }
   }
 
-  /* 3. ACCULTURATION */
-  .acc { position: relative; background: var(--dark); color: #fff; }
-  .acc :global(img) { aspect-ratio: 3 / 4; object-fit: cover; filter: brightness(.7); }
-  .acc-cover { position: absolute; left: 0; right: 0; top: 0; padding: clamp(3rem, 8vw, 7rem) var(--gutter) 0; text-align: center; }
-  .acc-title { font-size: clamp(2.2rem, 10vw, 10rem); line-height: .9; letter-spacing: -.01em; font-weight: 300; }
-  .acc-sub { font-family: var(--display); font-style: italic; font-size: clamp(1.3rem, 2.4vw, 2rem); margin-top: 1rem; }
-  .acc-def { position: absolute; left: var(--gutter); right: var(--gutter); bottom: clamp(1.5rem, 4vw, 3.5rem); max-width: 28rem; font-size: .95rem; line-height: 1.5; color: rgb(255 255 255 / .92); border-top: 1px solid rgb(255 255 255 / .5); padding-top: .9rem; }
-  @media (min-width: 900px) { .acc :global(img) { aspect-ratio: 16 / 9; max-height: 100svh; } .acc-def { left: auto; right: var(--gutter); } }
-
-  /* 4. data row */
-  .data { background: var(--cream); padding: var(--section) 0 clamp(3rem, 7vw, 6rem); }
-  .data-in { display: grid; gap: 3rem; }
-  .dh { font-family: var(--sans); font-weight: 600; font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--plum); padding-bottom: 1rem; border-bottom: 1px solid var(--ink); margin-bottom: .4rem; }
-  .dl li { display: grid; grid-template-columns: 3rem 1fr; align-items: baseline; padding: 1rem 0; border-bottom: 1px solid var(--hair); font-family: var(--display); font-size: clamp(1.35rem, 2vw, 1.8rem); line-height: 1.25; }
-  .n { font-family: var(--sans); font-size: .72rem; letter-spacing: .1em; color: var(--pink); font-weight: 600; }
-  .tri { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: clamp(.6rem, 2vw, 1.5rem); margin-top: clamp(3rem, 7vw, 6rem); align-items: start; }
-  .tri figure :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
-  .tri .mid { margin-top: clamp(1.5rem, 5vw, 4rem); }
-  @media (min-width: 900px) { .data-in { grid-template-columns: 1fr 1fr; column-gap: clamp(3rem, 8vw, 8rem); } }
-
-  /* 5. highlights */
-  .hl { padding: var(--section) 0; display: grid; gap: clamp(5rem, 11vw, 10rem); }
-  .hl-head { border-top: 1px solid var(--ink); padding-top: 1.25rem; }
-  .hl-title { font-family: var(--sans); font-weight: 600; font-size: .78rem; letter-spacing: .18em; text-transform: uppercase; }
-  .ft p { max-width: 30rem; }
-  .feat { display: grid; gap: 2rem; }
-
-  .grid6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: .7rem; align-items: start; }
-  .g :global(img) { width: 100%; object-fit: cover; }
-  .g1 { grid-column: 1 / 5; } .g2 { grid-column: 5 / 7; margin-top: 2.5rem; } .g3 { grid-column: 1 / 3; } .g4 { grid-column: 3 / 5; margin-top: 2rem; } .g5 { grid-column: 5 / 7; } .g6 { grid-column: 2 / 6; }
-  .g1 :global(img) { aspect-ratio: 4 / 5; } .g2 :global(img) { aspect-ratio: 3 / 4; } .g3 :global(img) { aspect-ratio: 4 / 3; } .g4 :global(img) { aspect-ratio: 3 / 4; } .g5 :global(img) { aspect-ratio: 3 / 4; } .g6 :global(img) { aspect-ratio: 16 / 10; }
+  /* PAGE 3: Layout 3 */
+  .p3 { background: var(--cream); padding: clamp(3rem, 6vw, 6rem) var(--pad) 0; display: grid; gap: 3rem; overflow: hidden; }
+  .p3-photos { display: grid; grid-template-columns: 5fr 4fr; gap: 1rem; align-items: start; }
+  .p3-photos .a :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
+  .p3-photos .b { margin-top: 35%; }
+  .p3-photos .b :global(img) { aspect-ratio: 4 / 3; object-fit: cover; }
+  .p3-list { display: grid; gap: .5rem; font-family: var(--display); font-size: clamp(1.35rem, 2.1vw, 2rem); line-height: 1.25; }
+  .p3-list li { display: grid; grid-template-columns: 1.1rem 1fr; }
+  .p3-list li::before { content: '•'; color: var(--pink); }
+  .p3-line { display: flex; align-items: baseline; gap: clamp(1rem, 3vw, 3rem); margin-bottom: -.12em; white-space: nowrap; }
+  .p3-line .s { font-family: var(--sans); font-weight: 500; font-size: clamp(.9rem, 1.4vw, 1.2rem); }
+  .p3-line .big { font-family: var(--display); font-weight: 300; font-size: clamp(2.4rem, 13vw, 14rem); line-height: .9; letter-spacing: -.035em; color: color-mix(in srgb, var(--pink) 30%, var(--cream)); }
   @media (min-width: 900px) {
-    .studio { grid-template-columns: 4fr 8fr; column-gap: clamp(3rem, 6vw, 6rem); align-items: start; }
-    .studio .ft { position: sticky; top: 5rem; }
-    .grid6 { grid-template-columns: repeat(12, 1fr); gap: 1rem; }
-    .g1 { grid-column: 1 / 6; } .g2 { grid-column: 6 / 9; margin-top: 4rem; } .g3 { grid-column: 9 / 13; } .g4 { grid-column: 2 / 5; margin-top: 2rem; } .g5 { grid-column: 5 / 8; margin-top: 5rem; } .g6 { grid-column: 8 / 13; margin-top: 1rem; }
+    .p3 { grid-template-columns: 6fr 5fr; grid-template-rows: auto auto; min-height: 90svh; align-items: start; column-gap: clamp(3rem, 7vw, 9rem); }
+    .p3-photos { grid-template-columns: 5fr 4fr; }
+    .p3-list { align-self: center; padding-top: 8rem; }
+    .p3-line { grid-column: 1 / -1; align-self: end; }
   }
 
-  /* two living spaces: numbered albums, like a "knowledge base" page */
-  .albums { display: grid; gap: 3.5rem; }
-  .album { position: relative; display: grid; }
-  .no { font-family: var(--display); font-weight: 500; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1; color: var(--pink); margin-bottom: .6rem; }
-  .open-album { appearance: none; background: none; border: 0; padding: 0; cursor: zoom-in; text-align: left; position: relative; display: block; }
-  .pair { display: grid; grid-template-columns: 2fr 3fr; gap: .7rem; align-items: end; }
-  .pair :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
-  .pair :global(img:first-child) { aspect-ratio: 3 / 4; }
-  .pair :global(img:last-child) { aspect-ratio: 4 / 3; }
-  .open-album:hover .pair :global(img) { transform: scale(1.02); }
-  .more { position: absolute; right: .8rem; top: .8rem; background: #fff; padding: .35rem .6rem; }
-  .a2 .pair { grid-template-columns: 3fr 2fr; }
-  .a2 .pair :global(img:first-child) { order: 2; aspect-ratio: 3 / 4; }
-  .a2 .pair :global(img:last-child) { order: 1; aspect-ratio: 4 / 3; }
+  /* PAGE 4: Layout 4, the spread. Photo positions follow *Design Style/01/Photo on Layout/Page 4.png */
+  .p4 { padding: var(--section) 0; }
+  .spread { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+  .p4-text { grid-column: 1 / -1; margin-bottom: 1.2rem; }
+  .p4-kick { color: var(--pink); margin-bottom: .8rem; }
+  .p4-title { font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(3.4rem, 9vw, 8rem); line-height: .92; letter-spacing: -.03em; }
+  .p4-intro { font-family: var(--display); font-size: clamp(1.2rem, 1.7vw, 1.55rem); line-height: 1.35; margin-top: 1.5rem; max-width: 34rem; }
+  .s :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .s-shelf { grid-column: 1 / -1; aspect-ratio: 2.5; }
+  .s-flowers { grid-row: span 2; aspect-ratio: .73; }
+  .s-tubes, .s-palette, .s-talk, .s-hold, .s-draw { aspect-ratio: 1.35; }
   @media (min-width: 900px) {
-    .living { grid-template-columns: 1fr; gap: 3.5rem; }
-    .albums { grid-template-columns: 1fr 1fr; gap: clamp(3rem, 6vw, 6rem); align-items: start; }
-    .a2 { margin-top: 7rem; }
+    .spread { display: block; position: relative; aspect-ratio: 1100 / 690; }
+    .spread .s { position: absolute; }
+    .p4-text { position: absolute; left: 3.4%; top: 2%; width: 44%; margin: 0; }
+    .p4-title { font-size: clamp(3.4rem, 7vw, 7.4rem); }
+    .p4-intro { font-size: clamp(1rem, 1.35vw, 1.3rem); margin-top: 1rem; }
+    .s-tubes { left: 27.3%; top: 39.1%; width: 11.4%; height: 8.7%; aspect-ratio: auto; }
+    .s-shelf { left: 3.4%; top: 49.6%; width: 35.3%; height: 22.5%; aspect-ratio: auto; }
+    .s-palette { left: 3.4%; top: 74.2%; width: 16.4%; height: 10.4%; aspect-ratio: auto; }
+    .s-talk { left: 50.4%; top: 9.9%; width: 17.6%; height: 21.2%; aspect-ratio: auto; }
+    .s-hold { left: 55.2%; top: 44.9%; width: 12.8%; height: 25%; aspect-ratio: auto; }
+    .s-flowers { left: 69.6%; top: 9.9%; width: 24.9%; height: 54.3%; aspect-ratio: auto; grid-row: auto; }
+    .s-draw { left: 69.6%; top: 65.9%; width: 17.6%; height: 18.6%; aspect-ratio: auto; }
   }
 
-  /* catalogue 03: one picture that leads to the link */
-  .cat-photo { position: relative; display: block; text-decoration: none; background: var(--blush); }
-  .cat-photo .out { position: absolute; right: 1rem; bottom: 1rem; width: 3rem; height: 3rem; display: grid; place-items: center; background: #fff; border-radius: 50%; font-size: 1.2rem; transition: background .3s, color .3s; }
-  .cat-photo:hover .out { background: var(--pink); color: #fff; }
-  .catalogue .fh a { text-decoration: none; }
-  .catalogue .fh a:hover { color: var(--pink); }
-  .arrow { font-family: var(--sans); font-size: .6em; }
+  /* PAGE 5: Layout 5 */
+  .album { appearance: none; background: none; border: 0; padding: 0; cursor: zoom-in; position: relative; display: block; width: 100%; text-align: left; }
+  .album :global(img) { transition: transform 1.4s var(--ease); }
+  .album:hover :global(img) { transform: scale(1.02); }
+  .album { overflow: hidden; }
+  .badge { position: absolute; left: 1rem; top: 1rem; background: #fff; color: var(--ink); padding: .4rem .65rem; }
+  .p5 { display: grid; background: var(--paper); }
+  .p5-left .album :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
+  .p5-right { display: grid; align-content: start; }
+  .p5-right .wide :global(img) { aspect-ratio: 16 / 10; object-fit: cover; }
+  .p5-row { display: grid; gap: 1.5rem; padding: 2rem var(--pad) 3rem; }
+  .p5-title { font-size: clamp(2.6rem, 5vw, 5rem); line-height: .96; letter-spacing: -.025em; font-weight: 400; max-width: 8ch; }
+  .p5-text p { margin-top: 1.25rem; max-width: 24rem; }
+  .inset { width: 70%; justify-self: end; }
+  .inset :global(img) { aspect-ratio: 2 / 3; object-fit: cover; }
   @media (min-width: 900px) {
-    .catalogue { grid-template-columns: 7fr 5fr; column-gap: clamp(3rem, 6vw, 6rem); align-items: end; }
-    .cat-photo :global(img) { max-height: 80svh; object-fit: cover; }
+    .p5 { grid-template-columns: 1fr 1fr; min-height: 100svh; }
+    .p5-left .album { height: 100%; }
+    .p5-left .album :global(img) { height: 100%; min-height: 100svh; aspect-ratio: auto; }
+    .p5-left, .p5-left .album { height: 100%; }
+    .p5-row { grid-template-columns: 1fr 1fr; padding: 0 var(--pad) var(--pad) clamp(2rem, 4vw, 4rem); align-items: start; margin-top: -2rem; position: relative; }
+    .p5-text { padding-top: 5rem; }
+    .inset { width: 100%; margin-top: -9rem; position: relative; z-index: 1; box-shadow: 0 0 0 .6rem var(--paper); }
   }
 
-  /* in the gallery */
-  .gallery { gap: 1.5rem; }
-  .gal-wide :global(img) { aspect-ratio: 3 / 2; object-fit: cover; }
-  .gal-cap { text-align: center; max-width: 34rem; margin: 1rem auto 0; justify-self: center; }
-  .gal-cap p { margin-inline: auto; }
-  .gal-two { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; max-width: 46rem; justify-self: center; width: 100%; margin-top: 1.5rem; }
-  .gal-two :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
+  /* PAGE 6: Layout 6 */
+  .p6 { display: grid; background: var(--paper); }
+  .p6-cat { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 1.5rem; text-decoration: none; padding: var(--pad); }
+  .p6-cat :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
+  .p6-ct { font-family: var(--display); font-weight: 400; font-size: clamp(2.4rem, 5.4vw, 5.2rem); line-height: .95; letter-spacing: -.02em; text-align: center; color: var(--ink); transition: color .3s; }
+  .p6-cat:hover .p6-ct { color: var(--pink); }
+  .arrow { font-family: var(--sans); font-size: .5em; vertical-align: .5em; }
+  .p6-gal { position: relative; }
+  .p6-gal :global(img) { aspect-ratio: 3 / 2; object-fit: cover; width: 100%; }
+  .p6-gt { position: absolute; left: 0; right: 0; top: 0; padding: clamp(1.5rem, 4vw, 3rem) var(--pad) 0; text-align: center; font-size: clamp(2.4rem, 5.4vw, 5.2rem); line-height: .95; letter-spacing: -.02em; font-weight: 400; }
+  .p6-text { background: rgb(255 255 255 / .92); padding: 1.25rem var(--pad) 1.75rem; font-size: .95rem; line-height: 1.55; }
+  @media (min-width: 900px) {
+    .p6 { grid-template-columns: 1fr 1fr; min-height: 100svh; }
+    .p6-cat :global(img) { aspect-ratio: auto; height: min(70svh, 44rem); width: auto; max-width: 100%; margin-inline: auto; }
+    .p6-gal { height: 100%; }
+    .p6-gal :global(img) { height: 100%; aspect-ratio: auto; position: absolute; inset: 0; }
+    .p6-gt { z-index: 1; }
+    .p6-text { position: absolute; z-index: 1; right: var(--pad); bottom: var(--pad); width: min(22rem, 70%); padding: 1.5rem; }
+  }
 
-  /* 6. closing */
-  .close { padding: clamp(6rem, 14vw, 12rem) 0 0; text-align: center; background: var(--paper); }
-  .cl { font-family: var(--display); font-size: clamp(1.5rem, 3vw, 2.4rem); line-height: 1.3; max-width: 28ch; margin: 0 auto 2rem; text-wrap: balance; }
-  .dream { font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(3.2rem, 11vw, 9.5rem); line-height: .96; letter-spacing: -.035em; max-width: 12ch; margin: clamp(5rem, 14vw, 11rem) auto 0; color: var(--plum); }
-  .next { display: block; width: 3rem; height: clamp(7rem, 16vw, 12rem); margin: 3rem auto 0; position: relative; }
-  .line { position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--ink); transform-origin: top; animation: draw 2.8s var(--ease) infinite; }
+  /* CLOSING: Layout 7, staggered lines on dark */
+  .close { background: var(--dark); color: var(--cream); padding: clamp(6rem, 14vw, 12rem) var(--pad) 0; }
+  .close-in { max-width: 62rem; margin: 0 auto; font-family: var(--display); font-weight: 300; font-size: clamp(1.9rem, 5.4vw, 4.6rem); line-height: 1.04; letter-spacing: -.02em; }
+  .l { margin: 0; }
+  .l1, .l2 { max-width: 16em; }
+  .l2 { padding-left: 1.5em; }
+  .l3 { margin-top: 1.2em; padding-left: 3em; max-width: 14em; }
+  .l3 :global(.accent-word) { font-family: inherit; font-size: 1em; line-height: inherit; color: var(--lime); font-style: italic; padding: 0; }
+  .l4 { margin-top: 1.4em; text-align: right; font-style: italic; color: var(--lime); font-size: 1.35em; letter-spacing: -.03em; }
+  .next { display: block; width: 3rem; height: clamp(6rem, 14vw, 10rem); margin: 3rem auto 0; position: relative; }
+  .line { position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--cream); transform-origin: top; animation: draw 2.8s var(--ease) infinite; }
   @keyframes draw { 0% { transform: scaleY(0); } 60%, 100% { transform: scaleY(1); } }
-  @media (prefers-reduced-motion: reduce) { .line { animation: none; } .pair :global(img) { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .line { animation: none; } .album :global(img) { transition: none; } }
 
-  /* album viewer */
-  .viewer { width: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: var(--paper); color: var(--ink); overflow: hidden; opacity: 0; transition: opacity .4s var(--ease); }
-  .viewer.is-open { opacity: 1; }
-  .viewer::backdrop { background: var(--paper); }
-  .vstage { position: absolute; inset: 4rem 1rem 5rem; display: grid; place-items: center; }
-  .vslide { width: 100%; height: 100%; display: grid; place-items: center; }
-  .vslide[hidden] { display: none; }
-  .c1 .vslide :global(img) { width: auto; height: auto; max-width: 100%; max-height: calc(100dvh - 9.5rem); object-fit: contain; }
-  .vx { position: absolute; top: .75rem; right: .75rem; z-index: 2; width: 3rem; height: 3rem; display: grid; place-items: center; background: transparent; border: 0; cursor: pointer; }
-  .vx:hover { color: var(--pink); }
-  .vbar { position: absolute; left: 0; right: 0; bottom: 1rem; display: flex; justify-content: center; align-items: center; gap: 1.25rem; }
-  .vb { width: 3rem; height: 3rem; display: grid; place-items: center; border: 1px solid var(--ink); background: var(--paper); border-radius: 50%; cursor: pointer; }
-  .vb:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
-  .vb:disabled { opacity: .3; cursor: default; }
-  .vc { min-width: 5rem; text-align: center; }
-  @media (prefers-reduced-motion: reduce) { .viewer { transition: none; } }
+  /* album gallery: the whole album at once */
+  .gal { width: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: var(--paper); color: var(--ink); overflow-y: auto; overscroll-behavior: contain; opacity: 0; transition: opacity .4s var(--ease); }
+  .gal.is-open { opacity: 1; }
+  .gal::backdrop { background: var(--paper); }
+  .gal-head { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: .6rem .75rem .6rem var(--pad); background: rgb(255 255 255 / .94); border-bottom: 1px solid var(--hair); }
+  .gal-name { font-family: var(--display); font-size: clamp(1.4rem, 2.4vw, 2rem); text-transform: capitalize; }
+  .gal-n { color: var(--ink-soft); margin-left: .8rem; }
+  .gx { width: 3rem; height: 3rem; display: grid; place-items: center; background: transparent; border: 0; cursor: pointer; }
+  .gx:hover { color: var(--pink); }
+  .gal-grid { columns: 2; column-gap: .6rem; padding: var(--pad); }
+  .gi { break-inside: avoid; margin: 0 0 .6rem; overflow: hidden; background: var(--blush); }
+  .gi :global(img) { transition: transform 1.2s var(--ease); }
+  .gi:hover :global(img) { transform: scale(1.03); }
+  @media (min-width: 700px) { .gal-grid { columns: 3; column-gap: .9rem; } .gi { margin-bottom: .9rem; } }
+  @media (min-width: 1200px) { .gal-grid { columns: 4; } }
+  @media (prefers-reduced-motion: reduce) { .gal { transition: none; } .gi :global(img) { transition: none; } }
 </style>
 
 <script>
-  // album viewer: opens the whole album, arrows / swipe / keys to move through it
+  // album gallery: one click opens the whole album as a grid; Esc / the close button returns
   const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   let opener: HTMLElement | null = null;
-  document.querySelectorAll<HTMLDialogElement>('[data-viewer]').forEach((dlg) => {
-    const slides = [...dlg.querySelectorAll<HTMLElement>('.vslide')];
-    const prev = dlg.querySelector<HTMLButtonElement>('[data-prev]')!;
-    const next = dlg.querySelector<HTMLButtonElement>('[data-next]')!;
-    const count = dlg.querySelector<HTMLElement>('[data-count]')!;
-    let i = 0;
-    const show = (n: number) => {
-      i = Math.min(slides.length - 1, Math.max(0, n));
-      slides.forEach((s, k) => (s.hidden = k !== i));
-      prev.disabled = i === 0; next.disabled = i === slides.length - 1;
-      count.textContent = `${i + 1} / ${slides.length}`;
-      slides[i].querySelector('img')?.setAttribute('loading', 'eager');
-    };
+  document.querySelectorAll<HTMLDialogElement>('[data-gallery]').forEach((dlg) => {
     const close = () => {
       dlg.classList.remove('is-open');
       const done = () => { dlg.close(); document.documentElement.classList.remove('sk-open'); opener?.focus(); };
       reduce() ? done() : setTimeout(done, 300);
     };
-    document.querySelectorAll<HTMLElement>(`[data-album="${dlg.dataset.viewer}"]`).forEach((b) => b.addEventListener('click', () => {
-      opener = b; show(0); dlg.showModal(); document.documentElement.classList.add('sk-open');
+    document.querySelectorAll<HTMLElement>(`[data-album="${dlg.dataset.gallery}"]`).forEach((b) => b.addEventListener('click', () => {
+      opener = b; dlg.showModal(); dlg.scrollTop = 0; document.documentElement.classList.add('sk-open');
+      dlg.querySelectorAll('img').forEach((i) => i.setAttribute('loading', 'eager'));
       requestAnimationFrame(() => dlg.classList.add('is-open'));
     }));
-    prev.addEventListener('click', () => show(i - 1));
-    next.addEventListener('click', () => show(i + 1));
-    dlg.querySelector('.vx')!.addEventListener('click', close);
+    dlg.querySelector('.gx')!.addEventListener('click', close);
     dlg.addEventListener('cancel', (e) => { e.preventDefault(); close(); });
-    dlg.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') show(i + 1); if (e.key === 'ArrowLeft') show(i - 1); });
-    let x0: number | null = null;
-    dlg.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
-    dlg.addEventListener('pointerup', (e) => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1)); });
   });
 </script>
