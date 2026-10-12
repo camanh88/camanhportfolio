@@ -1,61 +1,76 @@
 ---
 import Photo from './Photo.astro';
 import { cover } from '../lib/data';
-// The floating pictures around the line. To swap them for new photos later, change `id`
-// (any id from scripts/photos.mjs). x / y = position in the section (%), w = size, a = width / height,
-// s = how far the picture drifts while scrolling (px, negative = moves the other way).
-const pics = [
-  { id: 'know-1', x: 5, y: 6, w: 1.35, a: 1.5, s: -170 },
-  { id: 'skill-2', x: 25, y: 2, w: 0.85, a: 1, s: 120 },
-  { id: 'know-2-1', x: 46, y: 4, w: 0.7, a: 0.625, s: -90 },
-  { id: 'skill-4', x: 66, y: 7, w: 0.95, a: 0.667, s: 210 },
-  { id: 'know-3', x: 85, y: 12, w: 1.05, a: 0.75, s: -150 },
-  { id: 'skill-3', x: 10, y: 30, w: 0.8, a: 1.5, s: 260, mob: false },
-  { id: 'know-4', x: 90, y: 36, w: 0.8, a: 0.6, s: -240, mob: false },
-  { id: 'know-2-2', x: 3, y: 54, w: 1.25, a: 1.65, s: 150 },
-  { id: 'skill-1', x: 83, y: 58, w: 1.0, a: 1, s: -120 },
-  { id: 'skill-2', x: 20, y: 74, w: 0.8, a: 1, s: -210, mob: false },
-  { id: 'know-1', x: 71, y: 77, w: 1.0, a: 1.5, s: 180 },
-  { id: 'skill-3', x: 44, y: 88, w: 1.05, a: 1.5, s: -140 },
-  { id: 'know-3', x: 6, y: 90, w: 0.85, a: 0.75, s: 230, mob: false },
-  { id: 'skill-4', x: 91, y: 86, w: 0.75, a: 0.667, s: -170 },
-  { id: 'know-4', x: 16, y: 61, w: 0.55, a: 0.6, s: 100, mob: false },
-  { id: 'skill-1', x: 78, y: 22, w: 0.6, a: 1, s: 140, mob: false },
+import { imageMeta } from '../lib/data';
+
+// A tight cloud of pictures around the line: a few bigger ones, some medium, many tiny.
+// The pictures are existing photos for now; swap the ids in `source` (any id from scripts/photos.mjs) when new ones arrive.
+const source = ['know-1', 'know-2-1', 'know-2-2', 'know-3', 'know-4', 'skill-1', 'skill-2', 'skill-3', 'skill-4'];
+const tiers = [
+  { n: 5, w: [0.95, 1.25], r: [0.5, 0.78], speed: 150 },   // bigger
+  { n: 13, w: [0.5, 0.7], r: [0.35, 1.0], speed: 100 },    // medium
+  { n: 30, w: [0.17, 0.3], r: [0.3, 1.05], speed: 60 },    // tiny
 ];
+// deterministic scatter (same on every build)
+let seed = 26;
+const rnd = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
+type Pic = { id: string; x: number; y: number; w: number; a: number; s: number; mob: boolean };
+const pics: Pic[] = [];
+let k = 0;
+for (const t of tiers) {
+  for (let i = 0; i < t.n; i++) {
+    for (let tries = 0; tries < 80; tries++) {
+      const ang = rnd() * Math.PI * 2;
+      const r = t.r[0] + rnd() * (t.r[1] - t.r[0]);
+      const x = 50 + Math.cos(ang) * r * 47;
+      const y = 50 + Math.sin(ang) * r * 43;
+      const w = t.w[0] + rnd() * (t.w[1] - t.w[0]);
+      const gap = 2.2 + w * 7; // keep pictures apart, in % of the section
+      const nearText = x > 22 && x < 74 && y > 38 && y < 60;
+      const clash = pics.some((p) => Math.hypot(p.x - x, (p.y - y) * 0.9) < (gap + (2.2 + p.w * 7)) / 2);
+      if (nearText || clash) continue;
+      const id = source[k++ % source.length];
+      const m = imageMeta[id];
+      pics.push({ id, x, y, w, a: m ? m.width / m.height : 1, s: (rnd() < 0.5 ? -1 : 1) * (t.speed * (0.6 + rnd() * 0.8)), mob: t.n !== 30 || i % 2 === 0 });
+      break;
+    }
+  }
+}
 ---
-<section class="believe" aria-label={cover.quote} data-believe>
-  <div class="field" aria-hidden="true">
-    {pics.map((p, i) => (
-      <div class={`pic${p.mob === false ? ' no-mob' : ''}`} style={`--x:${p.x}%;--y:${p.y}%;--w:${p.w};--a:${p.a};--s:${p.s};--d:${(i % 8) * 110}ms`}>
-        <Photo id={p.id} alt="" sizes="160px" />
+<div class="wrap-believe">
+  <section class="believe" aria-label={cover.quote} data-believe>
+    <div class="copy">
+      <div class="field" aria-hidden="true">
+        {pics.map((p, i) => (
+          <div class={`pic${p.mob ? '' : ' no-mob'}`} style={`--x:${p.x.toFixed(1)}%;--y:${p.y.toFixed(1)}%;--w:${p.w.toFixed(2)};--a:${p.a.toFixed(3)};--s:${Math.round(p.s)};--d:${(i % 12) * 90}ms`}>
+            <Photo id={p.id} alt="" sizes="160px" />
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
-  <div class="copy">
-    <p class="line">{cover.quote}</p>
-  </div>
+      <p class="line">{cover.quote}</p>
+    </div>
+  </section>
   <p class="tag label">{cover.label}</p>
-</section>
+</div>
 
 <style>
-  .believe { position: relative; background: var(--paper); overflow: hidden; padding-bottom: clamp(5rem, 10vw, 9rem); }
-  .field { position: absolute; inset: 0 0 clamp(5rem, 10vw, 9rem) 0; pointer-events: none; }
-  .pic { --u: clamp(3.4rem, 8.2vw, 8.6rem); position: absolute; left: var(--x); top: var(--y); width: calc(var(--u) * var(--w)); aspect-ratio: var(--a);
-    transform: translate3d(0, calc(var(--p, 0) * var(--s) * 1px), 0); will-change: transform; opacity: 0; transition: opacity 1.4s var(--ease) var(--d); }
-  .pic :global(img) { width: 100%; height: 100%; object-fit: cover; filter: saturate(.92); }
+  .wrap-believe { background: var(--paper); padding-bottom: clamp(5rem, 10vw, 9rem); }
+  .believe { position: relative; min-height: 160svh; }
+  .field { position: absolute; inset: 0; pointer-events: none; }
+  .pic { --u: clamp(3.4rem, 8vw, 8.4rem); position: absolute; left: var(--x); top: var(--y); width: calc(var(--u) * var(--w)); aspect-ratio: var(--a);
+    transform: translate3d(0, calc(var(--p, 0) * var(--s) * 1px), 0); will-change: transform; opacity: 0; transition: opacity 1.2s var(--ease) var(--d); }
+  .pic :global(img) { width: 100%; height: 100%; object-fit: cover; }
   .believe.in .pic { opacity: 1; }
-  .copy { position: sticky; top: 0; height: 100svh; display: grid; place-items: center; padding: 0 var(--gutter); pointer-events: none; z-index: 1; }
-  /* the field is taller than the screen, so the line stays put while the pictures drift past it */
-  .believe { min-height: 180svh; }
-  .line { font-family: var(--script); font-size: clamp(3rem, 7.6vw, 6.4rem); line-height: 1.08; color: var(--tomato); text-align: center; max-width: 15ch; text-wrap: balance; }
-  .tag { position: relative; z-index: 1; display: block; width: fit-content; margin: 0 auto; background: var(--oxblood); color: #fff; font-size: .8rem; letter-spacing: .18em; padding: 1rem 1.6rem; max-width: calc(100% - 2 * var(--gutter)); text-align: center; }
-  .believe { display: flow-root; }
-  .copy + .tag { margin-top: 2rem; }
+  /* the line stays in the middle of the screen while the cloud drifts around it */
+  .copy { position: sticky; top: 0; height: 100svh; display: grid; place-items: center; padding: 0 var(--gutter); pointer-events: none; overflow: hidden; }
+  .line { position: relative; z-index: 1; }
+  .line { font-family: var(--script); font-size: clamp(3rem, 7.2vw, 6.2rem); line-height: 1.08; color: var(--tomato); text-align: center; max-width: 15ch; text-wrap: balance; }
+  .tag { display: block; width: fit-content; margin: clamp(2rem, 5vw, 4rem) auto 0; background: var(--oxblood); color: #fff; font-size: .8rem; letter-spacing: .18em; padding: 1rem 1.6rem; max-width: calc(100% - 2 * var(--gutter)); text-align: center; }
 
   @media (max-width: 700px) {
     .no-mob { display: none; }
-    .pic { --u: 4.2rem; }
-    .believe { min-height: 170svh; }
+    .pic { --u: 4rem; }
+    .believe { min-height: 140svh; }
   }
   @media (prefers-reduced-motion: reduce) { .pic { transform: none; transition: none; opacity: 1; } }
 </style>
@@ -63,10 +78,9 @@ const pics = [
 <script>
   const el = document.querySelector<HTMLElement>('[data-believe]');
   if (el) {
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { el.classList.add('in'); io.disconnect(); } }), { threshold: 0.05 });
     io.observe(el);
-    if (!reduce) {
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
       const pics = [...el.querySelectorAll<HTMLElement>('.pic')];
       const update = () => {
         const r = el.getBoundingClientRect();

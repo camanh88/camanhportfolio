@@ -1,13 +1,12 @@
 ---
+import Photo from './Photo.astro';
 import { cover, ui } from '../lib/data';
 import { inline } from '../lib/md';
-const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <header id="cover" class="cover">
-  <!-- row 1: the cover video (a looping collage on white). The poster shows while it loads, and when motion is reduced. -->
+  <!-- row 1: the cover photo, full width -->
   <div class="stage">
-    <video class="film" muted loop playsinline preload="metadata" poster={`${base}img/cover-poster-1600.webp`} aria-hidden="true" tabindex="-1"
-      data-src-wide={`${base}video/cover-1080.mp4`} data-src-narrow={`${base}video/cover-540.mp4`}></video>
+    <Photo id="cover-1" sizes="100vw" loading="eager" fetchpriority="high" />
     <a class="scroll label" href="#hello"><span>{ui.scroll}</span><i aria-hidden="true"></i></a>
   </div>
 
@@ -20,25 +19,15 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 <style>
   .cover { background: var(--paper); }
-  .stage { position: relative; background: #fff; display: grid; justify-items: center; align-items: center; min-height: 14rem; }
-  .film { display: block; width: min(100%, calc(100svh * 16 / 9)); aspect-ratio: 16 / 9; height: auto; background: #fff; object-fit: cover; }
-  @media (min-width: 900px) { .stage { min-height: 100svh; } }
-  .scroll { position: absolute; z-index: 1; left: var(--gutter); bottom: 1.5rem; display: none; align-items: center; gap: .9rem; color: var(--ink-soft); text-decoration: none; }
+  .stage { position: relative; background: var(--dark); height: 100svh; min-height: 28rem; overflow: hidden; }
+  .stage :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 38%; }
+  .stage::after { content: ''; position: absolute; inset: auto 0 0 0; height: 24%; background: linear-gradient(transparent, rgb(0 0 0 / .3)); pointer-events: none; }
+  .scroll { position: absolute; z-index: 1; left: var(--gutter); bottom: 1.75rem; display: flex; align-items: center; gap: .9rem; color: #fff; text-decoration: none; }
   .scroll i { width: 3rem; height: 1px; background: currentColor; transition: width .4s var(--ease); }
-  .scroll:hover i { width: 5rem; color: var(--ink); }
-  @media (min-width: 900px) { .scroll { display: flex; } }
+  .scroll:hover i { width: 5rem; }
 
   .hello { text-align: center; padding: clamp(4rem, 10vw, 8rem) 0 clamp(4rem, 9vw, 8rem); display: grid; justify-items: center; }
   .hero { font-size: clamp(3.4rem, 13vw, 11.5rem); line-height: .92; letter-spacing: -.035em; font-weight: 300; max-width: 12ch; text-wrap: balance; }
   .sub { font-family: var(--display); font-size: clamp(1.5rem, 3.4vw, 2.5rem); line-height: 1.3; margin-top: clamp(3rem, 7vw, 6rem); max-width: 26ch; text-wrap: balance; }
   .sub :global(strong) { font-weight: 600; }
 </style>
-
-<script>
-  // video: pick the size for this screen; stay still (poster only) when the visitor prefers reduced motion
-  const v = document.querySelector<HTMLVideoElement>('.film');
-  if (v) {
-    v.src = (matchMedia('(min-width: 900px)').matches ? v.dataset.srcWide : v.dataset.srcNarrow) ?? '';
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) v.play().catch(() => {});
-  }
-</script>
