@@ -12,6 +12,6 @@ npm run placeholders   # regenerate PLACEHOLDERS.md
 ```
 
 - **All words** live in `../content/*.md` (chapter text, side pages, and the few interface labels in `ui.md`). Edit there; the site updates.
-- Photos: manifest and alt text in `scripts/photos.mjs`. Originals in `../02` and `../04` are never touched.
+- Photos: manifest and alt text in `scripts/photos.mjs`. Originals in `../Photo` are never touched.
 - `{{Name}}` = sidepath (text in `content/side-pages.md`), `[text]` = open placeholder, `{{vi: …}}` = handwritten Vietnamese note, `BUILD NOTE:` lines are never rendered.
 - Deploy notes: `DEPLOY.md`. Open placeholders: `PLACEHOLDERS.md`.

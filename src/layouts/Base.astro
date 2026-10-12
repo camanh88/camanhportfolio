@@ -1,30 +1,25 @@
 ---
-import '@fontsource/newsreader/latin-400.css';
-import '@fontsource/newsreader/latin-ext-400.css';
-import '@fontsource/newsreader/vietnamese-400.css';
-import '@fontsource/newsreader/latin-400-italic.css';
-import '@fontsource/newsreader/latin-ext-400-italic.css';
-import '@fontsource/newsreader/vietnamese-400-italic.css';
-import '@fontsource/newsreader/latin-600.css';
-import '@fontsource/newsreader/latin-ext-600.css';
-import '@fontsource/newsreader/vietnamese-600.css';
-import '@fontsource/fraunces/latin-300.css';
-import '@fontsource/fraunces/latin-ext-300.css';
-import '@fontsource/fraunces/vietnamese-300.css';
-import '@fontsource/fraunces/latin-300-italic.css';
-import '@fontsource/fraunces/latin-ext-300-italic.css';
-import '@fontsource/fraunces/vietnamese-300-italic.css';
-import '@fontsource/fraunces/latin-600.css';
-import '@fontsource/fraunces/latin-ext-600.css';
-import '@fontsource/fraunces/vietnamese-600.css';
-import '@fontsource/vujahday-script/latin-400.css';
-import '@fontsource/vujahday-script/latin-ext-400.css';
-import '@fontsource/vujahday-script/vietnamese-400.css';
+import '@fontsource/cormorant-garamond/latin-300.css';
+import '@fontsource/cormorant-garamond/latin-ext-300.css';
+import '@fontsource/cormorant-garamond/vietnamese-300.css';
+import '@fontsource/cormorant-garamond/latin-300-italic.css';
+import '@fontsource/cormorant-garamond/latin-ext-300-italic.css';
+import '@fontsource/cormorant-garamond/vietnamese-300-italic.css';
+import '@fontsource/cormorant-garamond/latin-400.css';
+import '@fontsource/cormorant-garamond/latin-ext-400.css';
+import '@fontsource/cormorant-garamond/vietnamese-400.css';
+import '@fontsource/cormorant-garamond/latin-400-italic.css';
+import '@fontsource/cormorant-garamond/latin-ext-400-italic.css';
+import '@fontsource/cormorant-garamond/vietnamese-400-italic.css';
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-ext-400.css';
+import '@fontsource/inter/vietnamese-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-ext-500.css';
+import '@fontsource/inter/vietnamese-500.css';
 import '@fontsource/mynerve/latin-400.css';
 import '@fontsource/mynerve/latin-ext-400.css';
 import '@fontsource/mynerve/vietnamese-400.css';
-import '@fontsource/dm-mono/latin-400.css';
-import '@fontsource/dm-mono/latin-ext-400.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import { cover, sidePages, ui } from '../lib/data';
@@ -37,9 +32,9 @@ const title = `${cover.hero} ${cover.label}`;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <meta name="description" content={textOf(cover.quote)} />
-    <meta name="theme-color" content="#F3EBDD" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23C8442F'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F3EBDD' font-family='Georgia' font-style='italic'%3EC%3C/text%3E%3C/svg%3E" />
+    <meta name="description" content={textOf(cover.sub)} />
+    <meta name="theme-color" content="#1C2A23" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%237A1F26'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F5F1EA' font-family='Georgia' font-style='italic'%3EC%3C/text%3E%3C/svg%3E" />
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>
@@ -49,7 +44,7 @@ const title = `${cover.hero} ${cover.label}`;
     <dialog id="sp" class="sp-dialog" aria-labelledby="sp-title" data-soon={ui['coming soon']}>
       <div class="sp-sheet">
         <header class="sp-head">
-          <span class="sp-kicker mono">{ui['side note']}</span>
+          <span class="sp-kicker label">{ui['side note']}</span>
           <button type="button" class="sp-close" aria-label={ui.close}>
             <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
           </button>
@@ -70,26 +65,22 @@ const title = `${cover.hero} ${cover.label}`;
 
 <style is:global>
   .sp-dialog { border: 0; padding: 0; margin: 0; background: transparent; color: var(--ink); max-width: none; max-height: none; width: 100%; height: 100%; overflow: hidden; }
-  .sp-dialog::backdrop { background: rgb(30 27 24 / 0); transition: background .35s var(--ease); }
-  .sp-dialog.is-open::backdrop { background: rgb(30 27 24 / .5); }
-  .sp-sheet { position: absolute; background: var(--paper-light); box-shadow: -12px 0 40px -12px rgb(30 27 24 / .45); display: flex; flex-direction: column;
-    background-image: linear-gradient(var(--paper-light), var(--paper-light));
-    inset: auto 0 0 0; max-height: 86svh; border-radius: 14px 14px 0 0; transform: translateY(100%); transition: transform .4s var(--ease); }
+  .sp-dialog::backdrop { background: rgb(20 19 18 / 0); transition: background .4s var(--ease); }
+  .sp-dialog.is-open::backdrop { background: rgb(20 19 18 / .45); }
+  .sp-sheet { position: absolute; background: var(--paper); display: flex; flex-direction: column; inset: auto 0 0 0; max-height: 86svh; transform: translateY(100%); transition: transform .45s var(--ease); }
   .sp-dialog.is-open .sp-sheet { transform: none; }
-  .sp-sheet::before { content: ''; position: absolute; top: -.7rem; left: 50%; width: 5rem; height: 1.5rem; transform: translateX(-50%) rotate(-2deg); background: rgb(224 168 46 / .75); }
-  .sp-head { display: flex; align-items: center; justify-content: space-between; padding: 1.4rem 1.25rem .4rem 1.5rem; }
-  .sp-kicker { color: var(--oxblood); }
-  .sp-close { appearance: none; border: 1.5px solid var(--ink); background: transparent; width: 2.75rem; height: 2.75rem; border-radius: 50%; display: grid; place-items: center; cursor: pointer; }
-  .sp-close:hover { background: var(--ink); color: var(--paper); }
-  .sp-content { padding: .5rem 1.5rem 2.5rem; overflow-y: auto; overscroll-behavior: contain; outline: none; }
-  .sp-title { font-family: var(--display); font-weight: 300; font-size: clamp(2rem, 7vw, 2.8rem); line-height: 1.05; margin-bottom: 1rem; }
+  .sp-head { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.25rem .5rem 1.5rem; border-bottom: 1px solid var(--hair); }
+  .sp-kicker { color: var(--ink-soft); }
+  .sp-close { appearance: none; border: 0; background: transparent; width: 2.75rem; height: 2.75rem; display: grid; place-items: center; cursor: pointer; }
+  .sp-close:hover { color: var(--accent); }
+  .sp-content { padding: 1.75rem 1.5rem 3rem; overflow-y: auto; overscroll-behavior: contain; outline: none; }
+  .sp-title { font-family: var(--display); font-weight: 300; font-size: clamp(2.2rem, 7vw, 3.2rem); line-height: 1.02; letter-spacing: -.02em; margin-bottom: 1.25rem; }
   .sp-content p { margin-bottom: 1rem; max-width: 34rem; }
-  .sp-slot { aspect-ratio: 4 / 3; margin-bottom: 1.25rem; border: 1.5px dashed rgb(138 75 42 / .5); background: repeating-linear-gradient(135deg, transparent 0 9px, rgb(138 75 42 / .08) 9px 10px); }
+  .sp-slot { aspect-ratio: 4 / 3; margin-bottom: 1.5rem; background: var(--paper-2); }
   @media (min-width: 760px) {
-    .sp-sheet { inset: 0 0 0 auto; width: min(34rem, 92vw); max-height: none; border-radius: 0; transform: translateX(100%); }
-    .sp-sheet::before { top: 1.2rem; left: -1.6rem; transform: rotate(-82deg); width: 4.5rem; }
-    .sp-content { padding: .5rem 2.25rem 3rem; }
-    .sp-head { padding: 1.5rem 1.5rem .4rem 2.25rem; }
+    .sp-sheet { inset: 0 0 0 auto; width: min(32rem, 92vw); max-height: none; transform: translateX(100%); }
+    .sp-content { padding: 2.25rem 2.25rem 3rem; }
+    .sp-head { padding: 1.5rem 1.5rem .75rem 2.25rem; }
   }
   @media (prefers-reduced-motion: reduce) { .sp-sheet, .sp-dialog::backdrop { transition: none; } }
 </style>

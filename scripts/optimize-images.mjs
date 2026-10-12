@@ -11,10 +11,11 @@ const OUT = path.join(ROOT, 'public', 'img');
 mkdirSync(OUT, { recursive: true });
 const manifest = {};
 
-for (const [id, [rel, alt]] of Object.entries(photos)) {
+for (const [id, [rel, alt, opts = {}]] of Object.entries(photos)) {
   const src = path.join(PROJECT, rel);
   if (!existsSync(src)) { console.warn('missing', rel); continue; }
-  const img = sharp(readable(src)).rotate();
+  let img = sharp(readable(src)).rotate();
+  if (opts.trim) img = sharp(await img.trim({ background: '#000000', threshold: 24 }).toBuffer()); // black screenshot bars
   const meta = await sharp(await img.clone().toBuffer()).metadata();
   const [W, H] = [meta.width, meta.height];
   const widths = WIDTHS.filter((w) => w < W);
