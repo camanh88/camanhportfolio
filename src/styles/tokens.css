@@ -3,17 +3,20 @@
   --paper-2: #F6F5F2;
   --ink: #141312;
   --ink-soft: #57524B;
-  /* theme colours (CLAUDE.md palette) */
-  --tomato: #C8442F;
-  --oxblood: #7A1F26;
-  --mustard: #E0A82E;
-  --teal: #1F5A66;
-  --forest: #2F5D3A;
-  --blush: #E9B9B0;
-  --dark: #1C2A23;
-  --accent: var(--oxblood);
-  --hair: rgb(20 19 18 / .16);
-  --hair-light: rgb(245 241 234 / .28);
+  /* theme colours: "Girly Shimmer" scheme, Design Style/girly-shimmer-color-scheme.jpg */
+  --pink: #F33F71;
+  --blush: #EBDBD7;
+  --cream: #FCEFDB;
+  --lime: #BDCC30;
+  --plum: #61216A;
+  --dark: #2B1030;        /* plum, darkened: photo shade and deep blocks */
+  --accent: var(--plum);
+  /* older names used by components built earlier, now pointing at the new scheme */
+  --tomato: var(--pink);
+  --oxblood: var(--plum);
+  --mustard: var(--lime);
+  --teal: var(--plum);
+  --forest: var(--plum);
   /* placeholder [ ... ] */
   --ph-bg: #F6EDE6;
   --ph-ink: #8A4B2A;

@@ -1,0 +1,347 @@
+---
+import Photo from './Photo.astro';
+import { ch01, ui, sidePageBody, imageMeta } from '../lib/data';
+import { inline } from '../lib/md';
+
+const definition = sidePageBody('Acculturation')[0] ?? '';
+// the intro paragraph opens with a drop cap
+const story = ch01.story ?? '';
+const dropLetter = story.charAt(0);
+const storyRest = story.slice(1);
+const high = Object.fromEntries(ch01.highlights.map((h) => [h.lead.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim(), h]));
+const studio = high['studio visits'], living = high['two living spaces'], cat = high['catalogue 03'], gallery = high['in the gallery'];
+
+const studioPics = ['c1-studio-1', 'c1-studio-2', 'c1-studio-3', 'c1-studio-4', 'c1-studio-5', 'c1-studio-6'];
+const albums = [
+  { key: 'villa', label: ui['album villa'], ids: ['c1-villa-1', 'c1-villa-2', 'c1-villa-3', 'c1-villa-4', 'c1-villa-5', 'c1-villa-6', 'c1-villa-7', 'c1-villa-8'], cover: ['c1-villa-1', 'c1-villa-2'] },
+  { key: 'apt', label: ui['album apartment'], ids: ['c1-apt-1', 'c1-apt-2', 'c1-apt-3', 'c1-apt-4', 'c1-apt-5', 'c1-apt-6', 'c1-apt-7'], cover: ['c1-apt-1', 'c1-apt-2'] },
+];
+---
+<article id="ch-01" class="c1" aria-labelledby="c1-title">
+  <a class="back label" href="#contents">{ui.back}</a>
+
+  <!-- 1. Opener spread: one tall photo, the title on white -->
+  <header class="open">
+    <figure class="open-photo"><Photo id="c1-open" sizes="(min-width: 900px) 50vw, 100vw" loading="eager" /></figure>
+    <div class="open-text">
+      <p class="folio label">{ch01.num}</p>
+      <h2 id="c1-title" class="title">{ch01.title}</h2>
+      <p class="hint">{ch01.hint}</p>
+      <p class="role label">{ch01.role}</p>
+      <p class="where" set:html={inline(ch01.where)} />
+    </div>
+  </header>
+
+  <!-- 2. Drop-cap spread -->
+  <section class="story-spread">
+    <figure class="story-photo"><Photo id="c1-intro" sizes="(min-width: 900px) 40vw, 100vw" /></figure>
+    <div class="story-col">
+      <p class="story"><span class="drop" aria-hidden="true">{dropLetter}</span><span class="sr-only">{dropLetter}</span>{storyRest}</p>
+    </div>
+  </section>
+
+  <!-- 3. ACCULTURATION: the title over one big photo -->
+  <section class="acc" aria-labelledby="acc-title">
+    <Photo id="c1-big" sizes="100vw" />
+    <div class="acc-cover">
+      <h3 id="acc-title" class="acc-title">{ch01.accTitle}</h3>
+      <p class="acc-sub">{ch01.accSub}</p>
+    </div>
+    {definition && <p class="acc-def" set:html={inline(definition)} />}
+  </section>
+
+  <!-- 4. The mission / my part, as a quiet data row -->
+  <section class="data">
+    <div class="data-in wrap">
+      {ch01.mission && (
+        <div class="col">
+          <h3 class="dh">{ch01.mission.lead}</h3>
+          <ol class="dl">{ch01.mission.items.map((t, i) => <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span set:html={inline(t)} /></li>)}</ol>
+        </div>
+      )}
+      {ch01.part && (
+        <div class="col">
+          <h3 class="dh">{ch01.part.lead}</h3>
+          <ol class="dl">{ch01.part.items.map((t, i) => <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span set:html={inline(t)} /></li>)}</ol>
+        </div>
+      )}
+    </div>
+    <div class="tri wrap" role="group">
+      <figure><Photo id="c1-mood-1" sizes="(min-width: 900px) 28vw, 33vw" /></figure>
+      <figure class="mid"><Photo id="c1-shoot-1" sizes="(min-width: 900px) 28vw, 33vw" /></figure>
+      <figure><Photo id="c1-mood-2" sizes="(min-width: 900px) 28vw, 33vw" /></figure>
+    </div>
+  </section>
+
+  <!-- 5. Highlights: a feature page -->
+  <section class="hl wrap" aria-labelledby="hl-title">
+    <header class="hl-head">
+      <h3 id="hl-title" class="hl-title">{ch01.hlTitle}</h3>
+    </header>
+
+    {studio && (
+      <div class="feat studio">
+        <div class="ft">
+          <h4 class="fh">{studio.lead}</h4>
+          <p set:html={inline(studio.rest)} />
+        </div>
+        <div class="grid6">
+          {studioPics.map((id, i) => <figure class={`g g${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 24vw, 46vw" /></figure>)}
+        </div>
+      </div>
+    )}
+
+    {living && (
+      <div class="feat living">
+        <div class="ft">
+          <h4 class="fh">{living.lead}</h4>
+          <p set:html={inline(living.rest)} />
+        </div>
+        <div class="albums">
+          {albums.map((a, i) => (
+            <div class={`album a${i + 1}`}>
+              <p class="no" aria-hidden="true">{i + 1}.</p>
+              <button type="button" class="open-album" data-album={a.key} aria-haspopup="dialog" aria-label={`${ui['open album']}: ${a.label}`}>
+                <span class="pair">
+                  <Photo id={a.cover[0]} sizes="(min-width: 900px) 18vw, 36vw" />
+                  <Photo id={a.cover[1]} sizes="(min-width: 900px) 24vw, 48vw" />
+                </span>
+                <span class="more label" aria-hidden="true">+ {a.ids.length}</span>
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {cat && (
+      <div class="feat catalogue">
+        <a class="cat-photo" href={ch01.catalogueUrl} target="_blank" rel="noopener noreferrer" aria-label={`${cat.lead} ${ui['open catalogue']} (${ui['new tab']})`}>
+          <Photo id="c1-catalogue" sizes="(min-width: 900px) 40vw, 100vw" />
+          <span class="out" aria-hidden="true">↗</span>
+        </a>
+        <div class="ft">
+          <h4 class="fh"><a href={ch01.catalogueUrl} target="_blank" rel="noopener noreferrer">{cat.lead}<span class="arrow" aria-hidden="true"> ↗</span></a></h4>
+        </div>
+      </div>
+    )}
+
+    {gallery && (
+      <div class="feat gallery">
+        <figure class="gal-wide"><Photo id="c1-gal-1" sizes="100vw" /></figure>
+        <div class="gal-cap">
+          <h4 class="fh">{gallery.lead}</h4>
+          <p set:html={inline(gallery.rest)} />
+        </div>
+        <div class="gal-two">
+          <figure><Photo id="c1-gal-2" sizes="(min-width: 900px) 24vw, 46vw" /></figure>
+          <figure><Photo id="c1-gal-3" sizes="(min-width: 900px) 24vw, 46vw" /></figure>
+        </div>
+      </div>
+    )}
+  </section>
+
+  <!-- 6. Closing: a quiet page that turns to the next chapter -->
+  <footer class="close">
+    <div class="wrap">
+      {ch01.closing.slice(0, -1).map((t) => <p class="cl" set:html={inline(t, { accent: [] })} />)}
+      <p class="dream">{ch01.closing[ch01.closing.length - 1]}</p>
+      <a class="next" href="#ch-02" aria-label={ui['chapter nav']}><span class="line" aria-hidden="true"></span></a>
+    </div>
+  </footer>
+
+  <!-- album viewer -->
+  {albums.map((a) => (
+    <dialog class="viewer" data-viewer={a.key} aria-label={a.label}>
+      <button type="button" class="vx" aria-label={ui.close}><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg></button>
+      <div class="vstage">
+        {a.ids.map((id, i) => <figure class="vslide" hidden={i !== 0} data-slide={i}><Photo id={id} sizes="100vw" loading="lazy" /></figure>)}
+      </div>
+      <div class="vbar">
+        <button type="button" class="vb" data-prev aria-label={ui['previous photo']}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <p class="vc label" data-count aria-live="polite"></p>
+        <button type="button" class="vb" data-next aria-label={ui['next photo']}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </dialog>
+  ))}
+</article>
+
+<style>
+  .c1 { background: var(--paper); position: relative; }
+  .back { position: sticky; top: .75rem; z-index: 30; width: fit-content; margin: 0 var(--gutter) 0 auto; padding: .7rem 1rem; min-height: 44px; display: flex; align-items: center; text-decoration: none; background: var(--paper); border: 1px solid var(--ink); color: var(--ink); transition: background .3s, color .3s; }
+  .back:hover { background: var(--ink); color: var(--paper); }
+  .c1 :global(img) { display: block; width: 100%; height: auto; }
+  .c1 figure { margin: 0; }
+  .fh { font-family: var(--display); font-weight: 600; font-size: clamp(1.7rem, 2.6vw, 2.3rem); line-height: 1.05; letter-spacing: -.01em; margin-bottom: .9rem; }
+
+  /* 1. opener */
+  .open { display: grid; margin-top: -2.75rem; }
+  .open-photo { aspect-ratio: 4 / 5; overflow: hidden; }
+  .open-photo :global(img) { height: 100%; object-fit: cover; }
+  .open-text { padding: clamp(3rem, 8vw, 6rem) var(--gutter) clamp(4rem, 9vw, 7rem); display: grid; align-content: center; gap: 0; }
+  .folio { color: var(--pink); margin-bottom: 1.5rem; }
+  .title { font-size: clamp(3.4rem, 9.5vw, 8.2rem); line-height: .92; letter-spacing: -.04em; font-weight: 300; max-width: 9ch; }
+  .hint { font-family: var(--display); font-weight: 600; font-size: clamp(1.3rem, 2vw, 1.7rem); line-height: 1.25; margin-top: clamp(2rem, 4vw, 3.5rem); max-width: 22ch; }
+  .role { margin-top: clamp(3rem, 6vw, 5rem); color: var(--ink-soft); }
+  .where { margin-top: .5rem; font-size: .95rem; }
+  @media (min-width: 900px) {
+    .open { grid-template-columns: 1fr 1fr; min-height: 100svh; }
+    .open-photo { aspect-ratio: auto; height: 100%; min-height: 100svh; }
+    .open-text { padding: 7rem clamp(2rem, 6vw, 6rem) 5rem 4vw; }
+  }
+
+  /* 2. drop-cap spread */
+  .story-spread { display: grid; padding: var(--section) 0; gap: 3rem; }
+  .story-photo { padding: 0 var(--gutter); }
+  .story-col { padding: 0 var(--gutter); }
+  .story { font-size: clamp(1.15rem, 1.5vw, 1.35rem); line-height: 1.7; max-width: 34rem; }
+  .drop { float: left; font-family: var(--display); font-weight: 500; font-size: 5.6em; line-height: .72; padding: .06em .14em 0 0; color: var(--plum); }
+  @media (min-width: 900px) {
+    .story-spread { grid-template-columns: 5fr 7fr; padding-left: 0; gap: clamp(3rem, 8vw, 9rem); align-items: center; }
+    .story-photo { padding: 0; }
+    .story-photo :global(img) { max-height: 90svh; object-fit: cover; }
+    .story-col { padding: 0 clamp(2rem, 6vw, 8rem) 0 0; }
+    .story { font-size: 1.3rem; }
+  }
+
+  /* 3. ACCULTURATION */
+  .acc { position: relative; background: var(--dark); color: #fff; }
+  .acc :global(img) { aspect-ratio: 3 / 4; object-fit: cover; filter: brightness(.7); }
+  .acc-cover { position: absolute; left: 0; right: 0; top: 0; padding: clamp(3rem, 8vw, 7rem) var(--gutter) 0; text-align: center; }
+  .acc-title { font-size: clamp(2.2rem, 10vw, 10rem); line-height: .9; letter-spacing: -.01em; font-weight: 300; }
+  .acc-sub { font-family: var(--display); font-style: italic; font-size: clamp(1.3rem, 2.4vw, 2rem); margin-top: 1rem; }
+  .acc-def { position: absolute; left: var(--gutter); right: var(--gutter); bottom: clamp(1.5rem, 4vw, 3.5rem); max-width: 28rem; font-size: .95rem; line-height: 1.5; color: rgb(255 255 255 / .92); border-top: 1px solid rgb(255 255 255 / .5); padding-top: .9rem; }
+  @media (min-width: 900px) { .acc :global(img) { aspect-ratio: 16 / 9; max-height: 100svh; } .acc-def { left: auto; right: var(--gutter); } }
+
+  /* 4. data row */
+  .data { background: var(--cream); padding: var(--section) 0 clamp(3rem, 7vw, 6rem); }
+  .data-in { display: grid; gap: 3rem; }
+  .dh { font-family: var(--sans); font-weight: 600; font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--plum); padding-bottom: 1rem; border-bottom: 1px solid var(--ink); margin-bottom: .4rem; }
+  .dl li { display: grid; grid-template-columns: 3rem 1fr; align-items: baseline; padding: 1rem 0; border-bottom: 1px solid var(--hair); font-family: var(--display); font-size: clamp(1.35rem, 2vw, 1.8rem); line-height: 1.25; }
+  .n { font-family: var(--sans); font-size: .72rem; letter-spacing: .1em; color: var(--pink); font-weight: 600; }
+  .tri { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: clamp(.6rem, 2vw, 1.5rem); margin-top: clamp(3rem, 7vw, 6rem); align-items: start; }
+  .tri figure :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
+  .tri .mid { margin-top: clamp(1.5rem, 5vw, 4rem); }
+  @media (min-width: 900px) { .data-in { grid-template-columns: 1fr 1fr; column-gap: clamp(3rem, 8vw, 8rem); } }
+
+  /* 5. highlights */
+  .hl { padding: var(--section) 0; display: grid; gap: clamp(5rem, 11vw, 10rem); }
+  .hl-head { border-top: 1px solid var(--ink); padding-top: 1.25rem; }
+  .hl-title { font-family: var(--sans); font-weight: 600; font-size: .78rem; letter-spacing: .18em; text-transform: uppercase; }
+  .ft p { max-width: 30rem; }
+  .feat { display: grid; gap: 2rem; }
+
+  .grid6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: .7rem; align-items: start; }
+  .g :global(img) { width: 100%; object-fit: cover; }
+  .g1 { grid-column: 1 / 5; } .g2 { grid-column: 5 / 7; margin-top: 2.5rem; } .g3 { grid-column: 1 / 3; } .g4 { grid-column: 3 / 5; margin-top: 2rem; } .g5 { grid-column: 5 / 7; } .g6 { grid-column: 2 / 6; }
+  .g1 :global(img) { aspect-ratio: 4 / 5; } .g2 :global(img) { aspect-ratio: 3 / 4; } .g3 :global(img) { aspect-ratio: 4 / 3; } .g4 :global(img) { aspect-ratio: 3 / 4; } .g5 :global(img) { aspect-ratio: 3 / 4; } .g6 :global(img) { aspect-ratio: 16 / 10; }
+  @media (min-width: 900px) {
+    .studio { grid-template-columns: 4fr 8fr; column-gap: clamp(3rem, 6vw, 6rem); align-items: start; }
+    .studio .ft { position: sticky; top: 5rem; }
+    .grid6 { grid-template-columns: repeat(12, 1fr); gap: 1rem; }
+    .g1 { grid-column: 1 / 6; } .g2 { grid-column: 6 / 9; margin-top: 4rem; } .g3 { grid-column: 9 / 13; } .g4 { grid-column: 2 / 5; margin-top: 2rem; } .g5 { grid-column: 5 / 8; margin-top: 5rem; } .g6 { grid-column: 8 / 13; margin-top: 1rem; }
+  }
+
+  /* two living spaces: numbered albums, like a "knowledge base" page */
+  .albums { display: grid; gap: 3.5rem; }
+  .album { position: relative; display: grid; }
+  .no { font-family: var(--display); font-weight: 500; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1; color: var(--pink); margin-bottom: .6rem; }
+  .open-album { appearance: none; background: none; border: 0; padding: 0; cursor: zoom-in; text-align: left; position: relative; display: block; }
+  .pair { display: grid; grid-template-columns: 2fr 3fr; gap: .7rem; align-items: end; }
+  .pair :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+  .pair :global(img:first-child) { aspect-ratio: 3 / 4; }
+  .pair :global(img:last-child) { aspect-ratio: 4 / 3; }
+  .open-album:hover .pair :global(img) { transform: scale(1.02); }
+  .more { position: absolute; right: .8rem; top: .8rem; background: #fff; padding: .35rem .6rem; }
+  .a2 .pair { grid-template-columns: 3fr 2fr; }
+  .a2 .pair :global(img:first-child) { order: 2; aspect-ratio: 3 / 4; }
+  .a2 .pair :global(img:last-child) { order: 1; aspect-ratio: 4 / 3; }
+  @media (min-width: 900px) {
+    .living { grid-template-columns: 1fr; gap: 3.5rem; }
+    .albums { grid-template-columns: 1fr 1fr; gap: clamp(3rem, 6vw, 6rem); align-items: start; }
+    .a2 { margin-top: 7rem; }
+  }
+
+  /* catalogue 03: one picture that leads to the link */
+  .cat-photo { position: relative; display: block; text-decoration: none; background: var(--blush); }
+  .cat-photo .out { position: absolute; right: 1rem; bottom: 1rem; width: 3rem; height: 3rem; display: grid; place-items: center; background: #fff; border-radius: 50%; font-size: 1.2rem; transition: background .3s, color .3s; }
+  .cat-photo:hover .out { background: var(--pink); color: #fff; }
+  .catalogue .fh a { text-decoration: none; }
+  .catalogue .fh a:hover { color: var(--pink); }
+  .arrow { font-family: var(--sans); font-size: .6em; }
+  @media (min-width: 900px) {
+    .catalogue { grid-template-columns: 7fr 5fr; column-gap: clamp(3rem, 6vw, 6rem); align-items: end; }
+    .cat-photo :global(img) { max-height: 80svh; object-fit: cover; }
+  }
+
+  /* in the gallery */
+  .gallery { gap: 1.5rem; }
+  .gal-wide :global(img) { aspect-ratio: 3 / 2; object-fit: cover; }
+  .gal-cap { text-align: center; max-width: 34rem; margin: 1rem auto 0; justify-self: center; }
+  .gal-cap p { margin-inline: auto; }
+  .gal-two { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; max-width: 46rem; justify-self: center; width: 100%; margin-top: 1.5rem; }
+  .gal-two :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
+
+  /* 6. closing */
+  .close { padding: clamp(6rem, 14vw, 12rem) 0 0; text-align: center; background: var(--paper); }
+  .cl { font-family: var(--display); font-size: clamp(1.5rem, 3vw, 2.4rem); line-height: 1.3; max-width: 28ch; margin: 0 auto 2rem; text-wrap: balance; }
+  .dream { font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(3.2rem, 11vw, 9.5rem); line-height: .96; letter-spacing: -.035em; max-width: 12ch; margin: clamp(5rem, 14vw, 11rem) auto 0; color: var(--plum); }
+  .next { display: block; width: 3rem; height: clamp(7rem, 16vw, 12rem); margin: 3rem auto 0; position: relative; }
+  .line { position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--ink); transform-origin: top; animation: draw 2.8s var(--ease) infinite; }
+  @keyframes draw { 0% { transform: scaleY(0); } 60%, 100% { transform: scaleY(1); } }
+  @media (prefers-reduced-motion: reduce) { .line { animation: none; } .pair :global(img) { transition: none; } }
+
+  /* album viewer */
+  .viewer { width: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: var(--paper); color: var(--ink); overflow: hidden; opacity: 0; transition: opacity .4s var(--ease); }
+  .viewer.is-open { opacity: 1; }
+  .viewer::backdrop { background: var(--paper); }
+  .vstage { position: absolute; inset: 4rem 1rem 5rem; display: grid; place-items: center; }
+  .vslide { width: 100%; height: 100%; display: grid; place-items: center; }
+  .vslide[hidden] { display: none; }
+  .c1 .vslide :global(img) { width: auto; height: auto; max-width: 100%; max-height: calc(100dvh - 9.5rem); object-fit: contain; }
+  .vx { position: absolute; top: .75rem; right: .75rem; z-index: 2; width: 3rem; height: 3rem; display: grid; place-items: center; background: transparent; border: 0; cursor: pointer; }
+  .vx:hover { color: var(--pink); }
+  .vbar { position: absolute; left: 0; right: 0; bottom: 1rem; display: flex; justify-content: center; align-items: center; gap: 1.25rem; }
+  .vb { width: 3rem; height: 3rem; display: grid; place-items: center; border: 1px solid var(--ink); background: var(--paper); border-radius: 50%; cursor: pointer; }
+  .vb:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+  .vb:disabled { opacity: .3; cursor: default; }
+  .vc { min-width: 5rem; text-align: center; }
+  @media (prefers-reduced-motion: reduce) { .viewer { transition: none; } }
+</style>
+
+<script>
+  // album viewer: opens the whole album, arrows / swipe / keys to move through it
+  const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let opener: HTMLElement | null = null;
+  document.querySelectorAll<HTMLDialogElement>('[data-viewer]').forEach((dlg) => {
+    const slides = [...dlg.querySelectorAll<HTMLElement>('.vslide')];
+    const prev = dlg.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = dlg.querySelector<HTMLButtonElement>('[data-next]')!;
+    const count = dlg.querySelector<HTMLElement>('[data-count]')!;
+    let i = 0;
+    const show = (n: number) => {
+      i = Math.min(slides.length - 1, Math.max(0, n));
+      slides.forEach((s, k) => (s.hidden = k !== i));
+      prev.disabled = i === 0; next.disabled = i === slides.length - 1;
+      count.textContent = `${i + 1} / ${slides.length}`;
+      slides[i].querySelector('img')?.setAttribute('loading', 'eager');
+    };
+    const close = () => {
+      dlg.classList.remove('is-open');
+      const done = () => { dlg.close(); document.documentElement.classList.remove('sk-open'); opener?.focus(); };
+      reduce() ? done() : setTimeout(done, 300);
+    };
+    document.querySelectorAll<HTMLElement>(`[data-album="${dlg.dataset.viewer}"]`).forEach((b) => b.addEventListener('click', () => {
+      opener = b; show(0); dlg.showModal(); document.documentElement.classList.add('sk-open');
+      requestAnimationFrame(() => dlg.classList.add('is-open'));
+    }));
+    prev.addEventListener('click', () => show(i - 1));
+    next.addEventListener('click', () => show(i + 1));
+    dlg.querySelector('.vx')!.addEventListener('click', close);
+    dlg.addEventListener('cancel', (e) => { e.preventDefault(); close(); });
+    dlg.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') show(i + 1); if (e.key === 'ArrowLeft') show(i - 1); });
+    let x0: number | null = null;
+    dlg.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+    dlg.addEventListener('pointerup', (e) => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1)); });
+  });
+</script>

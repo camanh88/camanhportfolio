@@ -83,3 +83,44 @@ export const sidePages: SidePage[] = (() => {
   }
   return out;
 })();
+
+// ---- Chapters that have been designed so far (anchors) ----
+export const BUILT = new Set(['ch-01']);
+
+// ---- Chapter 01: It started with culture ----
+export const ch01 = (() => {
+  const raw = readContent('ch01-it-started-with-culture.md');
+  const bs = blocks(raw);
+  const vis = visible(bs);
+  const h1 = (vis.find((b) => b.t === 'h1') as { text: string }).text;
+  const [num, ...t] = h1.split('·');
+  const sec: Record<string, Block[]> = {};
+  let key = 'top';
+  for (const b of vis) {
+    if (b.t === 'h2') { key = b.text.toLowerCase(); sec[key] = []; continue; }
+    (sec[key] ??= []).push(b);
+  }
+  const ps = (k: string) => (sec[k] ?? []).filter((b): b is Extract<Block, { t: 'p' }> => b.t === 'p').map((b) => b.text);
+  const top = ps('top');
+  // bold lead paragraph followed by a list: [{ lead, items }]
+  const groups: { lead: string; items: string[] }[] = [];
+  const acc = sec['acculturation'] ?? [];
+  for (let i = 0; i < acc.length; i++) {
+    const b = acc[i];
+    if (b.t === 'p' && /^\*\*/.test(b.text)) {
+      const nx = acc[i + 1];
+      groups.push({ lead: leadSplit(b.text).lead, items: nx && nx.t === 'ul' ? nx.items : [] });
+    }
+  }
+  const note = bs.filter((b) => b.t === 'note').map((b) => (b as { text: string }).text).join(' ');
+  return {
+    num: num.trim(), title: t.join('·').trim(),
+    hint: top[0], role: top[1], where: top[2], story: top[3],
+    accTitle: (vis.find((b) => b.t === 'h2') as { text: string }).text, hlTitle: (vis.filter((b) => b.t === 'h2')[1] as { text: string }).text, accSub: ps('acculturation').find((p) => !/^\*\*/.test(p)) ?? '',
+    mission: groups[0], part: groups[1],
+    highlights: ps('highlights').map((p) => leadSplit(p)),
+    closing: ps('closing'),
+    catalogueUrl: /https?:\/\/\S+issuu\S+/.exec(note)?.[0].replace(/[.,;)]+$/, '') ?? '',
+  };
+})();
+export const sidePageBody = (name: string) => sidePages.find((p) => p.slug === slug(name))?.body ?? [];
