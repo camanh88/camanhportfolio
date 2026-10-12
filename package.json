@@ -10,7 +10,8 @@
     "images": "node scripts/optimize-images.mjs",
     "placeholders": "node scripts/placeholders.mjs",
     "predev": "node scripts/placeholders.mjs",
-    "prebuild": "node scripts/placeholders.mjs"
+    "prebuild": "node scripts/placeholders.mjs",
+    "video": "node scripts/video.mjs"
   },
   "dependencies": {
     "@fontsource/allura": "^5.3.0",

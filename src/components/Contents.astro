@@ -3,7 +3,7 @@ import Photo from './Photo.astro';
 import { contents, imageMeta } from '../lib/data';
 import { inline } from '../lib/md';
 // each photo's width as a share of its half of the page (proportions come from the crops themselves)
-const size: Record<string, string> = { 'know-1': '88%', 'know-2-1': '52%', 'know-2-2': '92%', 'know-3': '58%', 'know-4': '44%' };
+const size: Record<string, string> = { 'know-1': '88%', 'know-2-1': '52%', 'know-2-2': '92%', 'know-3': '58%', 'know-4': '78%' };
 // theme colour per entry: [dot / year colour, is it dark enough to colour the year text]
 const theme: [string, boolean][] = [['--teal', true], ['--tomato', true], ['--forest', true], ['--mustard', false], ['--oxblood', true], ['--teal', true]];
 // Photos alternate right, left, right, left, right. A title without photo sits on the same side as the entry after it.
@@ -76,6 +76,7 @@ const nodes = base.map((n, i) => {
   .roles { margin-top: 1.5rem; display: grid; gap: 1.1rem; max-width: 36rem; }
   .rd { display: block; font-size: .82rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--oxblood); margin-bottom: .15rem; }
   .rt { display: block; font-size: 1.05rem; line-height: 1.5; }
+  .rt :global(strong) { font-weight: 600; }
 
   /* reveal one by one */
   :global(.js) .node:not(.in) .pic, :global(.js) .node:not(.in) .txt { opacity: 0; transform: translateY(14px); }
