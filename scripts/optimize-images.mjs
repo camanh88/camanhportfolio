@@ -22,6 +22,7 @@ for (const [id, [rel, alt, opts = {}]] of Object.entries(photos)) {
     const a = opts.crop.aspect;
     let cw = m.width, ch = Math.round(m.width / a);
     if (ch > m.height) { ch = m.height; cw = Math.round(m.height * a); }
+    const z = opts.crop.zoom ?? 1; cw = Math.round(cw / z); ch = Math.round(ch / z); // zoom > 1 = tighter crop
     img = sharp(buf).extract({ left: Math.round((m.width - cw) * (opts.crop.x ?? 0.5)), top: Math.round((m.height - ch) * (opts.crop.y ?? 0.5)), width: cw, height: ch });
   }
   const meta = await sharp(await img.clone().toBuffer()).metadata();

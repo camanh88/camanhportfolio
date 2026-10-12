@@ -13,17 +13,24 @@ export const ui: Record<string, string> = Object.fromEntries(
 
 // ---- Cover ----
 const cp = paras(visible(blocks(readContent('cover.md'))));
-export const cover = { hero: cp[0] ?? '', sub: cp[1] ?? '', quote: cp[2] ?? '', label: cp[3] ?? '', go: cp[4] ?? '' };
+export const cover = { hero: cp[0] ?? '', sub: cp[1] ?? '', quote: cp[2] ?? '', label: cp[3] ?? '' };
 
 // ---- Get to know me (contents), shown as one continuous timeline ----
 export interface Role { date: string; text: string }
-export interface Node { kind: 'chapter' | 'sub'; anchor: string; title: string; hint: string; date: string; roles: Role[]; photo: string }
+export interface Node { kind: 'chapter' | 'sub'; anchor: string; title: string; hint: string; years: string; roles: Role[]; photo: string }
 
 /** "Role · Place · Type · Aug 2023 – Feb 2024" -> { text: "Role · Place · Type", date: "Aug 2023 – Feb 2024" } */
 function splitDate(line: string): Role {
   const i = line.lastIndexOf(' · ');
   const tail = i >= 0 ? line.slice(i + 3) : '';
   return /\d{4}/.test(tail) ? { text: line.slice(0, i), date: tail } : { text: line, date: '' };
+}
+/** only the years, from the earliest to the latest role: "2024 – 2026" */
+function yearsOf(roles: Role[]): string {
+  const ys = roles.flatMap((r) => r.date.match(/\d{4}/g) ?? []).map(Number);
+  if (!ys.length) return '';
+  const [a, b] = [Math.min(...ys), Math.max(...ys)];
+  return a === b ? String(a) : `${a} – ${b}`;
 }
 
 export const contents = (() => {
@@ -35,16 +42,18 @@ export const contents = (() => {
     if (b.t === 'h2') {
       const [n, ...t] = b.text.split('·');
       num = n.trim();
-      cur = { kind: 'chapter', anchor: `ch-${num}`, title: t.join('·').trim(), hint: '', date: '', roles: [], photo: `know-${num}` };
+      cur = { kind: 'chapter', anchor: `ch-${num}`, title: t.join('·').trim(), hint: '', years: '', roles: [], photo: '' };
       nodes.push(cur);
     } else if (b.t === 'h3') {
-      cur = { kind: 'sub', anchor: `ch-${num}`, title: b.text, hint: '', date: '', roles: [], photo: '' };
+      cur = { kind: 'sub', anchor: `ch-${num}`, title: b.text, hint: '', years: '', roles: [], photo: '' };
       nodes.push(cur);
     } else if (b.t === 'p' && cur) cur.hint = b.text;
     else if (b.t === 'ul' && cur) cur.roles.push(...b.items.map(splitDate));
   }
-  // The year range of the first role moves to the top of its entry; later roles keep their own date in front.
-  for (const n of nodes) if (n.roles[0]?.date) { n.date = n.roles[0].date; n.roles[0] = { ...n.roles[0], date: '' }; }
+  for (const n of nodes) n.years = yearsOf(n.roles);
+  // Photos in Cam Anh's numbering: 1 = chapter 01, 2.1 / 2.2 = the two sub-chapters of 02, 3, 4 = chapters 03, 04
+  const ids = ['know-1', '', 'know-2-1', 'know-2-2', 'know-3', 'know-4'];
+  nodes.forEach((n, i) => { n.photo = ids[i] ?? ''; });
   return { title: (bs.find((b) => b.t === 'h1') as { text: string }).text, nodes };
 })();
 

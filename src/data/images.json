@@ -1,34 +1,4 @@
 {
- "cover-1": {
-  "alt": "Cam Anh in a blue shirt and cream trousers, seen from behind, looking up at a large gong between red temple pillars patterned in gold.",
-  "width": 2400,
-  "height": 1600,
-  "widths": [
-   960,
-   1600,
-   2400
-  ]
- },
- "cover-2": {
-  "alt": "The silhouette of Cam Anh in profile against a low sun over the sea, a small swimmer in the water behind her.",
-  "width": 2400,
-  "height": 1600,
-  "widths": [
-   960,
-   1600,
-   2400
-  ]
- },
- "cover-3": {
-  "alt": "Cam Anh in a white t-shirt arranging glazed ceramic bowls on a dark wooden table in a pottery shop with shelves of bowls behind her.",
-  "width": 2400,
-  "height": 1600,
-  "widths": [
-   960,
-   1600,
-   2400
-  ]
- },
  "cover-4": {
   "alt": "The silhouette of Cam Anh from behind, one hand at her ear, against a wall of thick vertical stripes of colourful paint.",
   "width": 2400,
@@ -39,7 +9,7 @@
    2400
   ]
  },
- "know-01": {
+ "know-1": {
   "alt": "Cam Anh in profile, hair in a clip, looking closely at a mirror-polished silver sculpture in a pale gallery.",
   "width": 1600,
   "height": 1067,
@@ -49,7 +19,7 @@
    1600
   ]
  },
- "know-02": {
+ "know-2-1": {
   "alt": "Cam Anh in a pink shirt and apron photographing her reflection with a camera, between shelves of green gift boxes and dried flowers.",
   "width": 1600,
   "height": 2560,
@@ -59,17 +29,17 @@
    1600
   ]
  },
- "know-03": {
+ "know-2-2": {
   "alt": "Cam Anh in a peach t-shirt styling a table of plated dishes beside a large softbox light and a camera on a tripod.",
-  "width": 1284,
-  "height": 778,
+  "width": 1027,
+  "height": 622,
   "widths": [
    480,
    960,
-   1284
+   1027
   ]
  },
- "know-04": {
+ "know-3": {
   "alt": "A parcel wrapped in kraft paper with a cream ribbon and an illustrated card, held in front of a shopfront.",
   "width": 1600,
   "height": 1600,
@@ -79,7 +49,7 @@
    1600
   ]
  },
- "know-05": {
+ "know-4": {
   "alt": "A hand opening gold foil to reveal a dark chocolate bar stamped with an M, on a wooden table.",
   "width": 1600,
   "height": 3478,

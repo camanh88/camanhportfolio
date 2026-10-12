@@ -1,53 +1,67 @@
 ---
 import Photo from './Photo.astro';
 import { cover, ui } from '../lib/data';
-const options = [1, 2, 3, 4];
+// The hero line is set on three lines inside the silhouette: "Hi," / "I’m" / "Cam Anh."
+const w = cover.hero.split(' ');
+const lines = [w[0], w[1], w.slice(2).join(' ')].filter(Boolean);
+// the "I believe" line is written letter by letter
+const words = cover.quote.split(' ');
+let n = 0;
+const written = words.map((word) => [...word].map((ch) => ({ ch, i: n++ })));
 ---
 <header id="cover" class="cover">
-  <!-- row 1: one photo, full width. Open /?cover=2, 3 or 4 to preview the other options. -->
-  <div class="stage" data-cover>
-    {options.map((n) => (
-      <div class="opt" data-opt={n} hidden={n !== 1}>
-        <Photo id={`cover-${n}`} sizes="100vw" loading={n === 1 ? 'eager' : 'lazy'} fetchpriority={n === 1 ? 'high' : 'auto'} />
-      </div>
-    ))}
+  <!-- row 1: full-width photo, the hero line sits in the shadow -->
+  <div class="stage">
+    <Photo id="cover-4" sizes="100vw" loading="eager" fetchpriority="high" />
+    <h1 class="hero">
+      {lines.map((l, i) => <><span class={`l l${i + 1}`}>{l}</span>{' '}</>)}
+    </h1>
     <a class="scroll label" href="#hello"><span>{ui.scroll}</span><i aria-hidden="true"></i></a>
   </div>
 
   <!-- row 2: the words -->
   <div id="hello" class="hello wrap">
-    <h1 class="hero reveal">{cover.hero}</h1>
     <p class="sub reveal">{cover.sub}</p>
-    <p class="quote reveal">{cover.quote}</p>
+    <p class="write" data-write>
+      <span class="sr-only">{cover.quote}</span>
+      <span aria-hidden="true">
+        {written.map((word, wi) => <><span class="w">{word.map((c) => <span class="c" style={`--i:${c.i}`}>{c.ch}</span>)}</span>{wi < written.length - 1 ? ' ' : ''}</>)}
+      </span>
+    </p>
     <p class="tag label reveal">{cover.label}</p>
-    <a class="go label reveal" href="#contents">{cover.go}<span aria-hidden="true">→</span></a>
   </div>
 </header>
 
 <style>
   .cover { background: var(--paper); }
-  .stage { position: relative; background: var(--dark); height: 100svh; min-height: 28rem; }
-  .opt, .opt :global(img) { width: 100%; height: 100%; }
-  .opt :global(img) { object-fit: cover; object-position: 50% 45%; }
-  .opt[data-opt='1'] :global(img) { object-position: 50% 38%; }
-  .stage::after { content: ''; position: absolute; inset: auto 0 0 0; height: 30%; background: linear-gradient(transparent, rgb(0 0 0 / .32)); pointer-events: none; }
+  .stage { position: relative; background: var(--dark); height: 100svh; min-height: 28rem; overflow: hidden; }
+  .stage :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 57% 55%; }
+  .stage::after { content: ''; position: absolute; inset: auto 0 0 0; height: 24%; background: linear-gradient(transparent, rgb(0 0 0 / .3)); pointer-events: none; }
+  .hero { position: absolute; z-index: 1; left: 57%; top: 56%; transform: translate(-50%, -50%); margin: 0; text-align: center; font-family: var(--script); font-weight: 400; color: #fff; line-height: .92; text-shadow: 0 0 .5em rgb(0 0 0 / .4); white-space: nowrap; }
+  .l { display: block; }
+  .l1, .l2 { font-size: clamp(2.4rem, 5.8vw, 5.6rem); }
+  .l2 { margin-top: .35em; }
+  .l3 { font-size: clamp(4rem, 12.5vw, 11.5rem); margin-top: .18em; }
   .scroll { position: absolute; z-index: 1; left: var(--gutter); bottom: 1.75rem; display: flex; align-items: center; gap: .9rem; color: #fff; text-decoration: none; }
   .scroll i { width: 3rem; height: 1px; background: currentColor; transition: width .4s var(--ease); }
   .scroll:hover i { width: 5rem; }
-  .hello { text-align: center; padding: clamp(5rem, 14vw, 11rem) 0 var(--section); display: grid; justify-items: center; }
-  .hero { font-size: clamp(3.4rem, 13vw, 11.5rem); line-height: .92; letter-spacing: -.035em; font-weight: 300; max-width: 12ch; text-wrap: balance; }
-  .sub { font-family: var(--display); font-size: clamp(1.5rem, 3.4vw, 2.5rem); line-height: 1.25; margin-top: clamp(3rem, 7vw, 6rem); max-width: 26ch; text-wrap: balance; }
-  .quote { font-family: var(--display); font-style: italic; font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--ink-soft); margin-top: 1.5rem; max-width: 34ch; }
-  .tag { margin-top: clamp(4rem, 9vw, 7rem); color: var(--ink-soft); }
-  .go { margin-top: 1.25rem; display: inline-flex; gap: .9rem; align-items: center; text-decoration: none; padding: .9rem 0; border-bottom: 1px solid var(--ink); transition: color .3s, gap .3s var(--ease), border-color .3s; }
-  .go:hover { color: var(--accent); border-color: var(--accent); gap: 1.5rem; }
-  @media (max-width: 700px) { .stage { height: 86svh; } }
+
+  .hello { text-align: center; padding: clamp(5rem, 12vw, 9rem) 0 var(--section); display: grid; justify-items: center; }
+  .sub { font-family: var(--display); font-size: clamp(1.7rem, 3.8vw, 2.9rem); line-height: 1.2; max-width: 24ch; text-wrap: balance; }
+  .write { font-family: var(--script); font-size: clamp(2.4rem, 5.4vw, 4.4rem); line-height: 1.12; color: var(--tomato); margin-top: clamp(2.5rem, 6vw, 4.5rem); max-width: 22ch; text-wrap: balance; }
+  .w { display: inline-block; white-space: nowrap; }
+  .c { display: inline-block; opacity: 0; }
+  .write.in .c { animation: ink .7s var(--ease) forwards; animation-delay: calc(var(--i) * 60ms); }
+  @keyframes ink { from { opacity: 0; transform: translateY(.18em) scale(.96); filter: blur(2px); } to { opacity: 1; transform: none; filter: none; } }
+  :global(html:not(.js)) .c { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .c { opacity: 1; } .write.in .c { animation: none; } }
+  .tag { margin-top: clamp(3.5rem, 8vw, 6rem); background: var(--oxblood); color: #fff; font-size: .8rem; letter-spacing: .18em; padding: 1rem 1.6rem; max-width: 100%; }
 </style>
 
 <script>
-  // Preview the four cover options: /?cover=1 ... /?cover=4
-  const want = new URLSearchParams(location.search).get('cover');
-  if (want && /^[1-4]$/.test(want)) {
-    document.querySelectorAll<HTMLElement>('[data-cover] .opt').forEach((o) => { o.hidden = o.dataset.opt !== want; if (!o.hidden) o.querySelector('img')?.setAttribute('loading', 'eager'); });
+  const el = document.querySelector<HTMLElement>('[data-write]');
+  if (el) {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { el.classList.add('in'); io.disconnect(); } }), { threshold: 0.6 });
+    io.observe(el);
   }
 </script>
