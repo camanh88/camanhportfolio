@@ -1,0 +1,33 @@
+---
+import { contents, ui } from '../lib/data';
+import { inline } from '../lib/md';
+---
+{contents.chapters.map((c) => (
+  <section id={`ch-${c.num}`} class="cs" aria-labelledby={`ch-${c.num}-title`}>
+    <div class="wrap row">
+      <a class="back label" href="#contents">{ui.back}</a>
+      <p class="n" aria-hidden="true">{c.num}</p>
+      <div class="t">
+        <h2 id={`ch-${c.num}-title`} set:html={inline(c.title)} />
+        <p class="soon label">{ui['coming soon']}</p>
+      </div>
+    </div>
+  </section>
+))}
+
+<style>
+  .cs { border-top: 1px solid var(--hair); padding: clamp(4rem, 9vw, 8rem) 0; min-height: 70svh; display: grid; align-items: start; background: var(--paper); }
+  .cs:nth-of-type(odd) { background: var(--paper-2); }
+  .row { display: grid; gap: 2rem; align-content: start; }
+  .back { justify-self: end; text-decoration: none; padding: .5rem 0; border-bottom: 1px solid currentColor; color: var(--ink-soft); transition: color .3s; }
+  .back:hover { color: var(--accent); }
+  .n { font-family: var(--display); font-weight: 300; font-size: clamp(5rem, 16vw, 13rem); line-height: .8; color: var(--accent); letter-spacing: -.04em; }
+  h2 { font-size: clamp(2.2rem, 6vw, 5rem); line-height: 1; letter-spacing: -.025em; max-width: 16ch; text-wrap: balance; }
+  .soon { margin-top: 1.5rem; color: var(--ink-soft); }
+  @media (min-width: 900px) {
+    .row { grid-template-columns: 4fr 8fr; column-gap: 2rem; align-items: start; }
+    .back { grid-column: 2; grid-row: 1; }
+    .n { grid-column: 1; grid-row: 2; }
+    .t { grid-column: 2; grid-row: 2; align-self: end; }
+  }
+</style>
