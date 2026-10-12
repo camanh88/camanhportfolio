@@ -15,24 +15,37 @@ export const ui: Record<string, string> = Object.fromEntries(
 const cp = paras(visible(blocks(readContent('cover.md'))));
 export const cover = { hero: cp[0] ?? '', sub: cp[1] ?? '', quote: cp[2] ?? '', label: cp[3] ?? '', go: cp[4] ?? '' };
 
-// ---- Get to know me (contents) ----
-export interface Sub { title: string; hint: string; roles: string[] }
-export interface Chapter { num: string; title: string; hint: string; roles: string[]; subs: Sub[]; photo: string }
+// ---- Get to know me (contents), shown as one continuous timeline ----
+export interface Role { date: string; text: string }
+export interface Node { kind: 'chapter' | 'sub'; anchor: string; title: string; hint: string; date: string; roles: Role[]; photo: string }
+
+/** "Role · Place · Type · Aug 2023 – Feb 2024" -> { text: "Role · Place · Type", date: "Aug 2023 – Feb 2024" } */
+function splitDate(line: string): Role {
+  const i = line.lastIndexOf(' · ');
+  const tail = i >= 0 ? line.slice(i + 3) : '';
+  return /\d{4}/.test(tail) ? { text: line.slice(0, i), date: tail } : { text: line, date: '' };
+}
+
 export const contents = (() => {
   const bs = visible(blocks(readContent('contents.md')));
-  const chapters: Chapter[] = [];
-  let ch: Chapter | null = null;
-  let sub: Sub | null = null;
+  const nodes: Node[] = [];
+  let num = '';
+  let cur: Node | null = null;
   for (const b of bs) {
     if (b.t === 'h2') {
-      const [num, ...t] = b.text.split('·');
-      ch = { num: num.trim(), title: t.join('·').trim(), hint: '', roles: [], subs: [], photo: `know-${num.trim()}` };
-      chapters.push(ch); sub = null;
-    } else if (b.t === 'h3' && ch) { sub = { title: b.text, hint: '', roles: [] }; ch.subs.push(sub); }
-    else if (b.t === 'p' && ch) { (sub ?? ch).hint = b.text; }
-    else if (b.t === 'ul' && ch) { (sub ?? ch).roles.push(...b.items); }
+      const [n, ...t] = b.text.split('·');
+      num = n.trim();
+      cur = { kind: 'chapter', anchor: `ch-${num}`, title: t.join('·').trim(), hint: '', date: '', roles: [], photo: `know-${num}` };
+      nodes.push(cur);
+    } else if (b.t === 'h3') {
+      cur = { kind: 'sub', anchor: `ch-${num}`, title: b.text, hint: '', date: '', roles: [], photo: '' };
+      nodes.push(cur);
+    } else if (b.t === 'p' && cur) cur.hint = b.text;
+    else if (b.t === 'ul' && cur) cur.roles.push(...b.items.map(splitDate));
   }
-  return { title: (bs.find((b) => b.t === 'h1') as { text: string }).text, chapters };
+  // The year range of the first role moves to the top of its entry; later roles keep their own date in front.
+  for (const n of nodes) if (n.roles[0]?.date) { n.date = n.roles[0].date; n.roles[0] = { ...n.roles[0], date: '' }; }
+  return { title: (bs.find((b) => b.t === 'h1') as { text: string }).text, nodes };
 })();
 
 // ---- Introduction: core skills + how I work ----

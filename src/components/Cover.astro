@@ -1,11 +1,16 @@
 ---
 import Photo from './Photo.astro';
 import { cover, ui } from '../lib/data';
+const options = [1, 2, 3, 4];
 ---
 <header id="cover" class="cover">
-  <!-- row 1: one photo, shown whole -->
-  <div class="stage">
-    <Photo id="cover-main" sizes="(min-width: 900px) 40vw, 100vw" loading="eager" fetchpriority="high" />
+  <!-- row 1: one photo, full width. Open /?cover=2, 3 or 4 to preview the other options. -->
+  <div class="stage" data-cover>
+    {options.map((n) => (
+      <div class="opt" data-opt={n} hidden={n !== 1}>
+        <Photo id={`cover-${n}`} sizes="100vw" loading={n === 1 ? 'eager' : 'lazy'} fetchpriority={n === 1 ? 'high' : 'auto'} />
+      </div>
+    ))}
     <a class="scroll label" href="#hello"><span>{ui.scroll}</span><i aria-hidden="true"></i></a>
   </div>
 
@@ -21,9 +26,14 @@ import { cover, ui } from '../lib/data';
 
 <style>
   .cover { background: var(--paper); }
-  .stage { position: relative; background: var(--dark); display: grid; justify-items: center; }
-  .stage :global(img) { width: 100%; height: auto; }
-  .scroll { display: none; }
+  .stage { position: relative; background: var(--dark); height: 100svh; min-height: 28rem; }
+  .opt, .opt :global(img) { width: 100%; height: 100%; }
+  .opt :global(img) { object-fit: cover; object-position: 50% 45%; }
+  .opt[data-opt='1'] :global(img) { object-position: 50% 38%; }
+  .stage::after { content: ''; position: absolute; inset: auto 0 0 0; height: 30%; background: linear-gradient(transparent, rgb(0 0 0 / .32)); pointer-events: none; }
+  .scroll { position: absolute; z-index: 1; left: var(--gutter); bottom: 1.75rem; display: flex; align-items: center; gap: .9rem; color: #fff; text-decoration: none; }
+  .scroll i { width: 3rem; height: 1px; background: currentColor; transition: width .4s var(--ease); }
+  .scroll:hover i { width: 5rem; }
   .hello { text-align: center; padding: clamp(5rem, 14vw, 11rem) 0 var(--section); display: grid; justify-items: center; }
   .hero { font-size: clamp(3.4rem, 13vw, 11.5rem); line-height: .92; letter-spacing: -.035em; font-weight: 300; max-width: 12ch; text-wrap: balance; }
   .sub { font-family: var(--display); font-size: clamp(1.5rem, 3.4vw, 2.5rem); line-height: 1.25; margin-top: clamp(3rem, 7vw, 6rem); max-width: 26ch; text-wrap: balance; }
@@ -31,11 +41,13 @@ import { cover, ui } from '../lib/data';
   .tag { margin-top: clamp(4rem, 9vw, 7rem); color: var(--ink-soft); }
   .go { margin-top: 1.25rem; display: inline-flex; gap: .9rem; align-items: center; text-decoration: none; padding: .9rem 0; border-bottom: 1px solid var(--ink); transition: color .3s, gap .3s var(--ease), border-color .3s; }
   .go:hover { color: var(--accent); border-color: var(--accent); gap: 1.5rem; }
-  @media (min-width: 900px) {
-    .stage { min-height: 100svh; align-items: center; }
-    .stage :global(img) { width: auto; height: 100svh; max-width: 100%; object-fit: contain; }
-    .scroll { display: flex; position: absolute; left: var(--gutter); bottom: 2rem; align-items: center; gap: .9rem; color: rgb(245 241 234 / .75); text-decoration: none; }
-    .scroll i { width: 3.5rem; height: 1px; background: currentColor; transition: width .4s var(--ease); }
-    .scroll:hover i { width: 5.5rem; }
-  }
+  @media (max-width: 700px) { .stage { height: 86svh; } }
 </style>
+
+<script>
+  // Preview the four cover options: /?cover=1 ... /?cover=4
+  const want = new URLSearchParams(location.search).get('cover');
+  if (want && /^[1-4]$/.test(want)) {
+    document.querySelectorAll<HTMLElement>('[data-cover] .opt').forEach((o) => { o.hidden = o.dataset.opt !== want; if (!o.hidden) o.querySelector('img')?.setAttribute('loading', 'eager'); });
+  }
+</script>

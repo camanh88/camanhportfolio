@@ -1,11 +1,11 @@
 :root {
-  --paper: #F5F1EA;
-  --paper-2: #ECE6DA;
+  --paper: #FFFFFF;
+  --paper-2: #F6F5F2;
   --ink: #141312;
   --ink-soft: #57524B;
   --dark: #1C2A23;       /* very deep forest: the one dark block in the system */
   --accent: #7A1F26;     /* oxblood: numbers, underline, hover, nothing else */
-  --hair: rgb(20 19 18 / .18);
+  --hair: rgb(20 19 18 / .16);
   --hair-light: rgb(245 241 234 / .28);
   /* placeholder [ ... ] */
   --ph-bg: #F6EDE6;

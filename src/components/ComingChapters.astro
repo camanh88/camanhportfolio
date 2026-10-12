@@ -2,18 +2,18 @@
 import { contents, ui } from '../lib/data';
 import { inline } from '../lib/md';
 ---
-{contents.chapters.map((c) => (
-  <section id={`ch-${c.num}`} class="cs" aria-labelledby={`ch-${c.num}-title`}>
+{contents.nodes.filter((n) => n.kind === 'chapter').map((c) => { const num = c.anchor.replace('ch-', ''); return (
+  <section id={c.anchor} class="cs" aria-labelledby={`${c.anchor}-title`}>
     <div class="wrap row">
       <a class="back label" href="#contents">{ui.back}</a>
-      <p class="n" aria-hidden="true">{c.num}</p>
+      <p class="n" aria-hidden="true">{num}</p>
       <div class="t">
-        <h2 id={`ch-${c.num}-title`} set:html={inline(c.title)} />
+        <h2 id={`${c.anchor}-title`} set:html={inline(c.title)} />
         <p class="soon label">{ui['coming soon']}</p>
       </div>
     </div>
   </section>
-))}
+); })}
 
 <style>
   .cs { border-top: 1px solid var(--hair); padding: clamp(4rem, 9vw, 8rem) 0; min-height: 70svh; display: grid; align-items: start; background: var(--paper); }

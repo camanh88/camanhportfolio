@@ -1,12 +1,42 @@
 {
- "cover-main": {
+ "cover-1": {
   "alt": "Cam Anh in a blue shirt and cream trousers, seen from behind, looking up at a large gong between red temple pillars patterned in gold.",
-  "width": 1600,
-  "height": 2490,
+  "width": 2400,
+  "height": 1600,
   "widths": [
-   480,
    960,
-   1600
+   1600,
+   2400
+  ]
+ },
+ "cover-2": {
+  "alt": "The silhouette of Cam Anh in profile against a low sun over the sea, a small swimmer in the water behind her.",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   960,
+   1600,
+   2400
+  ]
+ },
+ "cover-3": {
+  "alt": "Cam Anh in a white t-shirt arranging glazed ceramic bowls on a dark wooden table in a pottery shop with shelves of bowls behind her.",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   960,
+   1600,
+   2400
+  ]
+ },
+ "cover-4": {
+  "alt": "The silhouette of Cam Anh from behind, one hand at her ear, against a wall of thick vertical stripes of colourful paint.",
+  "width": 2400,
+  "height": 1600,
+  "widths": [
+   960,
+   1600,
+   2400
   ]
  },
  "know-01": {
@@ -22,7 +52,7 @@
  "know-02": {
   "alt": "Cam Anh in a pink shirt and apron photographing her reflection with a camera, between shelves of green gift boxes and dried flowers.",
   "width": 1600,
-  "height": 1066,
+  "height": 2560,
   "widths": [
    480,
    960,
@@ -30,19 +60,19 @@
   ]
  },
  "know-03": {
-  "alt": "A parcel wrapped in kraft paper with a cream ribbon and an illustrated card, held in front of a shopfront.",
-  "width": 1600,
-  "height": 2133,
+  "alt": "Cam Anh in a peach t-shirt styling a table of plated dishes beside a large softbox light and a camera on a tripod.",
+  "width": 1284,
+  "height": 778,
   "widths": [
    480,
    960,
-   1600
+   1284
   ]
  },
  "know-04": {
-  "alt": "A hand opening gold foil to reveal a dark chocolate bar stamped with an M, on a wooden table.",
+  "alt": "A parcel wrapped in kraft paper with a cream ribbon and an illustrated card, held in front of a shopfront.",
   "width": 1600,
-  "height": 2133,
+  "height": 1600,
   "widths": [
    480,
    960,
@@ -50,13 +80,13 @@
   ]
  },
  "know-05": {
-  "alt": "Cam Anh in a peach t-shirt styling a table of plated dishes beside a large softbox light and a camera on a tripod.",
-  "width": 1284,
-  "height": 2283,
+  "alt": "A hand opening gold foil to reveal a dark chocolate bar stamped with an M, on a wooden table.",
+  "width": 1600,
+  "height": 3478,
   "widths": [
    480,
    960,
-   1284
+   1600
   ]
  },
  "skill-1": {
