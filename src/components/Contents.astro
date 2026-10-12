@@ -3,7 +3,7 @@ import Photo from './Photo.astro';
 import { contents, imageMeta } from '../lib/data';
 import { inline } from '../lib/md';
 // each photo's width as a share of its half of the page (proportions come from the crops themselves)
-const size: Record<string, string> = { 'know-1': '88%', 'know-2-1': '52%', 'know-2-2': '92%', 'know-3': '62%', 'know-4': '38%' };
+const size: Record<string, string> = { 'know-1': '88%', 'know-2-1': '52%', 'know-2-2': '92%', 'know-3': '58%', 'know-4': '44%' };
 // theme colour per entry: [dot / year colour, is it dark enough to colour the year text]
 const theme: [string, boolean][] = [['--teal', true], ['--tomato', true], ['--forest', true], ['--mustard', false], ['--oxblood', true], ['--teal', true]];
 // Photos alternate right, left, right, left, right. A title without photo sits on the same side as the entry after it.
@@ -19,6 +19,7 @@ const nodes = base.map((n, i) => {
 <section id="contents" class="know" aria-labelledby="know-title">
   <div class="wrap">
     <h2 id="know-title" class="title reveal">{contents.title}</h2>
+    <svg class="down" viewBox="0 0 16 64" width="16" height="64" aria-hidden="true"><path d="M8 2v56M2 51l6 9 6-9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
 
     <ol class="tl" data-tl>
       {nodes.map((n) => (
@@ -49,7 +50,10 @@ const nodes = base.map((n, i) => {
 
 <style>
   .know { padding: var(--section) 0; background: var(--paper); }
-  .title { text-align: center; font-size: clamp(2.6rem, 6vw, 5rem); line-height: 1; letter-spacing: -.03em; margin-bottom: clamp(4rem, 9vw, 8rem); }
+  .title { text-align: center; font-size: clamp(1.9rem, 3.8vw, 3rem); line-height: 1; letter-spacing: -.02em; }
+  .down { display: block; margin: 1.75rem auto clamp(3rem, 7vw, 6rem); color: var(--ink); animation: nudge 2.6s var(--ease) infinite; }
+  @keyframes nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+  @media (prefers-reduced-motion: reduce) { .down { animation: none; } }
 
   /* one continuous line through every entry */
   .tl { --p: 0; position: relative; padding: 1.5rem 0 3rem; }
@@ -63,7 +67,7 @@ const nodes = base.map((n, i) => {
   .pic { margin: 0; width: var(--pw); max-width: 100%; }
   .pic :global(img) { width: 100%; height: auto; }
 
-  .year { font-family: var(--sans); font-weight: 500; font-size: .95rem; letter-spacing: .1em; color: var(--y); margin-bottom: .6rem; }
+  .year { display: inline-block; font-family: var(--sans); font-weight: 500; font-size: .95rem; letter-spacing: .1em; color: var(--y); margin-bottom: .7rem; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .4em; }
   .ct { font-family: var(--display); font-weight: 300; font-size: clamp(2.3rem, 6.4vw, 4.2rem); line-height: 1.02; letter-spacing: -.02em; }
   .sub .ct { font-size: clamp(1.9rem, 5vw, 3.4rem); }
   .link { text-decoration: none; transition: color .3s; }
