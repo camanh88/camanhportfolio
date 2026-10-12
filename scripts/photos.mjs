@@ -2,8 +2,8 @@
 // Originals are read-only; optimised copies go to site/public/img/.
 const C = 'Photo/Cover & Introduction';
 export const photos = {
-  // Cover: Opt 1 as a photo, cropped to a 3:2 master for the full-width hero. (A video version exists: scripts/video.mjs.)
-  'cover-1': [`${C}/Cover/Cover Opt 1.heic`, 'Cam Anh in a blue shirt and cream trousers, seen from behind, looking up at a large gong between red temple pillars patterned in gold.', { crop: { aspect: 1.5, y: 0.89 }, hero: true }],
+  // Cover: Cam Anh's own collage (6000x3375), shown whole at 16:9, no cropping
+  'cover-1': [`${C}/COVER.jpg`, 'A collage: Cam Anh in a blue shirt stands between red temple pillars with gold tops, in front of a wall of thick vertical stripes of colourful paint, on a green woven mat, against a red-to-green gradient.', { hero: true }],
   // Get to know me: one photo per timeline entry, cropped to the proportions Cam Anh laid out
   'know-1': [`${C}/Get to know me/1.heic`, 'Cam Anh in profile, hair in a clip, looking closely at a mirror-polished silver sculpture in a pale gallery.', { crop: { aspect: 1.5 } }],
   'know-2-1': [`${C}/Get to know me/2.1.jpg`, 'Cam Anh in a pink shirt and apron photographing her reflection with a camera, between shelves of green gift boxes and dried flowers.', { crop: { aspect: 0.625, x: 0.43 } }],
