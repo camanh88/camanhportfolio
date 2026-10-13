@@ -1,6 +1,6 @@
 ---
 import Slot from './Slot.astro';
-import { ch02, ui, splitDate, type Block } from '../lib/data';
+import { ch02, ui, splitDate, type Block, pages } from '../lib/data';
 import { inline, leadSplit, esc } from '../lib/md';
 
 type Sec = { h: string; lvl: 3 | 4; body: Block[] };
@@ -109,7 +109,7 @@ const p8Items = lists(p8.secs[0]?.body ?? [])[0] ?? [];
 const p9 = ptxt(P['p9'] ?? []);
 ---
 <article id="ch-02" class="c2" aria-labelledby="c2-title">
-  <a class="back label" href="#contents">{ui.back}</a>
+  <a class="back label" href={`${pages.home}#contents`}>{ui.back}</a>
 
   <!-- P1: opening spread -->
   <section class="p1">
@@ -378,7 +378,7 @@ const p9 = ptxt(P['p9'] ?? []);
 <style>
   .c2 { background: var(--paper); position: relative; overflow-x: clip; --pad: clamp(1.25rem, 4vw, 4rem); }
   .c2 figure { margin: 0; }
-  .back { position: sticky; top: .75rem; z-index: 30; width: fit-content; margin: 0 var(--gutter) 0 auto; padding: .7rem 1rem; min-height: 44px; display: flex; align-items: center; text-decoration: none; background: var(--paper); border: 1px solid var(--ink); color: var(--ink); transition: background .3s, color .3s; }
+  .back { position: sticky; top: var(--back-top, .75rem); z-index: 30; width: fit-content; margin: 0 var(--gutter) 0 auto; padding: .7rem 1rem; min-height: 44px; display: flex; align-items: center; text-decoration: none; background: var(--paper); border: 1px solid var(--ink); color: var(--ink); transition: background .3s, color .3s; }
   .back:hover { background: var(--ink); color: var(--paper); }
   .k { font-family: var(--sans); font-weight: 600; font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; }
   .wrap { width: min(100% - 2 * var(--pad), 88rem); margin-inline: auto; }

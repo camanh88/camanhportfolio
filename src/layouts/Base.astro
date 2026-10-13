@@ -31,9 +31,11 @@ import '@fontsource/mynerve/latin-ext-400.css';
 import '@fontsource/mynerve/vietnamese-400.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import { cover, sidePages, ui } from '../lib/data';
 import { inline, textOf } from '../lib/md';
-const title = `${cover.hero} ${cover.label}`;
+const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${cover.hero} ${cover.label}`;
 ---
 <!doctype html>
 <html lang="en">
@@ -47,8 +49,10 @@ const title = `${cover.hero} ${cover.label}`;
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>
-    <a class="skip" href="#contents">{ui.skip}</a>
-    <slot />
+    <a class="skip" href="#main">{ui.skip}</a>
+    <Header current={Astro.props.current} />
+    <div id="main"><slot /></div>
+    <Footer />
 
     <dialog id="sp" class="sp-dialog" aria-labelledby="sp-title" data-soon={ui['coming soon']}>
       <div class="sp-sheet">

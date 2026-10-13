@@ -1,6 +1,6 @@
 ---
 import Photo from './Photo.astro';
-import { ch01, ui, sidePageBody, imageMeta } from '../lib/data';
+import { ch01, ui, sidePageBody, imageMeta, pages } from '../lib/data';
 import { inline } from '../lib/md';
 
 const definition = sidePageBody('Acculturation')[0] ?? '';
@@ -17,7 +17,7 @@ const albums = [
 const count = (k: string) => albums.find((a) => a.key === k)!.ids.length;
 ---
 <article id="ch-01" class="c1" aria-labelledby="c1-title">
-  <a class="back label" href="#contents">{ui.back}</a>
+  <a class="back label" href={`${pages.home}#contents`}>{ui.back}</a>
 
   <!-- PAGE 1 (Layout 1): big 01, one photo, title and words on a colour slide -->
   <section class="p1">
@@ -167,7 +167,7 @@ const count = (k: string) => albums.find((a) => a.key === k)!.ids.length;
 
 <style>
   .c1 { background: var(--paper); position: relative; overflow-x: clip; --pad: clamp(1.25rem, 4vw, 4rem); }
-  .back { position: sticky; top: .75rem; z-index: 30; width: fit-content; margin: 0 var(--gutter) 0 auto; padding: .7rem 1rem; min-height: 44px; display: flex; align-items: center; text-decoration: none; background: var(--paper); border: 1px solid var(--ink); color: var(--ink); transition: background .3s, color .3s; }
+  .back { position: sticky; top: var(--back-top, .75rem); z-index: 30; width: fit-content; margin: 0 var(--gutter) 0 auto; padding: .7rem 1rem; min-height: 44px; display: flex; align-items: center; text-decoration: none; background: var(--paper); border: 1px solid var(--ink); color: var(--ink); transition: background .3s, color .3s; }
   .back:hover { background: var(--ink); color: var(--paper); }
   .c1 :global(img) { display: block; width: 100%; height: auto; }
   .c1 figure { margin: 0; }

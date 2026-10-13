@@ -1,0 +1,243 @@
+---
+import Slot from './Slot.astro';
+import { ch04, ui, pages } from '../lib/data';
+import { inline, esc } from '../lib/md';
+
+const gift = ch04.ps(ch04.giftTitle.toLowerCase());
+const flor = ch04.ps(ch04.florTitle.toLowerCase());
+// the first paragraph: "I give." becomes the giant word
+const g1 = inline(gift[0] ?? '').replace('I give.', '<span class="give">I give.</span>');
+// the box-of-cake paragraph: "a box of cake" is marked
+const g2 = inline(gift[1] ?? '').replace('a box of cake', '<mark class="mk">a box of cake</mark>');
+// the book paragraph: the "[Photo of the page]" placeholder moves under the picture
+const bookRaw = gift[2] ?? '';
+const photoChip = /\[[^\]]+\]/.exec(bookRaw)?.[0] ?? '';
+const g3 = inline(bookRaw.replace(/\s*\[[^\]]+\]/, ''));
+// "I love gifting because ..." is split sentence by sentence for the typographic page
+const sent = (gift[3] ?? '').match(/[^.]+\.(?:["”]?)(?:\s|$)/g)?.map((x) => x.trim()) ?? [gift[3] ?? ''];
+const lovePre = sent[0] ?? '';
+const loveWords = sent.slice(1, 3);        // "Sharing." "Caring."
+const loveSay = sent[3] ?? '';             // Saying "I love you" without saying it.
+const loveEnd = sent.slice(4).join(' ');
+// "We don't just give a gift. We create a connection. And with food, ..."
+const last = (gift[4] ?? '').match(/[^.]+\./g)?.map((x) => x.trim()) ?? [gift[4] ?? ''];
+const connect = last.slice(0, 2);
+const stomach = last.slice(2).join(' ');
+---
+<article id="off-menu" class="om" aria-labelledby="om-title">
+
+  <!-- OPENER: a menu card -->
+  <section class="card-sec">
+    <div class="card">
+      <h1 id="om-title" class="c-title">{ch04.title}</h1>
+      <p class="c-hint">{ch04.hint}</p>
+      <ol class="dishes">
+        <li><a href="#gifting"><span class="dn">01</span><span class="dname">{ch04.giftTitle}</span><span class="lead" aria-hidden="true"></span><span class="dgo" aria-hidden="true">↓</span></a></li>
+        <li><a href="#florist"><span class="dn">02</span><span class="dname">{ch04.florTitle}</span><span class="lead" aria-hidden="true"></span><span class="dgo" aria-hidden="true">↓</span></a></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 01 GIFTING (the one to emphasise) -->
+  <section id="gifting" class="gift" aria-labelledby="gift-title">
+
+    <!-- G1: I give -->
+    <div class="g1">
+      <p class="gnum" aria-hidden="true">01</p>
+      <h2 id="gift-title" class="g-title">{ch04.giftTitle}</h2>
+      <p class="g1-text" set:html={g1} />
+      <div class="g1-pic">
+        <span class="ribbon-v" aria-hidden="true"></span><span class="ribbon-h" aria-hidden="true"></span>
+        <Slot tag="G1" a="4 / 5" tone="pink" />
+      </div>
+      <Slot tag="G2" a="1 / 1" tone="cream" class="g1-small" />
+    </div>
+
+    <!-- G2: a box of cake -->
+    <div class="g2">
+      <p class="g2-text" set:html={g2} />
+      <div class="g2-row">
+        <Slot tag="G3" a="4 / 5" tone="blush" />
+        <Slot tag="G4" a="4 / 5" tone="lime" />
+        <Slot tag="G5" a="4 / 5" tone="cream" />
+      </div>
+    </div>
+
+    <!-- G3: the book -->
+    <div class="g3">
+      <div class="book">
+        <Slot tag="G6" a="3 / 2" tone="cream" class="spine-l" />
+        <Slot tag="G7" a="3 / 4" tone="blush" class="spine-r" />
+        {photoChip && <p class="chip"><span class="ph">{photoChip}</span></p>}
+      </div>
+      <p class="g3-text" set:html={g3} />
+    </div>
+
+    <!-- G4: sharing, caring, "I love you" -->
+    <div class="g4">
+      <p class="l-pre">{lovePre}</p>
+      <p class="l-word w1">{loveWords[0]}</p>
+      <p class="l-word w2">{loveWords[1]}</p>
+      <p class="l-say" set:html={inline(loveSay)} />
+      <p class="l-end">{loveEnd}</p>
+    </div>
+
+    <!-- G5: a connection -->
+    <div class="g5">
+      <span class="g5-ribbon" aria-hidden="true"></span>
+      <div class="g5-in">
+        <p class="c1">{connect[0]}</p>
+        <p class="c2">{connect[1]}</p>
+        <p class="c3">{stomach}</p>
+      </div>
+      <div class="g5-row">
+        <Slot tag="G8" a="1 / 1" tone="cream" />
+        <Slot tag="G9" a="1 / 1" tone="lime" />
+        <Slot tag="G10" a="1 / 1" tone="blush" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 THE FLORIST IN ME: lots of photos and videos -->
+  <section id="florist" class="flor" aria-labelledby="flor-title">
+    <div class="f-head wrap">
+      <p class="gnum" aria-hidden="true">02</p>
+      <h2 id="flor-title" class="f-title">{ch04.florTitle}</h2>
+      <p class="f-text">{flor[0]}</p>
+    </div>
+
+    <div class="f-hero"><Slot tag="F1" a="16 / 9" kind="video" tone="plum" /></div>
+
+    <div class="bento wrap">
+      <Slot tag="F2" a="3 / 4" tone="pink" class="b1" />
+      <Slot tag="F3" a="1 / 1" tone="cream" class="b2" />
+      <Slot tag="F4" a="4 / 3" tone="lime" class="b3" />
+      <Slot tag="F5" a="9 / 16" kind="video" tone="blush" class="b4" />
+      <Slot tag="F6" a="1 / 1" tone="plum" class="b5" />
+      <Slot tag="F7" a="4 / 5" tone="cream" class="b6" />
+      <Slot tag="F8" a="4 / 3" tone="pink" class="b7" />
+    </div>
+
+    <div class="reel" role="group" aria-label={ch04.florTitle}>
+      <ul>
+        {[1, 2, 3, 4, 5, 6].map((n) => <li><Slot tag={`F${n + 8}`} a="9 / 16" kind="video" tone={['blush', 'cream', 'lime', 'pink', 'cream', 'blush'][n - 1] as 'blush'} /></li>)}
+      </ul>
+    </div>
+
+    <div class="f-end wrap">
+      <Slot tag="F15" a="3 / 2" tone="cream" />
+      <Slot tag="F16" a="3 / 2" tone="blush" />
+    </div>
+  </section>
+</article>
+
+<style>
+  .om { background: var(--paper); --pad: clamp(1.25rem, 4vw, 4rem); overflow-x: clip; }
+  .wrap { width: min(100% - 2 * var(--pad), 88rem); margin-inline: auto; }
+  .label { font-family: var(--sans); }
+  .gnum { font-family: var(--display); font-weight: 300; font-size: clamp(5rem, 14vw, 12rem); line-height: .75; letter-spacing: -.04em; }
+
+  /* ---------- opener: a menu card ---------- */
+  .card-sec { padding: clamp(2.5rem, 6vw, 5rem) var(--pad); background: var(--cream); }
+  .card { max-width: 62rem; margin: 0 auto; background: #fff; padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 5vw, 5rem); text-align: center; position: relative; box-shadow: 0 0 0 1px var(--ink), inset 0 0 0 .5rem #fff, inset 0 0 0 calc(.5rem + 1px) var(--ink); }
+  .c-num { color: var(--pink); }
+  .c-title { font-size: clamp(3.4rem, 12vw, 10rem); line-height: .86; letter-spacing: -.05em; font-weight: 300; margin: .5rem 0 0 -.03em; }
+  .c-hint { font-family: var(--display); font-style: italic; font-size: clamp(1.2rem, 2vw, 1.7rem); color: var(--ink-soft); margin: 1.2rem auto 0; max-width: 24em; }
+  .dishes { margin: clamp(2rem, 5vw, 4rem) auto 0; max-width: 44rem; text-align: left; display: grid; gap: 1.2rem; }
+  .dishes a { display: flex; align-items: baseline; gap: .8rem; text-decoration: none; padding: .5rem 0; }
+  .dn { font-size: .75rem; font-weight: 600; letter-spacing: .1em; color: var(--pink); }
+  .dname { font-family: var(--display); font-size: clamp(1.5rem, 3vw, 2.5rem); line-height: 1.1; letter-spacing: -.01em; }
+  .lead { flex: 1; border-bottom: 2px dotted var(--ink); transform: translateY(-.3em); min-width: 1rem; }
+  .dgo { transition: transform .3s var(--ease); }
+  .dishes a:hover .dgo { transform: translateY(5px); }
+  .dishes li:first-child .dname { font-style: italic; color: var(--pink); }
+
+  /* ---------- gifting ---------- */
+  .gift { background: var(--pink); color: #fff; }
+  .g1 { padding: clamp(3rem, 7vw, 7rem) var(--pad); display: grid; gap: 1.6rem; position: relative; }
+  .g1 .gnum { color: var(--cream); }
+  .g-title { font-size: clamp(3rem, 10.5vw, 10rem); line-height: .88; letter-spacing: -.045em; font-weight: 300; max-width: 9ch; }
+  .g1-text { font-family: var(--display); font-size: clamp(1.4rem, 2.6vw, 2.3rem); line-height: 1.22; max-width: 24em; }
+  .g1-text :global(.give) { display: block; font-style: italic; font-size: 2.6em; line-height: .9; letter-spacing: -.04em; color: var(--cream); margin: .15em 0; }
+  .g1-pic { position: relative; max-width: 26rem; }
+  .ribbon-v, .ribbon-h { position: absolute; background: var(--cream); z-index: 2; pointer-events: none; opacity: .92; }
+  .ribbon-v { left: 50%; width: 2.2rem; top: -1rem; bottom: -1rem; transform: translateX(-50%); }
+  .ribbon-h { top: 50%; height: 2.2rem; left: -1rem; right: -1rem; transform: translateY(-50%); }
+  .g1-small { max-width: 12rem; }
+  @media (min-width: 900px) {
+    .g1 { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; row-gap: 1.5rem; min-height: 100svh; align-content: start; }
+    .g1 .gnum { grid-column: 1 / 4; grid-row: 1; }
+    .g-title { grid-column: 1 / 9; grid-row: 2; }
+    .g1-text { grid-column: 1 / 7; grid-row: 3; margin-top: 1rem; }
+    .g1-pic { grid-column: 8 / 12; grid-row: 1 / 4; align-self: center; max-width: none; margin: 2.5rem 0; }
+    .g1-small { grid-column: 12 / 13; grid-row: 3; align-self: end; max-width: none; }
+  }
+
+  .g2 { background: var(--cream); color: var(--ink); padding: var(--section) var(--pad); display: grid; gap: 3rem; }
+  .g2-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.8rem, 4.2vw, 4rem); line-height: 1.08; letter-spacing: -.02em; max-width: 24em; }
+  .g2-text :global(.mk) { background: linear-gradient(transparent 58%, var(--pink) 58% 92%, transparent 92%); color: inherit; padding: 0 .08em; font-style: italic; }
+  .g2-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(.5rem, 2vw, 1.5rem); align-items: start; }
+  .g2-row :global(.slot:nth-child(2)) { margin-top: 2.5rem; } .g2-row :global(.slot:nth-child(3)) { margin-top: 5rem; }
+
+  .g3 { background: var(--plum); color: var(--cream); padding: var(--section) var(--pad); display: grid; gap: 2.5rem; align-items: center; }
+  .book { position: relative; display: grid; grid-template-columns: 1.3fr 1fr; gap: 0; align-items: stretch; box-shadow: 0 30px 60px -30px rgb(0 0 0 / .6); background: #fff; padding: .4rem; }
+  .book :global(.spine-l), .book :global(.spine-r) { height: 100%; aspect-ratio: auto !important; min-height: 16rem; }
+  .book::after { content: ''; position: absolute; left: 56.5%; top: 0; bottom: 0; width: 2rem; transform: translateX(-50%); background: linear-gradient(90deg, transparent, rgb(0 0 0 / .18), transparent); pointer-events: none; }
+  .chip { position: absolute; left: 0; bottom: -2.6rem; }
+  .g3 .ph { background: rgb(246 237 230 / .14); color: var(--blush); box-shadow: inset 0 0 0 1px rgb(235 219 215 / .4); }
+  .g3-text { font-family: var(--display); font-size: clamp(1.7rem, 3.6vw, 3.4rem); line-height: 1.12; letter-spacing: -.02em; max-width: 14em; }
+  .g3-text :global(em) { color: var(--lime); }
+  @media (min-width: 900px) { .g3 { grid-template-columns: 7fr 5fr; column-gap: clamp(3rem, 7vw, 8rem); } }
+
+  .g4 { background: #fff; color: var(--ink); padding: var(--section) var(--pad); max-width: 100%; }
+  .g4 > * { max-width: 70rem; margin-inline: auto; }
+  .l-pre { font-size: clamp(1.05rem, 1.5vw, 1.3rem); max-width: 30rem; margin-left: 0; }
+  .l-word { font-family: var(--display); font-weight: 300; font-size: clamp(4.4rem, 17vw, 16rem); line-height: .84; letter-spacing: -.05em; }
+  .l-word.w1 { color: var(--pink); } .l-word.w2 { color: var(--plum); padding-left: 1.2em; }
+  .l-say { font-family: var(--display); font-style: italic; font-size: clamp(2rem, 6vw, 5.4rem); line-height: 1; letter-spacing: -.03em; margin-top: .4em; padding-left: 0; }
+  .l-say :global(em) { font-style: normal; }
+  .l-end { margin-top: 1.5rem; font-size: clamp(1.05rem, 1.5vw, 1.3rem); max-width: 30rem; margin-left: auto; margin-right: 0; }
+
+  .g5 { position: relative; background: var(--pink); color: #fff; padding: var(--section) var(--pad) clamp(3rem, 6vw, 5rem); overflow: hidden; }
+  .g5-ribbon { position: absolute; left: 50%; top: 0; bottom: 0; width: clamp(3rem, 8vw, 7rem); transform: translateX(-50%); background: rgb(252 239 219 / .22); }
+  .g5-in { position: relative; max-width: 66rem; margin: 0 auto; font-family: var(--display); }
+  .g5 .c1, .g5 .c2 { font-weight: 300; font-size: clamp(2.8rem, 9.4vw, 9rem); line-height: .94; letter-spacing: -.045em; }
+  .g5 .c2 { font-style: italic; color: var(--cream); padding-left: 1em; }
+  .g5 .c3 { font-family: var(--sans); font-size: clamp(1.05rem, 1.6vw, 1.4rem); line-height: 1.55; max-width: 26rem; margin: 2.5rem 0 0 auto; background: var(--pink); padding: .4rem 0; }
+  .g5-row { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; max-width: 48rem; margin: clamp(3rem, 6vw, 5rem) auto 0; }
+
+  /* ---------- florist ---------- */
+  .flor { background: var(--lime); color: var(--ink); padding: var(--section) 0 clamp(2rem, 4vw, 4rem); }
+  .f-head { display: grid; gap: 1.2rem; }
+  .flor .gnum { color: var(--plum); }
+  .f-title { font-size: clamp(3rem, 11vw, 11rem); line-height: .86; letter-spacing: -.05em; font-weight: 300; max-width: 8ch; }
+  .f-title { font-style: italic; }
+  .f-text { font-family: var(--display); font-size: clamp(1.5rem, 2.6vw, 2.4rem); line-height: 1.18; max-width: 20em; }
+  .f-hero { margin: clamp(2.5rem, 6vw, 5rem) 0 0; }
+  .f-hero :global(.slot) { aspect-ratio: 16 / 9; }
+  .bento { display: grid; grid-template-columns: repeat(2, 1fr); gap: .6rem; margin-top: .6rem; align-items: start; }
+  .bento :global(.b3) { grid-column: 1 / -1; }
+  .reel { margin-top: clamp(2rem, 5vw, 4rem); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; padding: 0 var(--pad) 1rem; }
+  .reel ul { display: flex; gap: .6rem; width: max-content; }
+  .reel li { width: min(58vw, 15rem); scroll-snap-align: start; }
+  .f-end { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: 1.5rem; }
+  @media (min-width: 900px) {
+    .f-head { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; align-items: start; }
+    .f-head .gnum { grid-column: 1 / 3; grid-row: 1 / 3; }
+    .f-title { grid-column: 3 / 10; grid-row: 1; }
+    .f-text { grid-column: 8 / 13; grid-row: 2; }
+    .f-hero { margin-top: clamp(3rem, 6vw, 5rem); }
+    .bento { grid-template-columns: repeat(12, 1fr); gap: 1rem; }
+    .bento :global(.b1) { grid-column: 1 / 5; grid-row: 1 / 4; }
+    .bento :global(.b2) { grid-column: 5 / 8; grid-row: 1; }
+    .bento :global(.b3) { grid-column: 8 / 13; grid-row: 1; }
+    .bento :global(.b4) { grid-column: 5 / 7; grid-row: 2 / 4; }
+    .bento :global(.b5) { grid-column: 7 / 10; grid-row: 2; }
+    .bento :global(.b6) { grid-column: 10 / 13; grid-row: 2 / 4; }
+    .bento :global(.b7) { grid-column: 7 / 10; grid-row: 3; }
+    .bento :global(.b5) { align-self: stretch; }
+    .reel li { width: 14rem; }
+    .f-end { gap: 1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .dgo { transition: none; } }
+</style>

@@ -1,0 +1,250 @@
+---
+import Slot from './Slot.astro';
+import Photo from './Photo.astro';
+import { ch05 } from '../lib/data';
+import { inline } from '../lib/md';
+
+const values = ch05.ul('values');
+const intro = ch05.ps('values')[0] ?? '';
+const story = ch05.ps('story')[0] ?? '';
+const vision = ch05.ps('vision');
+const box = ch05.ps('gift box')[0] ?? '';
+const contactP = ch05.ps('contact');
+const contactLine = contactP[0] ?? '';
+const contactLabel = contactP[1] ?? '';
+const contactItems = ch05.ul('contact');
+// the three values: the part that changes, in a different colour per card
+const valueTone = ['pink', 'plum', 'lime'] as const;
+// "It's easy to say I love chocolate. I do: ..." sentence by sentence for the big statement
+const sentences = intro.match(/[^.]+\.(?:\s|$)/g)?.map((x) => x.trim()) ?? [intro];
+const statement = sentences.slice(0, 2).join(' ');
+const turn = sentences[2] ?? '';
+const belong = sentences.slice(3).join(' ');
+// "(to apply to Marou)" stays as written; the story is shown in two beats
+const storyAll = inline(story).replace('going global', '<mark class="mk">going global</mark>');
+// gift box sentence: TASTING GOOD / CONNECTING GOOD get colour
+const boxHtml = inline(box).replace('TASTING GOOD', '<span class="tg">TASTING GOOD</span>').replace('CONNECTING GOOD', '<span class="cg">CONNECTING GOOD</span>');
+const contactHtml = inline(contactLine).replace(';)', '<span class="wink">;)</span>');
+const v1 = vision[0] ?? '';
+const v2 = (vision[1] ?? '').replace('360°', '§');
+const [v2a, v2b] = v2.split('§');
+---
+<article id="why-marou" class="wm" aria-labelledby="wm-title">
+
+  <!-- W1: the road. A jeep drives along the hills as the page is scrolled -->
+  <section class="road-track" data-road>
+    <div class="road-stage">
+      <h1 id="wm-title" class="r-title">{ch05.title}</h1>
+      <p class="r-hint">{ch05.hint}</p>
+      <svg class="hills" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <path class="hill-back" d="M0,190 C160,140 300,130 440,165 C580,200 660,190 800,150 C940,110 1060,100 1180,128 C1290,154 1380,150 1440,130 L1440,300 L0,300 Z" />
+        <path class="hill-front" d="M0,215 C140,190 260,180 400,205 C560,235 640,230 780,200 C920,170 1050,175 1180,200 C1290,220 1380,215 1440,198 L1440,300 L0,300 Z" />
+        <path id="road-line" class="road-line" d="M0,215 C140,190 260,180 400,205 C560,235 640,230 780,200 C920,170 1050,175 1180,200 C1290,220 1380,215 1440,198" />
+        <g class="jeep" data-jeep>
+          <g transform="translate(-34,-40)">
+            <rect x="6" y="14" width="56" height="18" rx="4" class="j-body" />
+            <path d="M16,14 L24,3 H46 L52,14 Z" class="j-top" />
+            <rect x="26" y="0" width="22" height="3" class="j-rack" />
+            <circle cx="18" cy="34" r="7" class="j-wheel" /><circle cx="50" cy="34" r="7" class="j-wheel" />
+            <circle cx="18" cy="34" r="2.5" class="j-hub" /><circle cx="50" cy="34" r="2.5" class="j-hub" />
+          </g>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- W2: values -->
+  <section class="values">
+    <div class="v-in wrap">
+      <p class="v-state">{statement}</p>
+      <p class="v-turn">{turn}</p>
+      <p class="v-belong">{belong}</p>
+    </div>
+    <ul class="v-cards">
+      {values.map((v, i) => (
+        <li class={`vc vc${i + 1}`} style={`--c:var(--${valueTone[i]})`}>
+          <span class="vn" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <p class="vt" set:html={inline(v)} />
+          <Slot tag={`W${i + 1}`} a={i === 2 ? '16 / 10' : '4 / 5'} tone={i === 1 ? 'cream' : i === 2 ? 'plum' : 'blush'} />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- W3: the story. A die-cut photo and a winding road -->
+  <section class="story">
+    <svg class="wind" viewBox="0 0 400 900" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M340,0 C340,120 60,140 80,300 C100,460 360,440 330,620 C300,780 120,760 100,900" />
+    </svg>
+    <div class="story-in wrap">
+      <div class="diecut">
+        <Photo id="w-bike" alt={undefined} sizes="(min-width: 900px) 30vw, 70vw" />
+      </div>
+      <p class="story-text" set:html={storyAll} />
+      <Slot tag="W4" a="3 / 4" tone="cream" class="story-slot" />
+    </div>
+  </section>
+
+  <!-- W4: the vision -->
+  <section class="vision">
+    <p class="ghost" aria-hidden="true">360°</p>
+    <div class="vis-in wrap">
+      <p class="vis1" set:html={inline(v1)} />
+      <p class="vis2">{v2a}<span class="deg">360°</span>{v2b}</p>
+      <div class="vis-slots">
+        <Slot tag="W5" a="1 / 1" tone="blush" />
+        <Slot tag="W6" a="4 / 5" tone="lime" />
+        <Slot tag="W7" a="1 / 1" tone="pink" />
+      </div>
+    </div>
+  </section>
+
+  <!-- W5: the gift box opens -->
+  <section class="box-track" data-box>
+    <div class="box-stage">
+      <p class="bx-text" set:html={boxHtml} />
+      <div class="giftbox" aria-hidden="true">
+        <div class="lid"><span class="band"></span></div>
+        <div class="base"><span class="band"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- W6: contact -->
+  <section id="contact" class="contact" aria-labelledby="ct-title">
+    <div class="ct-in wrap">
+      <h2 id="ct-title" class="ct-line" set:html={contactHtml} />
+      <p class="ct-label label">{contactLabel}</p>
+      <ul class="ct-list">
+        {contactItems.map((t) => <li set:html={inline(t)} />)}
+      </ul>
+    </div>
+    <svg class="end-hills" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,70 C140,40 260,30 400,58 C560,90 640,86 780,56 C920,26 1050,30 1180,56 C1290,78 1380,74 1440,56 L1440,120 L0,120 Z" /></svg>
+  </section>
+</article>
+
+<style>
+  .wm { background: var(--paper); --pad: clamp(1.25rem, 4vw, 4rem); overflow-x: clip; }
+  .wrap { width: min(100% - 2 * var(--pad), 88rem); margin-inline: auto; }
+  .label { font-family: var(--sans); }
+
+  /* ---------- W1 ---------- */
+  .road-track { height: 230svh; position: relative; background: var(--dark); color: #fff; --p: 0; }
+  .road-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; align-content: start; justify-items: center; text-align: center; padding: clamp(4rem, 12svh, 8rem) var(--pad) 0; }
+  .r-num { color: var(--lime); letter-spacing: .2em; }
+  .r-title { font-size: clamp(4.4rem, 17vw, 16rem); line-height: .82; letter-spacing: -.05em; font-weight: 300; margin-top: .4rem; }
+  .r-hint { font-family: var(--display); font-style: italic; font-size: clamp(1.4rem, 3vw, 2.6rem); color: var(--blush); margin-top: 1rem; }
+  .hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: min(46svh, 26rem); }
+  .hill-back { fill: #3f1a47; }
+  .hill-front { fill: var(--plum); }
+  .road-line { fill: none; stroke: var(--lime); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 11; }
+  .jeep .j-body { fill: var(--pink); } .jeep .j-top { fill: var(--cream); } .jeep .j-rack { fill: var(--lime); }
+  .jeep .j-wheel { fill: var(--dark); stroke: var(--cream); stroke-width: 2; } .jeep .j-hub { fill: var(--cream); }
+  @media (prefers-reduced-motion: reduce) { .road-track { height: auto; } .road-stage { position: relative; } }
+
+  /* ---------- W2 ---------- */
+  .values { background: var(--cream); padding: var(--section) 0 clamp(4rem, 8vw, 7rem); }
+  .v-in { display: grid; gap: 1.4rem; }
+  .v-state { font-family: var(--display); font-weight: 300; font-size: clamp(2.4rem, 6.4vw, 6.2rem); line-height: .98; letter-spacing: -.035em; max-width: 14em; }
+  .v-turn { font-family: var(--display); font-style: italic; font-size: clamp(1.8rem, 4vw, 3.6rem); line-height: 1.04; letter-spacing: -.02em; color: var(--pink); max-width: 18em; }
+  .v-belong { max-width: 34rem; font-size: 1.08rem; }
+  .v-cards { margin-top: clamp(3rem, 7vw, 6rem); display: grid; gap: 0; }
+  .vc { background: var(--c); color: #fff; padding: clamp(2rem, 5vw, 4.5rem) var(--pad); display: grid; gap: 1.2rem; align-content: start; }
+  .vc2 { color: #fff; } .vc3 { color: var(--ink); }
+  .vn { font-family: var(--display); font-weight: 300; font-size: clamp(4rem, 9vw, 8rem); line-height: .8; opacity: .8; }
+  .vt { font-family: var(--display); font-weight: 300; font-size: clamp(2rem, 4.6vw, 4.4rem); line-height: 1; letter-spacing: -.03em; }
+  @media (min-width: 900px) {
+    .v-in { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; }
+    .v-state { grid-column: 1 / 11; } .v-turn { grid-column: 4 / 13; } .v-belong { grid-column: 7 / 13; }
+    .v-cards { grid-template-columns: repeat(3, 1fr); }
+    .vc { min-height: 80svh; grid-template-rows: auto 1fr auto; }
+    .vc :global(.slot) { align-self: end; }
+    .vc2 { padding-top: calc(clamp(2rem, 5vw, 4.5rem) + 4rem); } .vc3 { padding-top: calc(clamp(2rem, 5vw, 4.5rem) + 8rem); }
+  }
+
+  /* ---------- W3 ---------- */
+  .story { position: relative; background: var(--blush); padding: var(--section) 0; overflow: hidden; }
+  .wind { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .wind path { fill: none; stroke: var(--plum); stroke-width: 3; stroke-dasharray: 3 14; stroke-linecap: round; opacity: .55; vector-effect: non-scaling-stroke; }
+  .story-in { position: relative; display: grid; gap: 2.5rem; align-items: center; }
+  .diecut { width: min(100%, 22rem); justify-self: center; border-radius: 50% 50% 0 0 / 38% 38% 0 0; background: #fff; padding: .7rem .7rem 0; filter: drop-shadow(8px 10px 0 var(--plum)); }
+  .diecut :global(img) { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 50% 50% 0 0 / 38% 38% 0 0; image-rendering: auto; }
+  .story-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.3vw, 3.1rem); line-height: 1.14; letter-spacing: -.015em; max-width: 24em; }
+  .story-text :global(.mk) { background: linear-gradient(transparent 58%, var(--lime) 58% 92%, transparent 92%); color: inherit; font-style: italic; padding: 0 .08em; }
+  .story-slot { max-width: 18rem; }
+  @media (min-width: 900px) {
+    .story-in { grid-template-columns: 4fr 6fr 2fr; column-gap: clamp(2rem, 5vw, 6rem); }
+    .diecut { width: 100%; justify-self: stretch; }
+    .story-slot { align-self: end; }
+  }
+
+  /* ---------- W4 ---------- */
+  .vision { position: relative; background: #fff; padding: var(--section) 0; overflow: hidden; }
+  .ghost { position: absolute; right: -.05em; top: 0; font-family: var(--display); font-weight: 300; font-size: clamp(14rem, 44vw, 44rem); line-height: .8; letter-spacing: -.06em; color: transparent; -webkit-text-stroke: 1.5px var(--blush); pointer-events: none; user-select: none; }
+  .vis-in { position: relative; display: grid; gap: 2.5rem; }
+  .vis1 { font-family: var(--display); font-weight: 300; font-size: clamp(2rem, 4.8vw, 4.6rem); line-height: 1.04; letter-spacing: -.03em; max-width: 18em; }
+  .vis2 { font-size: clamp(1.1rem, 1.6vw, 1.4rem); line-height: 1.6; max-width: 36rem; }
+  .vis2 .deg { font-family: var(--display); font-style: italic; font-size: 1.9em; line-height: .8; color: var(--pink); padding: 0 .06em; }
+  .vis-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; align-items: start; }
+  .vis-slots :global(.slot:nth-child(2)) { margin-top: 2rem; }
+  @media (min-width: 900px) {
+    .vis-in { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; }
+    .vis1 { grid-column: 1 / 11; } .vis2 { grid-column: 6 / 12; }
+    .vis-slots { grid-column: 1 / 13; margin-top: 2rem; }
+  }
+
+  /* ---------- W5: the gift box ---------- */
+  .box-track { height: 300svh; position: relative; background: var(--dark); color: #fff; --p: 0; }
+  .box-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; place-items: center; }
+  .bx-text { position: absolute; z-index: 1; left: 0; right: 0; top: 38%; transform: translateY(calc(-50% + (1 - min(1, max(0, (var(--p) - .25) * 2))) * 18vh)); text-align: center; padding: 0 var(--pad); font-family: var(--display); font-weight: 300; font-size: clamp(2.2rem, 6.6vw, 6.6rem); line-height: 1; letter-spacing: -.035em; max-width: 14em; margin: 0 auto; opacity: min(1, max(0, calc((var(--p) - .25) * 2.4))); }
+  .bx-text :global(.tg) { color: var(--lime); font-style: italic; }
+  .bx-text :global(.cg) { color: var(--pink); font-style: italic; }
+  .giftbox { --w: min(54vw, 24rem); position: absolute; left: 50%; bottom: 5svh; width: var(--w); height: calc(var(--w) * .9); transform: translateX(-50%) translateY(calc(var(--p) * 9svh)); z-index: 2; }
+  .base { position: absolute; left: 0; right: 0; bottom: 0; height: 74%; background: var(--pink); }
+  .lid { position: absolute; left: -4%; right: -4%; top: 0; height: 28%; background: var(--plum); transform-origin: 0 100%; transform: translateY(calc(var(--p) * -70svh)) rotate(calc(var(--p) * -24deg)); opacity: calc(1 - var(--p) * .6); box-shadow: 0 10px 30px rgb(0 0 0 / .35); }
+  .band { position: absolute; left: 50%; top: 0; bottom: 0; width: 18%; transform: translateX(-50%); background: var(--cream); }
+  .giftbox::before { content: ''; position: absolute; left: 6%; right: 6%; top: 24%; height: 12%; background: radial-gradient(closest-side, var(--lime), transparent); filter: blur(14px); opacity: calc(var(--p) * 1.4); }
+  @media (prefers-reduced-motion: reduce) { .box-track { height: auto; --p: 1 !important; } .box-stage { position: relative; min-height: 100svh; } }
+
+  /* ---------- W6: contact ---------- */
+  .contact { position: relative; background: var(--pink); color: #fff; padding: var(--section) 0 clamp(7rem, 14vw, 11rem); }
+  .ct-in { display: grid; gap: 1.2rem; }
+  .ct-line { font-size: clamp(2.8rem, 8.6vw, 8.4rem); line-height: .94; letter-spacing: -.045em; font-weight: 300; max-width: 12em; }
+  .ct-line :global(.wink) { color: var(--lime); font-style: italic; }
+  .ct-label { margin-top: clamp(2rem, 5vw, 4rem); color: var(--cream); }
+  .ct-list { display: grid; gap: .9rem; }
+  .ct-list li { font-family: var(--display); font-size: clamp(1.8rem, 3.6vw, 3.2rem); line-height: 1.1; padding-bottom: .9rem; border-bottom: 1px solid rgb(255 255 255 / .5); }
+  .ct-list :global(.ph) { font-size: .9em; }
+  .end-hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: clamp(4rem, 9vw, 7rem); fill: var(--dark); display: block; }
+  @media (min-width: 900px) { .ct-in { grid-template-columns: 7fr 5fr; column-gap: 4rem; align-items: end; } .ct-line { grid-row: 1 / 4; } .ct-label { margin-top: 0; } }
+</style>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // scroll progress through a sticky track (0..1) -> --p on the track
+  const progress = (track: HTMLElement, hold = 0.85) => {
+    const r = track.getBoundingClientRect();
+    return Math.min(1, Math.max(0, -r.top / ((r.height - innerHeight) * hold)));
+  };
+  const road = document.querySelector<HTMLElement>('[data-road]');
+  const box = document.querySelector<HTMLElement>('[data-box]');
+  const jeep = document.querySelector<SVGGElement>('[data-jeep]');
+  const line = document.getElementById('road-line') as unknown as SVGPathElement | null;
+  const L = line?.getTotalLength() ?? 0;
+  const place = (p: number) => {
+    if (!jeep || !line) return;
+    const a = line.getPointAtLength(p * L), b = line.getPointAtLength(Math.min(L, p * L + 3));
+    jeep.setAttribute('transform', `translate(${a.x},${a.y}) rotate(${(Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI})`);
+  };
+  if (reduce) { place(0.62); box?.style.setProperty('--p', '1'); }
+  else {
+    const update = () => {
+      if (road) { const p = progress(road); road.style.setProperty('--p', p.toFixed(4)); place(p); }
+      if (box) box.style.setProperty('--p', progress(box, 0.8).toFixed(4));
+    };
+    let raf = 0;
+    addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  }
+</script>

@@ -1,6 +1,6 @@
 ---
 import Slot from './Slot.astro';
-import { ch03, ui, splitDate, contents, type Block } from '../lib/data';
+import { ch03, ui, splitDate, contents, type Block, pages } from '../lib/data';
 import { inline, leadSplit, slug } from '../lib/md';
 
 const ptxt = (bs: Block[]) => bs.filter((b): b is Extract<Block, { t: 'p' }> => b.t === 'p').map((b) => b.text);
@@ -38,7 +38,7 @@ const index = [
 ];
 ---
 <article id="ch-02-kitchens" class="c3" aria-labelledby="c3-title">
-  <a class="back label" href="#contents">{ui.back}</a>
+  <a class="back label" href={`${pages.home}#contents`}>{ui.back}</a>
 
   <!-- OPENER: the title, big and stacked, and an index of the three kitchens -->
   <section class="open">
@@ -172,14 +172,14 @@ const index = [
     </div>
   </section>
 
-  <a class="next" href="#ch-03" aria-label={ui['chapter nav']}><span class="line" aria-hidden="true"></span></a>
+  <a class="next" href={pages.menu} aria-label={ui['chapter nav']}><span class="line" aria-hidden="true"></span></a>
 </article>
 
 <style>
   .c3 { background: var(--paper); position: relative; overflow-x: clip; --pad: clamp(1.25rem, 4vw, 4rem); }
   .c3 figure { margin: 0; }
   .wrap { width: min(100% - 2 * var(--pad), 88rem); margin-inline: auto; }
-  .back { position: sticky; top: .75rem; z-index: 30; width: fit-content; margin: 0 var(--gutter) 0 auto; padding: .7rem 1rem; min-height: 44px; display: flex; align-items: center; text-decoration: none; background: var(--paper); border: 1px solid var(--ink); color: var(--ink); transition: background .3s, color .3s; }
+  .back { position: sticky; top: var(--back-top, .75rem); z-index: 30; width: fit-content; margin: 0 var(--gutter) 0 auto; padding: .7rem 1rem; min-height: 44px; display: flex; align-items: center; text-decoration: none; background: var(--paper); border: 1px solid var(--ink); color: var(--ink); transition: background .3s, color .3s; }
   .back:hover { background: var(--ink); color: var(--paper); }
   strong { font-weight: 600; }
   .num { font-family: var(--display); font-weight: 300; font-size: clamp(5rem, 14vw, 12rem); line-height: .75; letter-spacing: -.04em; }

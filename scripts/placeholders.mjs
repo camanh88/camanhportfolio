@@ -6,7 +6,7 @@ import { PROJECT, ROOT } from './_lib.mjs';
 
 const dir = path.join(PROJECT, 'content');
 const rows = [];
-const USED = ['cover.md', 'contents.md', 'intro-skills.md', 'ch01-it-started-with-culture.md', 'ch02-becoming-whole-in-fb.md', 'ch03-different-kitchens.md', 'side-pages.md']; // files the site renders
+const USED = ['cover.md', 'contents.md', 'intro-skills.md', 'ch01-it-started-with-culture.md', 'ch02-becoming-whole-in-fb.md', 'ch03-different-kitchens.md', 'ch04-off-the-menu.md', 'ch05-why-marou.md', 'nav.md', 'side-pages.md']; // files the site renders
 for (const f of readdirSync(dir).filter((x) => USED.includes(x)).sort()) {
   let skip = false, heading = '';
   readFileSync(path.join(dir, f), 'utf8').split('\n').forEach((line, i) => {

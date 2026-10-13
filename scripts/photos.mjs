@@ -64,4 +64,6 @@ export const photos = {
   'a2-1M2A4172': [`${P1}/PHOTOSHOOT/Morden House/1M2A4172.webp`, 'A pink painting above a sofa, a bouquet and a bronze figure on the round table.', { max: 960 }],
   'a2-484509074': [`${P1}/PHOTOSHOOT/Morden House/484509074_1572131456959459_8757120511498613466_n.jpg`, 'A pink painting above a bouquet and a bronze figure on a coffee table.', { max: 960 }],
   'a2-485176764': [`${P1}/PHOTOSHOOT/Morden House/485176764_1572131920292746_513370614072812891_n.jpg`, 'A living room with a large orange portrait painting above a cream sofa.', { max: 960 }],
+  // ---- Why Marou: Cam Anh's own photo, taken from her Word note (low resolution: 327x440) ----
+  'w-bike': ['site/tmp-img/word-bike.png', 'Cam Anh in a black coat and glasses standing beside an orange motorbike on a mountain road, green hills behind her under a grey sky.', { max: 640 }],
 };

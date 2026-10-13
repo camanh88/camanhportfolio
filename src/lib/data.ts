@@ -2,6 +2,10 @@
 import { blocks, visible, readContent, slug, leadSplit, type Block } from './md';
 import images from '../data/images.json';
 
+// ---- Page addresses ----
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+export const url = (path = '') => `${base}${path.replace(/^\//, '')}`;
+
 export const imageMeta = images as Record<string, { alt: string; width: number; height: number; widths: number[] }>;
 
 const paras = (bs: Block[]) => bs.filter((b): b is Extract<Block, { t: 'p' }> => b.t === 'p').map((b) => b.text);
@@ -17,7 +21,7 @@ export const cover = { hero: cp[0] ?? '', sub: cp[1] ?? '', quote: cp[2] ?? '', 
 
 // ---- Get to know me (contents), shown as one continuous timeline ----
 export interface Role { date: string; text: string }
-export interface Node { kind: 'chapter' | 'sub'; anchor: string; title: string; hint: string; years: string; roles: Role[]; photo: string }
+export interface Node { kind: 'chapter' | 'sub'; anchor: string; href: string; title: string; hint: string; years: string; roles: Role[]; photo: string }
 
 /** "Role · Place · Type · Aug 2023 – Feb 2024" -> { text: "Role · Place · Type", date: "Aug 2023 – Feb 2024" } */
 export function splitDate(line: string): Role {
@@ -33,6 +37,12 @@ function yearsOf(roles: Role[]): string {
   return a === b ? String(a) : `${a} – ${b}`;
 }
 
+const hrefFor = (anchor: string, title: string) => {
+  if (/^ch-0[12]$/.test(anchor) || anchor === 'ch-02-kitchens') return `${url('in-the-making/')}#${anchor}`;
+  if (/off the menu/i.test(title)) return url('off-the-menu/');
+  if (/why marou/i.test(title)) return url('why-marou/');
+  return `#${anchor}`;
+};
 export const contents = (() => {
   const bs = visible(blocks(readContent('contents.md')));
   const nodes: Node[] = [];
@@ -42,15 +52,15 @@ export const contents = (() => {
     if (b.t === 'h2') {
       const [n, ...t] = b.text.split('·');
       num = n.trim();
-      cur = { kind: 'chapter', anchor: `ch-${num}`, title: t.join('·').trim(), hint: '', years: '', roles: [], photo: '' };
+      cur = { kind: 'chapter', anchor: `ch-${num}`, href: '', title: t.join('·').trim(), hint: '', years: '', roles: [], photo: '' };
       nodes.push(cur);
     } else if (b.t === 'h3') {
-      cur = { kind: 'sub', anchor: /different kitchens/i.test(b.text) ? `ch-${num}-kitchens` : `ch-${num}`, title: b.text, hint: '', years: '', roles: [], photo: '' };
+      cur = { kind: 'sub', anchor: /different kitchens/i.test(b.text) ? `ch-${num}-kitchens` : `ch-${num}`, href: '', title: b.text, hint: '', years: '', roles: [], photo: '' };
       nodes.push(cur);
     } else if (b.t === 'p' && cur) cur.hint = b.text;
     else if (b.t === 'ul' && cur) cur.roles.push(...b.items.map(splitDate));
   }
-  for (const n of nodes) n.years = yearsOf(n.roles);
+  for (const n of nodes) { n.years = yearsOf(n.roles); n.href = hrefFor(n.anchor, n.title); }
   // Photos in Cam Anh's numbering: 1 = chapter 01, 2.1 / 2.2 = the two sub-chapters of 02, 3, 4 = chapters 03, 04
   const ids = ['know-1', '', 'know-2-1', 'know-2-2', 'know-3', 'know-4'];
   nodes.forEach((n, i) => { n.photo = ids[i] ?? ''; });
@@ -85,7 +95,7 @@ export const sidePages: SidePage[] = (() => {
 })();
 
 // ---- Chapters that have been designed so far (anchors) ----
-export const BUILT = new Set(['ch-01', 'ch-02', 'ch-02-kitchens']);
+export const BUILT = new Set(['ch-01', 'ch-02', 'ch-02-kitchens', 'ch-03', 'ch-04']);
 
 // ---- Chapter 01: It started with culture ----
 export const ch01 = (() => {
@@ -161,3 +171,44 @@ export const ch03 = (() => {
     facebook: /https?:\/\/\S+facebook\S+?(?=[\s.,;)]|$)/.exec(note)?.[0].replace(/\.$/, '') ?? '',
   };
 })();
+
+// ---- Navigation (content/nav.md) and page addresses ----
+export const nav = (() => {
+  const m: Record<string, { label: string; sub: string }> = {};
+  for (const l of readContent('nav.md').split('\n')) {
+    const x = /^- ([a-z]+):\s*(.*)$/.exec(l);
+    if (!x) continue;
+    const [label, sub = ''] = x[2].split('|').map((t) => t.trim());
+    m[x[1]] = { label, sub };
+  }
+  return m;
+})();
+export const pages = {
+  home: url(''),
+  making: url('in-the-making/'),
+  menu: url('off-the-menu/'),
+  marou: url('why-marou/'),
+  contact: url('why-marou/#contact'),
+};
+
+// ---- Chapter 04 (Off the menu) and 05 (Why Marou?) ----
+function pageDoc(file: string) {
+  const bs = visible(blocks(readContent(file)));
+  const h1 = (bs.find((b) => b.t === 'h1') as { text: string }).text;
+  const [num, ...t] = h1.split('·');
+  const secs: Record<string, Block[]> = {};
+  let key = 'top';
+  for (const b of bs) {
+    if (b.t === 'h2') { key = b.text.trim().toLowerCase(); secs[key] = []; continue; }
+    if (b.t !== 'h1') (secs[key] ??= []).push(b);
+  }
+  const ps = (k: string) => (secs[k] ?? []).filter((b): b is Extract<Block, { t: 'p' }> => b.t === 'p').map((b) => b.text);
+  const ul = (k: string) => (secs[k] ?? []).filter((b): b is Extract<Block, { t: 'ul' }> => b.t === 'ul').flatMap((b) => b.items);
+  return { num: num.trim(), title: t.join('·').trim(), hint: ps('top')[0] ?? '', secs, ps, ul };
+}
+export const ch04 = (() => {
+  const d = pageDoc('ch04-off-the-menu.md');
+  const keys = Object.keys(d.secs);
+  return { ...d, giftTitle: keys[0] ? d.secs[keys[0]] && (visible(blocks(readContent('ch04-off-the-menu.md'))).filter((b) => b.t === 'h2')[0] as { text: string }).text : '', florTitle: (visible(blocks(readContent('ch04-off-the-menu.md'))).filter((b) => b.t === 'h2')[1] as { text: string }).text };
+})();
+export const ch05 = pageDoc('ch05-why-marou.md');

@@ -15,3 +15,7 @@ npm run placeholders   # regenerate PLACEHOLDERS.md
 - Photos: manifest and alt text in `scripts/photos.mjs`. Originals in `../Photo` are never touched.
 - `{{Name}}` = sidepath (text in `content/side-pages.md`), `[text]` = open placeholder, `{{vi: …}}` = handwritten Vietnamese note, `BUILD NOTE:` lines are never rendered.
 - Deploy notes: `DEPLOY.md`. Open placeholders: `PLACEHOLDERS.md`.
+
+## Pages
+- `/` Home (cover, contents timeline, core skills, how I work) · `/in-the-making/` (chapters 01, 02 Lam Yên, Different kitchens) · `/off-the-menu/` · `/why-marou/` (also holds Contact, `#contact`).
+- Header menu words: `content/nav.md`. Photo slots (`Slot.astro`) are empty places with a label like G1 / F3 / W2 until real photos arrive.
