@@ -45,7 +45,7 @@ export const contents = (() => {
       cur = { kind: 'chapter', anchor: `ch-${num}`, title: t.join('·').trim(), hint: '', years: '', roles: [], photo: '' };
       nodes.push(cur);
     } else if (b.t === 'h3') {
-      cur = { kind: 'sub', anchor: `ch-${num}`, title: b.text, hint: '', years: '', roles: [], photo: '' };
+      cur = { kind: 'sub', anchor: /different kitchens/i.test(b.text) ? `ch-${num}-kitchens` : `ch-${num}`, title: b.text, hint: '', years: '', roles: [], photo: '' };
       nodes.push(cur);
     } else if (b.t === 'p' && cur) cur.hint = b.text;
     else if (b.t === 'ul' && cur) cur.roles.push(...b.items.map(splitDate));
@@ -85,7 +85,7 @@ export const sidePages: SidePage[] = (() => {
 })();
 
 // ---- Chapters that have been designed so far (anchors) ----
-export const BUILT = new Set(['ch-01', 'ch-02']);
+export const BUILT = new Set(['ch-01', 'ch-02', 'ch-02-kitchens']);
 
 // ---- Chapter 01: It started with culture ----
 export const ch01 = (() => {
@@ -139,3 +139,25 @@ export const ch02 = (() => {
   return { num: num.trim(), title: t.join('·').trim(), hint: ((pages['top'] ?? []).find((b) => b.t === 'p') as { text: string }).text, pages };
 })();
 export type { Block };
+
+// ---- Chapter 03: Different kitchens (three side projects) ----
+export const ch03 = (() => {
+  const raw = readContent('ch03-different-kitchens.md');
+  const all = blocks(raw);
+  const bs = visible(all);
+  const h1 = (bs.find((b) => b.t === 'h1') as { text: string }).text;
+  const [num, ...t] = h1.split('·');
+  const projects: { name: string; blocks: Block[] }[] = [];
+  let top: Block[] = [];
+  for (const b of bs) {
+    if (b.t === 'h2') projects.push({ name: b.text, blocks: [] });
+    else if (b.t !== 'h1') (projects.length ? projects[projects.length - 1].blocks : top).push(b);
+  }
+  const note = all.filter((b) => b.t === 'note').map((b) => (b as { text: string }).text).join(' ');
+  return {
+    num: num.trim(), title: t.join('·').trim(),
+    hint: (top.find((b) => b.t === 'p') as { text: string } | undefined)?.text ?? '',
+    projects,
+    facebook: /https?:\/\/\S+facebook\S+?(?=[\s.,;)]|$)/.exec(note)?.[0].replace(/\.$/, '') ?? '',
+  };
+})();
