@@ -1,0 +1,654 @@
+---
+import Slot from './Slot.astro';
+import { ch02, ui, splitDate, type Block } from '../lib/data';
+import { inline, leadSplit, esc } from '../lib/md';
+
+type Sec = { h: string; lvl: 3 | 4; body: Block[] };
+const P = ch02.pages;
+// split a page into headed sections (h3 / h4); `pre` = blocks before the first heading
+function sections(key: string) {
+  const pre: Block[] = [], out: Sec[] = [];
+  for (const b of P[key] ?? []) {
+    if (b.t === 'h3' || b.t === 'h4') out.push({ h: b.text, lvl: b.t === 'h3' ? 3 : 4, body: [] });
+    else (out.length ? out[out.length - 1].body : pre).push(b);
+  }
+  return { pre, secs: out };
+}
+const ptxt = (bs: Block[]) => bs.filter((b): b is Extract<Block, { t: 'p' }> => b.t === 'p').map((b) => b.text);
+const lists = (bs: Block[]) => bs.filter((b): b is Extract<Block, { t: 'ul' }> => b.t === 'ul').map((b) => b.items);
+const numTitle = (h: string) => { const m = /^(\d+)\s*[·.]\s*(.*)$/.exec(h); return m ? { n: m[1], t: m[2] } : { n: '', t: h }; };
+const colonSplit = (h: string) => { const i = h.indexOf(':'); return i > 0 ? { label: h.slice(0, i).trim(), title: h.slice(i + 1).trim() } : { label: '', title: h }; };
+
+// ---- P1 ----
+const p1 = sections('p1');
+const p1Name = p1.secs[0]?.h ?? '';
+const p1Lead = ptxt(p1.secs[0]?.body ?? [])[0] ?? '';
+const p1Roles = (lists(p1.secs[0]?.body ?? [])[0] ?? []).map(splitDate);
+const p1p = ptxt(p1.secs[0]?.body ?? []);
+const p1Quote = [p1p[1], p1p[2]];
+const p1Foot = p1p[3];
+
+// ---- P2 ----
+const p2 = sections('p2');
+const p2About = p2.secs[0]?.h ?? '';
+const p2BriefH = p2.secs[1]?.h ?? '';
+const p2Intro = ptxt(p2.secs[1]?.body ?? [])[0] ?? '';
+const p2Items = (lists(p2.secs[1]?.body ?? [])[0] ?? []).map((t) => { const { lead, rest } = leadSplit(t); const m = /^(\d+)\.\s*(.*)$/.exec(lead); return { n: m?.[1] ?? '', lead: m?.[2] ?? lead, rest }; });
+
+// ---- P3 ----
+const p3 = sections('p3');
+const p3Head = numTitle(p3.secs[0]?.h ?? '');
+const p3PackH = p3.secs[1]?.h ?? '';
+const p3PackP = ptxt(p3.secs[1]?.body ?? []);
+const p3Pillars = (lists(p3.secs[1]?.body ?? [])[0] ?? []).map(leadSplit);
+const wrap = p3.secs.find((s) => /wrap/i.test(s.h));
+const bag = p3.secs.find((s) => /bag/i.test(s.h));
+const splitDash = (h: string) => { const i = h.indexOf(' - '); return i > 0 ? { t: h.slice(0, i), sub: h.slice(i + 3) } : { t: h, sub: '' }; };
+
+// ---- P4 ----
+const p4 = sections('p4');
+const p4Head = colonSplit(p4.secs[0]?.h ?? '');
+const p4Items = lists(p4.secs[0]?.body ?? [])[0] ?? [];
+
+// ---- P5 ----
+const p5 = sections('p5');
+const p5Head = numTitle(p5.secs[0]?.h ?? '');
+const p5p = ptxt(p5.secs[0]?.body ?? []);
+const p5Image = colonSplit(p5.secs[1]?.h ?? '');
+const p5ImageP = ptxt(p5.secs[1]?.body ?? [])[0] ?? '';
+const p5Voice = colonSplit(p5.secs[2]?.h ?? '');
+const p5VoiceP = ptxt(p5.secs[2]?.body ?? []);
+// "That small gesture became our signature. Customers ... said, “…” “…”" -> sentence + the two quotes
+const gesture = p5p[3] ?? '';
+const gQuotes = [...gesture.matchAll(/“[^”]+”/g)].map((m) => m[0]);
+const gSentence = gesture.replace(/\s*“[^”]+”/g, '').replace(/\s+$/, '');
+const pullPhrase = 'break it, and pull it apart';
+const kitchenHtml = inline(p5p[1] ?? '').replace(esc(pullPhrase), `<mark class="pull">${esc(pullPhrase)}</mark>`);
+const voiceShop = 'a cordial, welcoming and confident shopkeeper';
+const voiceHtml = inline(p5VoiceP[1] ?? '').replace(esc(voiceShop), `<mark class="pull">${esc(voiceShop)}</mark>`);
+
+// ---- P6 ----
+const p6 = sections('p6');
+const p6Head = numTitle(p6.secs[0]?.h ?? '');
+const p6Seasons = (lists(p6.secs[0]?.body ?? [])[0] ?? []).map(leadSplit);
+const p6Small = p6.secs[1]?.h ?? '';
+const mochi = p6.secs[2];
+const mochiHead = (() => { const i = (mochi?.h ?? '').indexOf(' · '); return i > 0 ? { y: mochi!.h.slice(0, i), t: mochi!.h.slice(i + 3) } : { y: '', t: mochi?.h ?? '' }; })();
+const mochiP = ptxt(mochi?.body ?? []);
+const mochiResults = lists(mochi?.body ?? [])[0] ?? [];
+const gia = p6.secs[3];
+const giaHead = splitDash(gia?.h ?? '');
+const giaItems = lists(gia?.body ?? [])[0] ?? [];
+const giaP = ptxt(gia?.body ?? []);
+
+// ---- P7 ----
+const p7 = sections('p7');
+const p7Head = numTitle(p7.secs[0]?.h ?? '');
+const p7Body = p7.secs[0]?.body ?? [];
+const years: { y: string; name: string; items: string[] }[] = [];
+for (let i = 0; i < p7Body.length; i++) {
+  const b = p7Body[i];
+  if (b.t === 'p') {
+    const t = b.text.replace(/^\*\*|\*\*$/g, '');
+    const j = t.indexOf(' · ');
+    const nx = p7Body[i + 1];
+    years.push({ y: j > 0 ? t.slice(0, j) : t, name: j > 0 ? t.slice(j + 3) : '', items: nx && nx.t === 'ul' ? nx.items : [] });
+  }
+}
+
+// ---- P8 ----
+const p8 = sections('p8');
+const p8Raw = p8.secs[0]?.h ?? '';
+const p8Num = numTitle(p8Raw);
+const p8Parts = p8Num.t.split('/').map((x) => x.trim());
+const p8Title = p8Parts[p8Parts.length - 1];            // the big words: "What changed"
+const p8Pre = p8Parts.slice(0, -1).join(' / ');          // the small words before it, kept as written
+const p8Items = lists(p8.secs[0]?.body ?? [])[0] ?? [];
+
+// ---- P9 ----
+const p9 = ptxt(P['p9'] ?? []);
+---
+<article id="ch-02" class="c2" aria-labelledby="c2-title">
+  <a class="back label" href="#contents">{ui.back}</a>
+
+  <!-- P1: opening spread -->
+  <section class="p1">
+    <header class="p1-head">
+      <p class="p1-num label">{ch02.num}</p>
+      <h2 id="c2-title" class="p1-title">{ch02.title}</h2>
+      <p class="p1-hint">{ch02.hint}</p>
+    </header>
+    <h3 class="p1-giant">{p1Name}</h3>
+    <figure class="p1-slot"><Slot tag="1.1" a="3 / 4" tone="pink" /></figure>
+    <div class="p1-side">
+      <p class="p1-lead" set:html={inline(p1Lead)} />
+      <ul class="p1-roles">
+        {p1Roles.map((r) => <li><span class="d">{r.date}</span><span class="r">{r.text}</span></li>)}
+      </ul>
+    </div>
+    <blockquote class="p1-quote">
+      <p set:html={inline(p1Quote[0] ?? '')} />
+      <p set:html={inline(p1Quote[1] ?? '')} />
+    </blockquote>
+    <p class="p1-foot" set:html={inline(p1Foot ?? '')} />
+  </section>
+
+  <!-- P2: about + the brief -->
+  <section class="p2">
+    <div class="p2-about">
+      <h3 class="k">{p2About}</h3>
+      <Slot tag="2.1" a="1 / 1" tone="cream" />
+    </div>
+    <div class="p2-brief">
+      <h3 class="p2-h">{p2BriefH}</h3>
+      <p class="p2-intro" set:html={inline(p2Intro)} />
+      <ol class="p2-items">
+        {p2Items.map((it) => (
+          <li><span class="n" aria-hidden="true">{it.n}</span><div><h4 class="il">{it.lead}</h4><p set:html={inline(it.rest)} /></div></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- P3: gift worth owning: packaging, the wrap, the signature bag -->
+  <section class="p3">
+    <header class="p3-head">
+      <p class="p3-num" aria-hidden="true">{p3Head.n}</p>
+      <h3 class="p3-title">{p3Head.t}</h3>
+    </header>
+
+    <div class="p3-pack">
+      <div class="p3-packtext">
+        <h4 class="k">{p3PackH}</h4>
+        <p class="p3-want">{p3PackP[0]}</p>
+        <ul class="pillars">
+          {p3Pillars.map((p, i) => <li class={`pl pl${i + 1}`}><h5>{p.lead}</h5><p set:html={inline(p.rest)} /></li>)}
+        </ul>
+      </div>
+      <div class="p3-ba">
+        <Slot tag="3.1" a="3 / 4" tone="cream" />
+        <span class="arrow" aria-hidden="true">→</span>
+        <Slot tag="3.2" a="3 / 4" tone="pink" />
+      </div>
+      <p class="p3-renewed" set:html={inline(p3PackP[1] ?? '')} />
+    </div>
+
+    {wrap && (
+      <div class="p3-wrap">
+        <h4 class="h4i">{splitDash(wrap.h).t}<span class="sub">{splitDash(wrap.h).sub}</span></h4>
+        <div class="stages">
+          <div class="stage s1"><span class="no label">1</span><p set:html={inline(ptxt(wrap.body)[0] ?? '')} /><Slot tag="3.3" a="4 / 3" /></div>
+          <div class="stage s2"><span class="no label">2</span><p set:html={inline(ptxt(wrap.body)[1] ?? '')} /><Slot tag="3.4" a="4 / 3" tone="lime" /></div>
+        </div>
+      </div>
+    )}
+
+    {bag && (
+      <div class="p3-bag">
+        <div class="bagtext">
+          <h4 class="h4i">{splitDash(bag.h).t}<span class="sub">{splitDash(bag.h).sub}</span></h4>
+          <p set:html={inline(ptxt(bag.body)[0] ?? '')} />
+          <p class="big" set:html={inline(ptxt(bag.body)[1] ?? '')} />
+          <p set:html={inline(ptxt(bag.body)[2] ?? '')} />
+        </div>
+        <div class="bagpics">
+          <Slot tag="3.5" a="1 / 1" tone="cream" class="b1" />
+          <Slot tag="3.6" a="3 / 4" tone="pink" class="b2" />
+          <Slot tag="3.7" a="1 / 1" tone="lime" class="b3" />
+        </div>
+      </div>
+    )}
+  </section>
+
+  <!-- P4: brand's image, a wall of photos -->
+  <section class="p4">
+    <div class="wall">
+      <Slot tag="4.1" a="4 / 5" class="w1" tone="cream" />
+      <Slot tag="4.2" a="1 / 1" class="w2" tone="pink" />
+      <Slot tag="4.3" a="3 / 4" class="w3" tone="blush" />
+      <Slot tag="4.4" a="4 / 3" class="w4" tone="lime" />
+      <Slot tag="4.5" a="3 / 4" class="w5" tone="cream" />
+      <Slot tag="4.6" a="1 / 1" class="w6" tone="blush" />
+      <div class="p4-text">
+        <p class="k">{p4Head.label}</p>
+        <h3 class="p4-title">{p4Head.title}</h3>
+        <ul class="p4-items">
+          {p4Items.map((t, i) => <li class={`i${i + 1}`}><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span set:html={inline(t)} /></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- P5: THE HERO. "Show it the way it's meant to be enjoyed": a mooncake that breaks apart as you scroll -->
+  <section class="p5" data-pull>
+    <div class="pull-track">
+      <div class="stick">
+        <p class="h5-num" aria-hidden="true">{p5Head.n}</p>
+        <h3 class="h5-title">{p5Head.t}</h3>
+        <span class="filling" aria-hidden="true"></span>
+        <div class="moon" aria-hidden="true">
+          <div class="half hl"><div class="disc"><Slot tag="5.1" a="1 / 1" round tone="cream" /></div></div>
+          <div class="half hr"><div class="disc"><Slot tag="5.1" a="1 / 1" round tone="cream" /></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p5-kitchen wrap">
+      <p class="owner" set:html={inline(p5p[0] ?? '')} />
+      <Slot tag="5.2" a="4 / 5" class="k1" />
+      <div class="kt">
+        <p set:html={kitchenHtml} />
+        <p class="shot" set:html={inline(p5p[2] ?? '')} />
+      </div>
+      <Slot tag="5.3" a="3 / 4" class="k2" tone="pink" />
+      <Slot tag="5.4" a="3 / 4" class="k3" tone="lime" />
+    </div>
+
+    <div class="p5-signature">
+      <div class="sig-in">
+        <p class="gs">{gSentence}</p>
+        {gQuotes.map((q, i) => <p class={`gq gq${i + 1}`}>{q}</p>)}
+      </div>
+    </div>
+
+    <div class="p5-library wrap">
+      <p class="lib-text" set:html={inline(p5p[4] ?? '')} />
+      <div class="reels">
+        {[1, 2, 3, 4, 5].map((n) => <Slot tag={`5.${n + 4}`} a="9 / 16" kind="video" class={`r${n}`} tone={n % 2 ? 'blush' : 'cream'} />)}
+      </div>
+    </div>
+
+    <div class="p5-two wrap">
+      <div class="reg">
+        <p class="k">{p5Image.label}</p>
+        <h4 class="reg-t">{p5Image.title}</h4>
+        <p class="reg-p" set:html={inline(p5ImageP)} />
+      </div>
+      <Slot tag="5.10" a="4 / 5" tone="cream" class="reg-a" />
+      <Slot tag="5.11" a="4 / 5" tone="plum" class="reg-b" />
+    </div>
+
+    <div class="p5-voice">
+      <div class="voice-in wrap">
+        <div class="vt">
+          <p class="k">{p5Voice.label}</p>
+          <h4 class="vh">{p5Voice.title}</h4>
+          <p set:html={inline(p5VoiceP[0] ?? '')} />
+          <p class="vsecond" set:html={voiceHtml} />
+        </div>
+        <p class="vnote" set:html={inline(p5VoiceP[2] ?? '')} />
+        <Slot tag="5.12" a="4 / 5" class="vslot" tone="blush" />
+      </div>
+    </div>
+  </section>
+
+  <!-- P6: keep the season going -->
+  <section class="p6">
+    <header class="p6-head wrap">
+      <p class="p6-num" aria-hidden="true">{p6Head.n}</p>
+      <h3 class="p6-title">{p6Head.t}</h3>
+    </header>
+    <div class="p6-cards wrap">
+      {p6Seasons.map((s, i) => <article class={`sc sc${i + 1}`}><h4>{s.lead}</h4><p set:html={inline(s.rest)} /></article>)}
+    </div>
+    <p class="p6-strip label">{p6Small}</p>
+
+    <div class="mochi wrap">
+      <div class="mo-head"><p class="mo-y">{mochiHead.y}</p><h4 class="mo-t">{mochiHead.t}</h4></div>
+      <div class="mo-p">
+        <p set:html={inline(mochiP[0] ?? '')} />
+        <p set:html={inline(mochiP[1] ?? '')} />
+      </div>
+      <div class="phones">
+        <Slot tag="6.1" a="9 / 16" kind="video" tone="pink" />
+        <Slot tag="6.2" a="9 / 16" kind="video" tone="cream" />
+        <Slot tag="6.3" a="9 / 16" kind="video" tone="lime" />
+      </div>
+      <aside class="results">
+        <p class="rl label" set:html={inline(mochiP[2] ?? '')} />
+        <ul>{mochiResults.map((t) => <li set:html={inline(t)} />)}</ul>
+      </aside>
+    </div>
+
+    <div class="gia wrap">
+      <Slot tag="6.4" a="4 / 3" class="g1" tone="cream" />
+      <Slot tag="6.5" a="3 / 4" class="g2" tone="pink" />
+      <div class="gt">
+        <h4 class="gh">{giaHead.t}</h4>
+        <p class="gsub">{giaHead.sub}</p>
+        <ul class="gl">{giaItems.map((t) => <li set:html={inline(t)} />)}</ul>
+        <p class="gp" set:html={inline(giaP[0] ?? '')} />
+      </div>
+    </div>
+  </section>
+
+  <!-- P7: the Mid-Autumn seasons, three panels -->
+  <section class="p7" aria-labelledby="p7-title">
+    <header class="p7-head wrap">
+      <p class="p7-num" aria-hidden="true">{p7Head.n}</p>
+      <h3 id="p7-title" class="p7-title">{p7Head.t}</h3>
+    </header>
+    <div class="panels">
+      {years.map((y, i) => (
+        <article class={`panel y${i + 1}`}>
+          <p class="yr">{y.y}</p>
+          <h4 class="yn">{y.name}</h4>
+          <ul class="yl">{y.items.map((t) => <li set:html={inline(t)} />)}</ul>
+          <Slot tag={`7.${i + 1}`} a="3 / 4" tone={i === 1 ? 'cream' : 'blush'} />
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- P8: what changed -->
+  <section class="p8">
+    <div class="p8-in wrap">
+      <header class="p8-head">
+        <p class="p8-num" aria-hidden="true">{p8Num.n}</p>
+        {p8Pre && <p class="k p8-pre">{p8Pre}</p>}
+        <h3 class="p8-title">{p8Title}</h3>
+      </header>
+      <ol class="p8-list">
+        {p8Items.map((t, i) => <li class={`it it${i + 1}`}><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><p set:html={inline(t)} /></li>)}
+      </ol>
+    </div>
+    <div class="p8-slots wrap">
+      <Slot tag="8.1" a="1 / 1" tone="cream" />
+      <Slot tag="8.2" a="1 / 1" tone="pink" />
+      <Slot tag="8.3" a="1 / 1" tone="lime" />
+    </div>
+  </section>
+
+  <!-- P9: rooted -->
+  <footer class="p9">
+    <div class="p9-in wrap">
+      <Slot tag="9.1" a="4 / 5" tone="plum" class="p9-slot" />
+      <div class="p9-text">
+        <span class="qm" aria-hidden="true">“</span>
+        <p class="a" set:html={inline((p9[0] ?? '').replace(/^“/, ''))} />
+        <p set:html={inline(p9[1] ?? '')} />
+        <p class="aside" set:html={inline(p9[2] ?? '')} />
+        <p class="end" set:html={inline((p9[3] ?? '').replace(/”$/, ''))} />
+      </div>
+    </div>
+    <a class="next" href="#ch-03" aria-label={ui['chapter nav']}><span class="line" aria-hidden="true"></span></a>
+  </footer>
+</article>
+
+<style>
+  .c2 { background: var(--paper); position: relative; overflow-x: clip; --pad: clamp(1.25rem, 4vw, 4rem); }
+  .c2 figure { margin: 0; }
+  .back { position: sticky; top: .75rem; z-index: 30; width: fit-content; margin: 0 var(--gutter) 0 auto; padding: .7rem 1rem; min-height: 44px; display: flex; align-items: center; text-decoration: none; background: var(--paper); border: 1px solid var(--ink); color: var(--ink); transition: background .3s, color .3s; }
+  .back:hover { background: var(--ink); color: var(--paper); }
+  .k { font-family: var(--sans); font-weight: 600; font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; }
+  .wrap { width: min(100% - 2 * var(--pad), 88rem); margin-inline: auto; }
+  strong { font-weight: 600; }
+
+  /* ---------- P1 ---------- */
+  .p1 { margin-top: -2.75rem; background: var(--cream); padding: 6.5rem var(--pad) clamp(3rem, 6vw, 5rem); display: grid; gap: 1.75rem; position: relative; }
+  .p1-num { color: var(--pink); }
+  .p1-title { font-size: clamp(1.6rem, 3vw, 2.8rem); line-height: 1.05; font-weight: 400; max-width: 14ch; margin-top: .6rem; }
+  .p1-hint { font-family: var(--display); font-style: italic; font-size: clamp(1.1rem, 1.5vw, 1.4rem); margin-top: .9rem; color: var(--ink-soft); max-width: 22ch; }
+  .p1-giant { font-size: clamp(5.4rem, 24vw, 19rem); line-height: .8; letter-spacing: -.05em; font-weight: 300; color: var(--pink); margin: .2em 0 0 -.04em; position: relative; z-index: 2; }
+  .p1-slot { width: min(78%, 22rem); justify-self: end; margin-top: -4rem; }
+  .p1-lead { font-weight: 400; font-size: clamp(1.4rem, 2.4vw, 2.1rem); font-family: var(--display); line-height: 1.12; }
+  .p1-lead :global(strong) { font-weight: 600; }
+  .p1-roles { margin-top: 1.4rem; display: grid; gap: .9rem; }
+  .p1-roles .d { display: block; font-size: .72rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--plum); }
+  .p1-roles .r { display: block; font-size: 1rem; line-height: 1.4; }
+  .p1-quote { margin: 0; font-family: var(--display); font-style: italic; font-size: clamp(1.4rem, 2.6vw, 2.3rem); line-height: 1.22; display: grid; gap: .8rem; max-width: 28ch; color: var(--plum); }
+  .p1-foot { font-size: .98rem; line-height: 1.55; max-width: 26rem; border-top: 1px solid var(--ink); padding-top: .9rem; }
+  .p1-foot :global(strong) { background: linear-gradient(transparent 62%, var(--lime) 62% 92%, transparent 92%); padding: 0 .1em; font-weight: 600; }
+  @media (min-width: 900px) {
+    .p1 { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; row-gap: 0; min-height: 100svh; align-content: start; }
+    .p1-head { grid-column: 1 / 6; grid-row: 1; }
+    .p1-giant { grid-column: 1 / 10; grid-row: 2; align-self: start; margin-top: clamp(1.5rem, 5vw, 5rem); font-size: clamp(8rem, 17vw, 17rem); }
+    .p1-slot { grid-column: 9 / 13; grid-row: 1 / 4; width: 100%; margin: 0; z-index: 1; }
+    .p1-side { grid-column: 1 / 5; grid-row: 3; margin-top: clamp(2rem, 4vw, 4rem); }
+    .p1-quote { grid-column: 5 / 9; grid-row: 3; margin-top: clamp(2rem, 4vw, 4rem); }
+    .p1-foot { grid-column: 9 / 13; grid-row: 4; margin-top: 2rem; }
+  }
+
+  /* ---------- P2 ---------- */
+  .p2 { display: grid; }
+  .p2-about { background: var(--pink); color: #fff; padding: clamp(3rem, 6vw, 6rem) var(--pad); display: grid; gap: 2rem; align-content: start; }
+  .p2-about .k { font-size: .85rem; }
+  .p2-brief { padding: clamp(3rem, 6vw, 6rem) var(--pad); }
+  .p2-h { font-size: clamp(3rem, 8vw, 7rem); line-height: .92; letter-spacing: -.035em; font-weight: 300; }
+  .p2-intro { margin-top: 1.6rem; max-width: 30rem; font-size: 1.05rem; }
+  .p2-items { margin-top: 2.5rem; display: grid; }
+  .p2-items li { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1rem; align-items: start; padding: 1.4rem 0; border-top: 1px solid var(--ink); }
+  .p2-items li:last-child { border-bottom: 1px solid var(--ink); }
+  .p2-items .n { font-family: var(--display); font-weight: 300; font-size: clamp(3.4rem, 6vw, 5.4rem); line-height: .8; color: var(--pink); }
+  .p2-items li:nth-child(2) .n { color: var(--plum); } .p2-items li:nth-child(3) .n { color: var(--lime); }
+  .il { font-family: var(--display); font-weight: 600; font-size: clamp(1.5rem, 2.3vw, 2.1rem); line-height: 1.05; margin-bottom: .45rem; }
+  @media (min-width: 900px) { .p2 { grid-template-columns: 5fr 7fr; min-height: 90svh; } }
+
+  /* ---------- P3 ---------- */
+  .p3 { padding: var(--section) var(--pad); display: grid; gap: clamp(5rem, 10vw, 9rem); }
+  .p3-head { display: flex; align-items: baseline; gap: clamp(1rem, 3vw, 3rem); border-top: 1px solid var(--ink); padding-top: 1.2rem; }
+  .p3-num { font-family: var(--display); font-weight: 300; font-size: clamp(5rem, 14vw, 12rem); line-height: .75; color: var(--pink); }
+  .p3-title { font-size: clamp(2.2rem, 6.2vw, 6rem); line-height: .98; letter-spacing: -.03em; font-weight: 400; max-width: 11ch; }
+  .p3-pack { display: grid; gap: 2.5rem; }
+  .p3-want { font-family: var(--display); font-size: clamp(1.4rem, 2.2vw, 1.9rem); margin: .8rem 0 1.5rem; font-style: italic; }
+  .pillars { display: grid; gap: 1rem; }
+  .pl { border-top: 6px solid var(--c, var(--pink)); padding-top: .9rem; }
+  .pl1 { --c: var(--pink); } .pl2 { --c: var(--plum); } .pl3 { --c: var(--lime); }
+  .pl h5 { font-family: var(--display); font-weight: 600; font-size: 1.5rem; line-height: 1.05; margin-bottom: .3rem; }
+  .p3-ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: .8rem; align-items: center; }
+  .arrow { font-size: 2rem; color: var(--pink); }
+  .p3-renewed { font-family: var(--display); font-size: clamp(1.5rem, 2.6vw, 2.4rem); line-height: 1.2; max-width: 26ch; }
+  .h4i { font-family: var(--display); font-style: italic; font-weight: 400; font-size: clamp(1.8rem, 3.4vw, 3rem); line-height: 1.05; }
+  .h4i .sub { display: block; font-family: var(--sans); font-style: normal; font-weight: 500; font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; margin-top: .6rem; color: var(--ink-soft); }
+  .stages { display: grid; gap: 2.5rem; margin-top: 2rem; }
+  .stage { display: grid; gap: 1rem; position: relative; }
+  .stage .no { color: var(--pink); }
+  .s2 { background: var(--cream); padding: 1.4rem; }
+  .p3-bag { display: grid; gap: 2.5rem; }
+  .bagtext { display: grid; gap: 1rem; align-content: start; max-width: 34rem; }
+  .bagtext .big { font-family: var(--display); font-size: clamp(1.4rem, 2.1vw, 1.9rem); line-height: 1.25; color: var(--plum); }
+  .bagpics { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; align-items: start; }
+  .bagpics :global(.b2) { grid-row: span 2; }
+  @media (min-width: 900px) {
+    .p3-pack { grid-template-columns: 6fr 5fr; column-gap: clamp(3rem, 6vw, 7rem); align-items: start; }
+    .pillars { grid-template-columns: repeat(3, 1fr); }
+    .p3-ba { grid-row: 1 / 3; grid-column: 2; }
+    .p3-renewed { grid-column: 1; }
+    .stages { grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 6rem); }
+    .s2 { margin-top: 5rem; }
+    .p3-bag { grid-template-columns: 5fr 7fr; column-gap: clamp(3rem, 6vw, 7rem); }
+    .bagpics { grid-template-columns: 1fr 1fr 1fr; }
+    .bagpics :global(.b2) { grid-row: auto; margin-top: 3rem; }
+    .bagpics :global(.b3) { margin-top: 1.5rem; }
+  }
+
+  /* ---------- P4 ---------- */
+  .p4 { background: var(--plum); padding: clamp(1rem, 2vw, 2rem); }
+  .wall { display: grid; grid-template-columns: repeat(6, 1fr); gap: clamp(.4rem, 1vw, .8rem); }
+  .wall > :global(.slot) { grid-column: span 3; }
+  .p4-text { grid-column: 1 / -1; background: var(--cream); padding: clamp(1.8rem, 4vw, 3.5rem); order: -1; }
+  .p4-title { font-size: clamp(2.2rem, 5.4vw, 5rem); line-height: .96; letter-spacing: -.03em; font-weight: 300; margin: .6rem 0 1.6rem; }
+  .p4-items { display: grid; gap: 1.1rem; font-family: var(--display); font-size: clamp(1.3rem, 2vw, 1.8rem); line-height: 1.22; }
+  .p4-items li { display: grid; grid-template-columns: 2.4rem 1fr; align-items: baseline; }
+  .p4-items .n { font-family: var(--sans); font-size: .72rem; font-weight: 600; letter-spacing: .1em; color: var(--pink); }
+  .p4-items .i3 { font-style: italic; color: var(--pink); }
+  @media (min-width: 900px) {
+    .wall { grid-template-columns: repeat(12, 1fr); }
+    .wall > :global(.slot) { grid-column: span 2; }
+    .wall > :global(.w1) { grid-column: 1 / 4; grid-row: 1 / 3; align-self: stretch; height: 100%; aspect-ratio: auto !important; }
+    .p4-text { grid-column: 4 / 9; grid-row: 1 / 3; order: 0; align-self: stretch; display: grid; align-content: center; }
+    .wall > :global(.w2) { grid-column: 9 / 13; grid-row: 1; }
+    .wall > :global(.w3) { grid-column: 9 / 11; grid-row: 2; }
+    .wall > :global(.w4) { grid-column: 11 / 13; grid-row: 2; }
+    .wall > :global(.w5) { grid-column: 1 / 5; grid-row: 3; }
+    .wall > :global(.w6) { grid-column: 5 / 9; grid-row: 3; }
+  }
+
+  /* ---------- P5: the hero ---------- */
+  .p5 { background: var(--paper); }
+  .pull-track { height: 230svh; position: relative; --p: 0; background: var(--dark); color: #fff; }
+  .stick { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; place-items: center; }
+  .h5-num { position: absolute; left: var(--pad); top: 5.5rem; font-family: var(--display); font-weight: 300; font-size: clamp(3rem, 8vw, 7rem); line-height: .8; color: var(--lime); }
+  .h5-title { z-index: 1; position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; font-size: clamp(2.6rem, 8.4vw, 8.6rem); line-height: .98; letter-spacing: -.03em; font-weight: 300; padding: 0 var(--pad); text-wrap: balance; opacity: calc(.25 + var(--p) * .75); }
+  .moon { --d: min(62svh, 74vw); position: relative; width: var(--d); height: var(--d); z-index: 2; pointer-events: none; }
+  .half { position: absolute; top: 0; width: 50%; height: 100%; overflow: hidden; will-change: transform; }
+  .hl { left: 0; transform: translateX(calc(var(--p) * -1 * min(54vw, 36rem))) rotate(calc(var(--p) * -7deg)); transform-origin: 100% 60%; }
+  .hr { left: 50%; transform: translateX(calc(var(--p) * min(54vw, 36rem))) rotate(calc(var(--p) * 7deg)); transform-origin: 0 60%; }
+  .disc { position: absolute; top: 0; width: 200%; height: 100%; }
+  .hl .disc { left: 0; } .hr .disc { left: -100%; }
+  .filling { position: absolute; z-index: 0; left: 50%; top: 50%; height: min(56svh, 36rem); width: calc(var(--p) * min(34vw, 30rem)); transform: translate(-50%, -50%); background: radial-gradient(closest-side, var(--lime), var(--pink) 70%, transparent); filter: blur(22px); opacity: calc(var(--p) * 1.1); }
+  @media (prefers-reduced-motion: reduce) { .pull-track { height: auto; --p: .55 !important; } .stick { position: relative; height: 100svh; } }
+
+  
+  .p5-kitchen { padding: var(--section) 0 0; display: grid; gap: 1.5rem; }
+  .owner { font-family: var(--display); font-size: clamp(1.7rem, 3.6vw, 3.2rem); line-height: 1.15; max-width: 22ch; letter-spacing: -.01em; }
+  .kt { display: grid; gap: 1.2rem; max-width: 34rem; font-size: 1.05rem; }
+  .kt :global(.pull), .vsecond :global(.pull) { background: linear-gradient(transparent 58%, var(--lime) 58% 92%, transparent 92%); color: inherit; padding: 0 .1em; font-weight: 600; }
+  .shot { font-family: var(--display); font-style: italic; font-size: clamp(1.6rem, 2.6vw, 2.4rem); line-height: 1.15; color: var(--pink); }
+  :global(.k1), :global(.k2), :global(.k3) { max-width: 26rem; }
+  @media (min-width: 900px) {
+    .p5-kitchen { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; row-gap: 2rem; align-items: start; }
+    .owner { grid-column: 1 / 8; grid-row: 1; }
+    :global(.k1) { grid-column: 9 / 13; grid-row: 1 / 3; }
+    .kt { grid-column: 1 / 6; grid-row: 2; }
+    :global(.k2) { grid-column: 3 / 6; grid-row: 3; margin-top: 2rem; }
+    :global(.k3) { grid-column: 7 / 10; grid-row: 3; margin-top: 6rem; }
+  }
+
+  .p5-signature { background: var(--blush); margin-top: var(--section); padding: clamp(5rem, 12vw, 10rem) var(--pad); overflow: hidden; }
+  .sig-in { max-width: 70rem; margin: 0 auto; font-family: var(--display); font-weight: 300; }
+  .gs { font-size: clamp(1.4rem, 2.6vw, 2.3rem); max-width: 22em; }
+  .gq { font-style: italic; font-size: clamp(3rem, 9.4vw, 9rem); line-height: .94; letter-spacing: -.035em; margin-top: .25em; }
+  .gq1 { color: var(--pink); }
+  .gq2 { color: var(--plum); padding-left: 1.4em; }
+
+  .p5-library { padding: var(--section) 0 0; display: grid; gap: 2rem; }
+  .lib-text { font-size: 1.1rem; max-width: 36rem; }
+  .reels { display: grid; grid-template-columns: repeat(5, 1fr); gap: .5rem; align-items: start; }
+  .reels :global(.r2) { margin-top: 1.5rem; } .reels :global(.r3) { margin-top: 3rem; } .reels :global(.r4) { margin-top: 1.5rem; }
+  @media (min-width: 900px) { .p5-library { grid-template-columns: 4fr 8fr; column-gap: 4rem; align-items: start; } .reels { gap: 1rem; } }
+
+  .p5-two { padding: var(--section) 0 0; display: grid; gap: 1.5rem; }
+  .reg-t { font-size: clamp(2.2rem, 5vw, 4.4rem); line-height: .98; letter-spacing: -.025em; font-weight: 300; margin: .6rem 0 1.2rem; }
+  .reg-p { font-family: var(--display); font-size: clamp(1.25rem, 1.9vw, 1.7rem); line-height: 1.3; max-width: 26em; }
+  @media (min-width: 900px) {
+    .p5-two { grid-template-columns: 5fr 3.5fr 3.5fr; column-gap: 2rem; align-items: end; }
+    :global(.reg-b) { margin-bottom: 4rem; }
+  }
+
+  .p5-voice { margin-top: var(--section); background: var(--pink); color: #fff; padding: clamp(4rem, 9vw, 8rem) 0; overflow: hidden; }
+  .voice-in { display: grid; gap: 2rem; position: relative; }
+  .vh { font-size: clamp(2.4rem, 5.2vw, 5rem); line-height: .98; letter-spacing: -.025em; font-weight: 300; margin: .6rem 0 1.4rem; }
+  .vt p { max-width: 32rem; }
+  .vsecond { margin-top: 1rem; font-family: var(--display); font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.25; }
+  .vsecond :global(.pull) { background: linear-gradient(transparent 58%, rgb(97 33 106 / .55) 58% 92%, transparent 92%); }
+  .vnote { transform: rotate(-4deg); }
+  .vnote :global(.hand-note) { font-size: clamp(1.8rem, 4vw, 3.4rem); line-height: 1.15; color: var(--cream); transform: none; display: block; max-width: 14ch; }
+  :global(.vslot) { max-width: 22rem; }
+  @media (min-width: 900px) {
+    .voice-in { grid-template-columns: 5fr 4fr 3fr; align-items: center; column-gap: 3rem; }
+    :global(.vslot) { justify-self: end; }
+  }
+  @media (prefers-reduced-motion: reduce) { .half { will-change: auto; } }
+
+  /* ---------- P6 ---------- */
+  .p6 { padding: var(--section) 0 0; }
+  .p6-head { display: flex; align-items: baseline; gap: clamp(1rem, 3vw, 3rem); }
+  .p6-num { font-family: var(--display); font-weight: 300; font-size: clamp(5rem, 14vw, 12rem); line-height: .75; color: var(--lime); }
+  .p6-title { font-size: clamp(2.2rem, 6.4vw, 6.4rem); line-height: .96; letter-spacing: -.03em; font-weight: 400; max-width: 10ch; }
+  .p6-cards { display: grid; gap: 1rem; margin-top: 3rem; }
+  .sc { padding: clamp(1.5rem, 3vw, 2.6rem); display: grid; gap: .8rem; align-content: start; }
+  .sc h4 { font-family: var(--display); font-weight: 600; font-size: clamp(1.8rem, 3.2vw, 3rem); line-height: 1; }
+  .sc p { max-width: 28rem; font-size: 1.02rem; }
+  .sc1 { background: var(--lime); }
+  .sc2 { background: var(--plum); color: #fff; }
+  .p6-strip { margin-top: clamp(4rem, 8vw, 7rem); background: var(--ink); color: #fff; padding: .9rem var(--pad); }
+  .mochi { padding: clamp(3rem, 7vw, 6rem) 0; display: grid; gap: 2rem; }
+  .mo-y { font-family: var(--display); font-weight: 300; font-size: clamp(4rem, 11vw, 10rem); line-height: .8; color: var(--pink); letter-spacing: -.04em; }
+  .mo-t { font-family: var(--display); font-style: italic; font-weight: 400; font-size: clamp(1.6rem, 3vw, 2.6rem); line-height: 1.1; margin-top: .5rem; }
+  .mo-p { display: grid; gap: 1rem; max-width: 40rem; }
+  .phones { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; align-items: start; }
+  .phones :global(.slot:nth-child(2)) { margin-top: 1.6rem; } .phones :global(.slot:nth-child(3)) { margin-top: 3.2rem; }
+  .results { background: var(--cream); padding: 1.6rem; align-self: end; }
+  .results .rl { color: var(--plum); margin-bottom: .8rem; }
+  .results ul { display: grid; gap: .9rem; font-family: var(--display); font-size: clamp(1.25rem, 1.8vw, 1.6rem); line-height: 1.25; }
+  .results li::before { content: '→ '; color: var(--pink); }
+  .gia { padding-bottom: var(--section); display: grid; gap: 1.5rem; }
+  .gh { font-size: clamp(2.2rem, 4.6vw, 4.2rem); line-height: .98; letter-spacing: -.025em; font-weight: 400; }
+  .gsub { font-family: var(--display); font-style: italic; font-size: clamp(1.3rem, 2.2vw, 1.9rem); color: var(--pink); margin-top: .4rem; }
+  .gl { margin: 1.4rem 0; display: grid; gap: .5rem; }
+  .gl li { padding-left: 1.2rem; position: relative; }
+  .gl li::before { content: ''; position: absolute; left: 0; top: .65em; width: .5rem; height: .5rem; background: var(--lime); border-radius: 50%; }
+  .gp { font-family: var(--display); font-size: clamp(1.2rem, 1.8vw, 1.5rem); line-height: 1.3; max-width: 28rem; }
+  @media (min-width: 900px) {
+    .p6-cards { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .sc2 { margin-top: 3rem; }
+    .mochi { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; align-items: start; }
+    .mo-head { grid-column: 1 / 6; } .mo-p { grid-column: 7 / 13; }
+    .phones { grid-column: 1 / 9; margin-top: 2rem; } .results { grid-column: 9 / 13; margin-top: 2rem; }
+    .gia { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; align-items: center; }
+    :global(.g1) { grid-column: 1 / 5; } :global(.g2) { grid-column: 5 / 8; margin-top: 4rem; } .gt { grid-column: 9 / 13; }
+  }
+
+  /* ---------- P7 ---------- */
+  .p7 { padding: var(--section) 0 0; }
+  .p7-head { display: flex; align-items: baseline; gap: clamp(1rem, 3vw, 3rem); margin-bottom: 3rem; }
+  .p7-num { font-family: var(--display); font-weight: 300; font-size: clamp(5rem, 14vw, 12rem); line-height: .75; color: var(--pink); }
+  .p7-title { font-size: clamp(2.2rem, 6.2vw, 6rem); line-height: .98; letter-spacing: -.03em; font-weight: 400; max-width: 10ch; }
+  .panels { display: grid; }
+  .panel { padding: clamp(2rem, 4vw, 3.5rem) var(--pad); display: grid; gap: 1rem; align-content: start; }
+  .y1 { background: var(--blush); } .y2 { background: var(--lime); } .y3 { background: var(--plum); color: #fff; }
+  .yr { font-family: var(--display); font-weight: 300; font-size: clamp(4.4rem, 9vw, 8rem); line-height: .8; letter-spacing: -.04em; }
+  .yn { font-family: var(--display); font-weight: 600; font-size: clamp(1.5rem, 2.3vw, 2.1rem); line-height: 1.1; min-height: 1.1em; }
+  .yl { display: grid; gap: .7rem; font-size: 1rem; line-height: 1.5; margin-bottom: 1rem; }
+  .yl li { padding-left: 1.1rem; position: relative; }
+  .yl li::before { content: '—'; position: absolute; left: 0; }
+  @media (min-width: 900px) { .panels { grid-template-columns: repeat(3, 1fr); } .y2 { padding-top: calc(clamp(2rem, 4vw, 3.5rem) + 4rem); } .y3 { padding-top: calc(clamp(2rem, 4vw, 3.5rem) + 8rem); } .panel { padding-bottom: 5rem; } }
+
+  /* ---------- P8 ---------- */
+  .p8 { background: var(--cream); padding: var(--section) 0 clamp(3rem, 6vw, 5rem); margin-top: 0; }
+  .p8-in { display: grid; gap: 3rem; }
+  .p8-num { font-family: var(--display); font-weight: 300; font-size: clamp(5rem, 14vw, 12rem); line-height: .75; color: var(--pink); }
+  .p8-pre { margin-top: 1rem; color: var(--plum); }
+  .p8-title { font-size: clamp(3rem, 8vw, 7.4rem); line-height: .92; letter-spacing: -.035em; font-weight: 300; margin-top: .3em; }
+  .p8-list { display: grid; }
+  .it { display: grid; grid-template-columns: 3rem 1fr; gap: 1rem; padding: 1.5rem 0; border-top: 1px solid var(--ink); align-items: baseline; }
+  .it:last-child { border-bottom: 1px solid var(--ink); }
+  .it .n { font-family: var(--sans); font-size: .72rem; font-weight: 600; letter-spacing: .1em; color: var(--pink); }
+  .it p { font-family: var(--display); font-size: clamp(1.3rem, 2vw, 1.9rem); line-height: 1.25; max-width: 30em; }
+  .it1 p { font-size: clamp(2rem, 4.4vw, 4rem); line-height: 1.02; letter-spacing: -.02em; color: var(--plum); }
+  .it3 p { font-style: italic; color: var(--pink); }
+  .p8-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: clamp(3rem, 6vw, 6rem); }
+  @media (min-width: 900px) { .p8-in { grid-template-columns: 4fr 8fr; column-gap: clamp(3rem, 6vw, 7rem); align-items: start; } .p8-head { position: sticky; top: 5rem; } }
+
+  /* ---------- P9 ---------- */
+  .p9 { background: var(--dark); color: var(--cream); padding: clamp(5rem, 10vw, 9rem) 0 0; }
+  .p9-in { display: grid; gap: 2.5rem; align-items: start; }
+  :global(.p9-slot) { max-width: 26rem; }
+  .qm { display: block; font-family: var(--display); font-size: clamp(6rem, 14vw, 12rem); line-height: .6; color: var(--pink); margin-bottom: 1rem; }
+  .p9-text { display: grid; gap: 1.4rem; max-width: 40rem; font-family: var(--display); font-weight: 300; font-size: clamp(1.25rem, 1.9vw, 1.6rem); line-height: 1.4; }
+  .p9-text .a { font-size: clamp(1.7rem, 3vw, 2.6rem); line-height: 1.2; }
+  .p9-text .aside { font-style: italic; color: var(--blush); font-size: 1.05em; }
+  .p9-text .end { font-style: italic; font-size: clamp(2rem, 4.4vw, 4rem); line-height: 1; letter-spacing: -.02em; color: var(--lime); margin-top: 1rem; }
+  .next { display: block; width: 3rem; height: clamp(6rem, 14vw, 10rem); margin: 3rem auto 0; position: relative; }
+  .line { position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--cream); transform-origin: top; animation: draw 2.8s var(--ease) infinite; }
+  @keyframes draw { 0% { transform: scaleY(0); } 60%, 100% { transform: scaleY(1); } }
+  @media (prefers-reduced-motion: reduce) { .line { animation: none; } }
+  @media (min-width: 900px) { .p9-in { grid-template-columns: 4fr 7fr; column-gap: clamp(3rem, 7vw, 8rem); } :global(.p9-slot) { position: sticky; top: 5rem; } }
+</style>
+
+<script>
+  // P5 hero: how far the visitor has scrolled through the sticky stage (0..1) drives the mooncake splitting apart
+  const track = document.querySelector<HTMLElement>('.pull-track');
+  if (track && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const update = () => {
+      const r = track.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, -r.top / ((r.height - innerHeight) * 0.8))); // the last fifth of the scroll holds the opened state
+      track.style.setProperty('--p', p.toFixed(4));
+    };
+    let raf = 0;
+    addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  }
+</script>

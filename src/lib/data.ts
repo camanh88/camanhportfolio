@@ -20,7 +20,7 @@ export interface Role { date: string; text: string }
 export interface Node { kind: 'chapter' | 'sub'; anchor: string; title: string; hint: string; years: string; roles: Role[]; photo: string }
 
 /** "Role · Place · Type · Aug 2023 – Feb 2024" -> { text: "Role · Place · Type", date: "Aug 2023 – Feb 2024" } */
-function splitDate(line: string): Role {
+export function splitDate(line: string): Role {
   const i = line.lastIndexOf(' · ');
   const tail = i >= 0 ? line.slice(i + 3) : '';
   return /\d{4}/.test(tail) ? { text: line.slice(0, i), date: tail } : { text: line, date: '' };
@@ -85,7 +85,7 @@ export const sidePages: SidePage[] = (() => {
 })();
 
 // ---- Chapters that have been designed so far (anchors) ----
-export const BUILT = new Set(['ch-01']);
+export const BUILT = new Set(['ch-01', 'ch-02']);
 
 // ---- Chapter 01: It started with culture ----
 export const ch01 = (() => {
@@ -124,3 +124,18 @@ export const ch01 = (() => {
   };
 })();
 export const sidePageBody = (name: string) => sidePages.find((p) => p.slug === slug(name))?.body ?? [];
+
+// ---- Chapter 02: Becoming whole in F&B (Lam Yên), nine pages P1..P9 ----
+export const ch02 = (() => {
+  const bs = visible(blocks(readContent('ch02-becoming-whole-in-fb.md')));
+  const h1 = (bs.find((b) => b.t === 'h1') as { text: string }).text;
+  const [num, ...t] = h1.split('·');
+  const pages: Record<string, Block[]> = {};
+  let key = 'top';
+  for (const b of bs) {
+    if (b.t === 'h2') { key = b.text.trim().toLowerCase(); pages[key] = []; continue; }
+    (pages[key] ??= []).push(b);
+  }
+  return { num: num.trim(), title: t.join('·').trim(), hint: ((pages['top'] ?? []).find((b) => b.t === 'p') as { text: string }).text, pages };
+})();
+export type { Block };

@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 export type Block =
-  | { t: 'h1' | 'h2' | 'h3'; text: string }
+  | { t: 'h1' | 'h2' | 'h3' | 'h4'; text: string }
   | { t: 'p'; text: string }
   | { t: 'ul'; items: string[] }
   | { t: 'table'; rows: string[][] }
@@ -34,11 +34,11 @@ export function blocks(md: string): Block[] {
     const line = raw.trimEnd();
     if (!line.trim()) { flush(); continue; }
     if (/^BUILD NOTE:/.test(line)) { flush(); out.push({ t: 'note', text: line }); continue; }
-    const h = /^(#{1,3})\s+(.*)$/.exec(line);
+    const h = /^(#{1,4})\s+(.*)$/.exec(line);
     if (h) {
       flush();
       if (/^image map/i.test(h[2])) break;
-      out.push({ t: (`h${h[1].length}`) as 'h1' | 'h2' | 'h3', text: h[2] });
+      out.push({ t: (`h${h[1].length}`) as 'h1' | 'h2' | 'h3' | 'h4', text: h[2] });
       continue;
     }
     if (/^\s*[-*]\s+/.test(line)) {
@@ -75,7 +75,7 @@ export interface InlineOpts {
   accent?: string[];
 }
 
-const TOKEN = /\{\{vi:\s*([^}]+?)\}\}|\{\{([^}]+?)\}\}|\[([^\]]+?)\]|\*\*([^*]+?)\*\*/g;
+const TOKEN = /\{\{vi:\s*([^}]+?)\}\}|\{\{([^}]+?)\}\}|\[([^\]]+?)\]|\*\*([^*]+?)\*\*|(?<![A-Za-z0-9])_([^_\s][^_]*?)_(?![A-Za-z0-9])/g;
 
 export function sidepathButton(name: string) {
   return `<button type="button" class="sp" data-sp="${slug(name)}" aria-haspopup="dialog">${esc(name)}<span class="sp-arrow" aria-hidden="true">↗</span></button>`;
@@ -101,6 +101,7 @@ export function inline(text: string, opts: InlineOpts = {}): string {
     else if (m[2] !== undefined) html += sidepathButton(m[2].trim());
     else if (m[3] !== undefined) html += `<span class="ph">[${esc(m[3])}]</span>`;
     else if (m[4] !== undefined) html += `<strong>${inline(m[4], opts)}</strong>`;
+    else if (m[5] !== undefined) html += `<em>${inline(m[5], opts)}</em>`;
     last = (m.index ?? 0) + m[0].length;
   }
   html += plain(text.slice(last), opts);
