@@ -15,6 +15,9 @@ const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
         <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5a1.8 1.8 0 012.5 0l.5.5a1.8 1.8 0 010 2.5L8 19l-4 1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
       </button>
       <div class="rv-note">
+        <span class="rv-size" aria-label="Drag to resize the note" title="Drag to resize">
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M4 20L20 4M4 13L13 4M4 6l6-2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" transform="translate(0 0)"/></svg>
+        </span>
         <div class="rv-head">
           <span class="rv-grip" aria-hidden="true"></span>
           <button type="button" class="rv-btn" data-act="copy" aria-label="Copy note" title="Copy">
@@ -22,6 +25,9 @@ const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
           </button>
           <button type="button" class="rv-btn" data-act="clear" aria-label="Clear note" title="Clear">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="rv-btn" data-act="max" aria-label="Enlarge or shrink note" title="Bigger / smaller">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           <button type="button" class="rv-btn" data-act="min" aria-label="Minimise note" title="Minimise">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -37,8 +43,10 @@ const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
       .rv[data-state="open"] .rv-tab { display: none; }
       .rv-tab { appearance: none; border: 0; cursor: pointer; width: 2.75rem; height: 2.75rem; display: grid; place-items: center; color: #141312; opacity: .82; background: linear-gradient(225deg, var(--rv-edge) 0 .8rem, var(--rv-paper) .8rem); box-shadow: 0 1px 6px rgb(20 19 18 / .22); transition: opacity .25s; }
       .rv-tab:hover, .rv-tab:focus-visible { opacity: 1; }
-      .rv-note { width: 15rem; height: 11.5rem; min-width: 11rem; min-height: 8rem; max-width: calc(100vw - 1rem); max-height: calc(100svh - 1rem); display: flex; flex-direction: column; background: var(--rv-paper); box-shadow: 0 2px 14px rgb(20 19 18 / .26); resize: both; overflow: hidden; }
-      .rv-head { display: flex; align-items: center; gap: .1rem; padding: 0 .15rem 0 .5rem; height: 2rem; flex: none; background: var(--rv-edge); cursor: grab; touch-action: none; }
+      .rv-note { width: 15rem; height: 11.5rem; min-width: 11rem; min-height: 8rem; max-width: calc(100vw - 1rem); max-height: calc(100svh - 1rem); min-width: 11rem; display: flex; flex-direction: column; background: var(--rv-paper); box-shadow: 0 2px 14px rgb(20 19 18 / .26); position: relative; overflow: hidden; }
+      .rv-size { position: absolute; z-index: 2; left: 0; top: 0; width: 1.6rem; height: 2rem; display: grid; place-items: center; cursor: nwse-resize; touch-action: none; color: #141312; opacity: .55; }
+      .rv-size:hover { opacity: 1; }
+      .rv-head { display: flex; align-items: center; gap: .1rem; padding: 0 .15rem 0 1.7rem; height: 2rem; flex: none; background: var(--rv-edge); cursor: grab; touch-action: none; }
       .rv-head:active { cursor: grabbing; }
       .rv-grip { flex: 1; height: 100%; }
       .rv-btn { appearance: none; border: 0; background: transparent; color: #141312; width: 2rem; height: 2rem; display: grid; place-items: center; cursor: pointer; opacity: .7; }
@@ -130,14 +138,32 @@ const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
         head.addEventListener('pointerup', endDrag);
         head.addEventListener('pointercancel', endDrag);
 
-        // remember the size she gives it
-        if (window.ResizeObserver) {
-          new ResizeObserver(function () {
-            if (root.dataset.state !== 'open') return;
-            var r = note.getBoundingClientRect();
-            if (r.width > 0) { st.w = Math.round(r.width); st.h = Math.round(r.height); save(); }
-          }).observe(note);
+        // resize: drag the top-left corner (the note stays anchored at its bottom-right corner)
+        var rs = root.querySelector('.rv-size'), sz = null;
+        function setBox(right, bottom, w, h) {
+          w = Math.min(Math.max(176, w), innerWidth - 8); h = Math.min(Math.max(128, h), innerHeight - 8);
+          var l = Math.min(Math.max(0, right - w), innerWidth - w), t = Math.min(Math.max(0, bottom - h), innerHeight - h);
+          note.style.width = w + 'px'; note.style.height = h + 'px';
+          root.style.right = 'auto'; root.style.bottom = 'auto'; root.style.left = l + 'px'; root.style.top = t + 'px';
+          st.x = l; st.y = t; st.w = Math.round(w); st.h = Math.round(h);
         }
+        rs.addEventListener('pointerdown', function (e) {
+          var r = root.getBoundingClientRect();
+          sz = { right: r.right, bottom: r.bottom };
+          rs.setPointerCapture(e.pointerId); e.preventDefault();
+        });
+        rs.addEventListener('pointermove', function (e) { if (sz) setBox(sz.right, sz.bottom, sz.right - e.clientX, sz.bottom - e.clientY); });
+        function endSize() { if (sz) { sz = null; st.big = false; save(); } }
+        rs.addEventListener('pointerup', endSize);
+        rs.addEventListener('pointercancel', endSize);
+        // one-click bigger / back to the previous size
+        root.addEventListener('click', function (e) {
+          if (!e.target.closest('[data-act=max]')) return;
+          var r = root.getBoundingClientRect();
+          if (st.big && st.pw) { setBox(r.right, r.bottom, st.pw, st.ph); st.big = false; }
+          else { st.pw = r.width; st.ph = r.height; setBox(r.right, r.bottom, Math.min(480, innerWidth - 16), Math.min(innerHeight * 0.7, 560)); st.big = true; }
+          save();
+        });
         addEventListener('resize', place);
         // keep two open tabs of the site in step
         addEventListener('storage', function (e) {
