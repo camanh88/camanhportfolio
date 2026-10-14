@@ -33,6 +33,7 @@ import '../styles/tokens.css';
 import '../styles/base.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ReviewNote from '../components/ReviewNote.astro';
 import { cover, sidePages, ui } from '../lib/data';
 import { inline, textOf } from '../lib/md';
 const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${cover.hero} ${cover.label}`;
@@ -53,6 +54,7 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
     <Header current={Astro.props.current} />
     <div id="main"><slot /></div>
     <Footer />
+    <ReviewNote />
 
     <dialog id="sp" class="sp-dialog" aria-labelledby="sp-title" data-soon={ui['coming soon']}>
       <div class="sp-sheet">
