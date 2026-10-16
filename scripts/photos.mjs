@@ -74,18 +74,10 @@ export const photos = {
   'g-hug': [`${G}/IMG_7804.HEIC`, 'Cam Anh smiling and hugging a kraft-paper parcel with a ribbon, in a gallery with deep blue walls.', { crop: { aspect: 0.8 } }],
   'g-choc': [`${G}/IMG_4254.heic`, 'A slice of chocolate cake with whipped cream, nuts and a chocolate heart on a white plate, seen from above with a fork.', { crop: { aspect: 0.8 } }],
   'g-team': [`${G}/IMG_0768.jpg`, 'A group of smiling people in aprons standing behind a café counter, some giving a thumbs-up.', { crop: { aspect: 0.8, x: 0.22 } }],
-  // ---- Off the menu: The florist in me (spread in the order of Cam Anh's mock-up; cut-outs are her own PNGs) ----
-  'f-woman': ['*Photo/04/1M2A9731.JPG', 'A woman in a pink shirt, seen from behind, arranging flowers in front of a pale pink paper backdrop.', { crop: { aspect: 0.8, y: 0.45 } }],
-  'f-sofa': ['*Photo/04/IMG_8177.JPG', 'A cream sofa and a low wooden coffee table with a bouquet of red, pink and green flowers in a gold vase.', { crop: { aspect: 1.34 } }],
-  'f-bluevase': [`${F}/IMG_0086.JPG`, 'A blue-and-white porcelain vase with a loose bouquet of pink and lime-green flowers and thin branches, in front of a dark carved doorway.', { crop: { aspect: 0.75, y: 0.4 } }],
-  'f-lily-cut': [`${F}/cutout/7.png`, 'Pink lilies and chrysanthemums in a grey-and-white marbled glass vase.', { alpha: true }],
-  'f-box-cut': [`${F}/cutout/6.png`, 'A pale green Lam Yên gift box tilted open on a box, with orange ranunculus, a persimmon and a dried branch.', { alpha: true }],
-  'f-drum': ['*Photo/04/IMG_8653.HEIC', 'A bouquet of orange, yellow and white flowers in a vase between two carved dark figures, under a bronze drum on a white wall.', { crop: { aspect: 0.71 } }],
-  'f-ring': [`${F}/IMG_3372.JPG`, 'A tall, airy arrangement of pink, orange and yellow flowers and branches on a marble table with small porcelain jars, lit by a ring light.', { crop: { aspect: 0.85, y: 0.4 } }],
-  'f-orange': [`${F}/IMG_9731.JPG`, 'Orange ranunculus and a red gladiolus in a white ruffled vase in front of grey curtains.', { crop: { aspect: 1.17, y: 0.62 } }],
-  'f-dining': [`${F}/IMG_4055.jpg`, 'A long arrangement of red, orange and pink flowers with a tall orange heliconia on a marble dining table, a wall of orange painted flowers behind.'],
-  'f-ranun': [`${F}/1M2A9440.JPG`, 'Close-up of orange and yellow ranunculus and a persimmon on a green Lam Yên gift box.', { crop: { aspect: 0.66 } }],
-  'f-guitar': [`${F}/IMG_0777.jpg`, 'Red and pink anthurium and gerbera in a blue-and-white bowl on a wooden console, a guitar leaning beside a wooden door.', { crop: { aspect: 1, y: 0.7 } }],
+  // ---- Off the menu: The florist in me (spread in the order of Cam Anh's second mock-up, Oct 16; 5.png and 8.png are her own cut-outs) ----
+  'f-box': ['*Photo/04/Florist in me/1M2A9403-3.JPG', 'A pale green Lam Yên gift box tilted open on a box, with orange ranunculus, a persimmon and a dried branch, against a soft green backdrop.', { crop: { aspect: 0.8, y: 0.6 } }],
+  'f-lily-cut': ['*Photo/04/Florist in me/8.png', 'Pink lilies and chrysanthemums in a grey-and-white marbled glass vase, with a soft shadow.', { alpha: true }],
+  'f-woman': ['*Photo/04/Florist in me/5.png', 'A woman in a pink shirt, seen from behind, arranging flowers in front of a pale pink paper backdrop.', { alpha: true }],
   // ---- Why Marou: Cam Anh's own photo, taken from her Word note (low resolution: 327x440) ----
   'w-bike': ['site/tmp-img/word-bike.png', 'Cam Anh in a black coat and glasses standing beside an orange motorbike on a mountain road, green hills behind her under a grey sky.', { max: 640 }],
 };
