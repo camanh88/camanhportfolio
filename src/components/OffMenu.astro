@@ -83,7 +83,7 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
       <p class="gnum" aria-hidden="true">{sectionNum('gift')}</p>
       <h2 id="gift-title" class="g-title" >{ch04.giftTitle}</h2>
       <p class="g1-text" set:html={g1} />
-      <div class="g1-pic" data-ribbon="a">
+      <div class="g1-pic">
         <span class="ribbon-v" aria-hidden="true"></span><span class="ribbon-h" aria-hidden="true"></span>
         <div class="pic" style="--a: 4 / 5"><Photo id="g-parcel" sizes="(min-width: 900px) 30vw, 90vw" /></div>
       </div>
@@ -175,11 +175,10 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   .cl { position: absolute; }
   .cl :global(img) { display: block; width: 100%; height: auto; }
   .g1-pic { position: relative; max-width: 26rem; }
-    .ribbon-v, .ribbon-h { position: absolute; background: var(--cream); z-index: 2; pointer-events: none; opacity: .38; } /* option A (default): faded, over the photo */
-  .g1-pic[data-ribbon="b"] .ribbon-v, .g1-pic[data-ribbon="b"] .ribbon-h { z-index: 0; opacity: .92; } /* option B: behind the photo, only the ends show */
-  .g1-pic[data-ribbon="b"] .pic { position: relative; z-index: 1; }
-  .ribbon-v { left: 50%; width: 2.2rem; top: -1rem; bottom: -1rem; transform: translateX(-50%); }
-  .ribbon-h { top: 50%; height: 2.2rem; left: -1rem; right: -1rem; transform: translateY(-50%); }
+    /* faded blue ribbon cross laid over the parcel photo, placed to follow the real ribbon (Cam Anh's marked-up screenshot) */
+  .ribbon-v, .ribbon-h { position: absolute; background: #2B5FE0; z-index: 2; pointer-events: none; opacity: .42; }
+  .ribbon-v { left: 30%; width: 2.2rem; top: -9.2%; bottom: -9.4%; transform: translateX(-50%) rotate(-1.2deg); }
+  .ribbon-h { top: 36%; height: 2.2rem; left: -15.6%; right: -10.2%; transform: translateY(-50%); }
   .pic.g1-small { max-width: 12.8rem; }
   @media (min-width: 900px) {
     .g1 { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; row-gap: 1.5rem; min-height: 100svh; align-content: start; }
@@ -285,9 +284,3 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   }
 </script>
 
-<script>
-  // TEMPORARY preview of the two ribbon options: ?ribbon=a (faded over the photo) or ?ribbon=b (behind the photo).
-  // Remove this block, the data-ribbon attribute and the unused CSS once Cam Anh picks one.
-  const rb = new URLSearchParams(location.search).get('ribbon');
-  if (rb === 'a' || rb === 'b') document.querySelector<HTMLElement>('.g1-pic')?.setAttribute('data-ribbon', rb);
-</script>
