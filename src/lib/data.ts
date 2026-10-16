@@ -208,7 +208,8 @@ function pageDoc(file: string) {
 }
 export const ch04 = (() => {
   const d = pageDoc('ch04-off-the-menu.md');
-  const keys = Object.keys(d.secs);
-  return { ...d, giftTitle: keys[0] ? d.secs[keys[0]] && (visible(blocks(readContent('ch04-off-the-menu.md'))).filter((b) => b.t === 'h2')[0] as { text: string }).text : '', florTitle: (visible(blocks(readContent('ch04-off-the-menu.md'))).filter((b) => b.t === 'h2')[1] as { text: string }).text };
+  // sections are found by name, so their order in the markdown file can change freely
+  const heads = visible(blocks(readContent('ch04-off-the-menu.md'))).filter((b) => b.t === 'h2').map((b) => (b as { text: string }).text);
+  return { ...d, giftTitle: heads.find((h) => /gift/i.test(h)) ?? '', florTitle: heads.find((h) => /florist/i.test(h)) ?? '', order: heads.map((h) => (/gift/i.test(h) ? 'gift' : 'flor')) };
 })();
 export const ch05 = pageDoc('ch05-why-marou.md');

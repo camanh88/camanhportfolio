@@ -1,6 +1,7 @@
 // Photo manifest: output id -> [original (relative to PORT 26/), alt text written from the actual photo, options].
 // Originals are read-only; optimised copies go to site/public/img/.
 const C = '*Photo/Cover & Introduction'; // Cam Anh prefixes her folders with "*"
+const G = '*Photo/04/Gifting'; // Off the menu
 const P1 = '*Photo/01'; // chapter 01, organised by Cam Anh as Page 1 .. Page 6 + PHOTOSHOOT albums
 export const photos = {
   // Cover: Cam Anh's own collage (6000x3375), shown whole at 16:9, no cropping
@@ -64,6 +65,17 @@ export const photos = {
   'a2-1M2A4172': [`${P1}/PHOTOSHOOT/Morden House/1M2A4172.webp`, 'A pink painting above a sofa, a bouquet and a bronze figure on the round table.', { max: 960 }],
   'a2-484509074': [`${P1}/PHOTOSHOOT/Morden House/484509074_1572131456959459_8757120511498613466_n.jpg`, 'A pink painting above a bouquet and a bronze figure on a coffee table.', { max: 960 }],
   'a2-485176764': [`${P1}/PHOTOSHOOT/Morden House/485176764_1572131920292746_513370614072812891_n.jpg`, 'A living room with a large orange portrait painting above a cream sofa.', { max: 960 }],
+  // ---- Off the menu: My love language: gifting (*Photo/04/Gifting) ----
+  'g-parcel': [`${G}/IMG_7801.heic`, 'A parcel wrapped in kraft paper and tied with a wide cream satin ribbon, an illustrated card tucked under the bow.', { crop: { aspect: 0.8 } }],
+  'g-bag': [`${G}/IMG_0465.jpg`, 'A hand holding a small yellow-and-white striped gift bag with a gold ribbon and a round cream label.', { crop: { aspect: 1, y: 0.4 } }],
+  'g-cakecase': [`${G}/IMG_3879.heic`, 'Cam Anh in a braid, seen from behind, choosing from a glass cabinet of whole cakes in a café.', { crop: { aspect: 0.8, y: 0.45 } }],
+  'g-strawberry': [`${G}/IMG_3898.heic`, 'A plate of strawberry cream cake, cut open, with a fork, seen from above in warm sunlight.', { crop: { aspect: 0.8, y: 0.5 } }],
+  'g-redbox': [`${G}/IMG_4618.jpg`, 'A red box of chocolate bark studded with nuts and dried rose petals, on a wooden table.', { crop: { aspect: 0.8, y: 0.5 } }],
+  'g-book': [`${G}/Sách You & I eat the same.jpg`, 'An open book with a passage highlighted in green, the word “Introduction” on the facing page.', { crop: { aspect: 1.5, y: 0.7, x: 0.3 } }],
+  'g-card': [`${G}/IMG_9100.heic`, 'A hand holding a blue greeting card that reads “Emotional support card” in front of a shelf of colourful cards.', { crop: { aspect: 0.75 } }],
+  'g-hug': [`${G}/IMG_7804.HEIC`, 'Cam Anh smiling and hugging a kraft-paper parcel with a ribbon, in a gallery with deep blue walls.', { crop: { aspect: 1, y: 0.35, x: 0.6 } }],
+  'g-friend': [`${G}/DSC08520.jpg`, 'A woman in a beige top holding up a gift wrapped in red-and-green check paper in front of her face, in a café.', { crop: { aspect: 1, y: 0.3 } }],
+  'g-team': [`${G}/IMG_0768.jpg`, 'A group of smiling people in aprons standing behind a café counter, some giving a thumbs-up.', { crop: { aspect: 1, x: 0.6 } }],
   // ---- Why Marou: Cam Anh's own photo, taken from her Word note (low resolution: 327x440) ----
   'w-bike': ['site/tmp-img/word-bike.png', 'Cam Anh in a black coat and glasses standing beside an orange motorbike on a mountain road, green hills behind her under a grey sky.', { max: 640 }],
 };

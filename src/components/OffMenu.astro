@@ -1,28 +1,35 @@
 ---
 import Slot from './Slot.astro';
+import Photo from './Photo.astro';
 import { ch04, ui, pages } from '../lib/data';
-import { inline, esc } from '../lib/md';
+import { inline, esc, phrases, sentences } from '../lib/md';
 
 const gift = ch04.ps(ch04.giftTitle.toLowerCase());
 const flor = ch04.ps(ch04.florTitle.toLowerCase());
+// Display text is cut into phrase units (see phrases() in md.ts): a phrase that carries one meaning stays on one line,
+// and a new idea starts on a new line after each comma. Only the layout changes, never the words.
 // the first paragraph: "I give." becomes the giant word
-const g1 = inline(gift[0] ?? '').replace('I give.', '<span class="give">I give.</span>');
-// the box-of-cake paragraph: "a box of cake" is marked
-const g2 = inline(gift[1] ?? '').replace('a box of cake', '<mark class="mk">a box of cake</mark>');
-// the book paragraph: the "[Photo of the page]" placeholder moves under the picture
-const bookRaw = gift[2] ?? '';
-const photoChip = /\[[^\]]+\]/.exec(bookRaw)?.[0] ?? '';
-const g3 = inline(bookRaw.replace(/\s*\[[^\]]+\]/, ''));
+const g1 = phrases(gift[0] ?? '', {}).replace('<span class="u">I give.</span>', '<span class="u give">I give.</span>');
+// the box-of-cake paragraph: its last sentence is set smaller; "a box of cake" is marked
+const g2s = sentences(gift[1] ?? '');
+const mark = (h: string) => h.replace(/a box of\s+cake/, (m) => `<mark class="mk">${m}</mark>`);
+const g2 = mark(phrases(g2s.slice(0, -1).join(' ')));
+const g2sub = phrases(g2s.slice(-1)[0] ?? '');
+// the book paragraph (the photo of the page now sits beside it)
+const g3 = phrases(gift[2] ?? '');
 // "I love gifting because ..." is split sentence by sentence for the typographic page
-const sent = (gift[3] ?? '').match(/[^.]+\.(?:["”]?)(?:\s|$)/g)?.map((x) => x.trim()) ?? [gift[3] ?? ''];
+const sent = sentences(gift[3] ?? '');
 const lovePre = sent[0] ?? '';
 const loveWords = sent.slice(1, 3);        // "Sharing." "Caring."
 const loveSay = sent[3] ?? '';             // Saying "I love you" without saying it.
-const loveEnd = sent.slice(4).join(' ');
+const loveEnd = phrases(sent.slice(4).join(' '));
 // "We don't just give a gift. We create a connection. And with food, ..."
-const last = (gift[4] ?? '').match(/[^.]+\./g)?.map((x) => x.trim()) ?? [gift[4] ?? ''];
+const last = sentences(gift[4] ?? '');
 const connect = last.slice(0, 2);
-const stomach = last.slice(2).join(' ');
+const stomach = phrases(last.slice(2).join(' '));
+// titles: the part up to a colon is one phrase and stays on one line
+const titleUnits = (t: string) => t.split(/(?<=:)\s+/).map((u) => `<span class="tu">${esc(u)}</span>`).join(' ');
+const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).padStart(2, '0');
 ---
 <article id="off-menu" class="om" aria-labelledby="om-title">
 
@@ -32,78 +39,19 @@ const stomach = last.slice(2).join(' ');
       <h1 id="om-title" class="c-title">{ch04.title}</h1>
       <p class="c-hint">{ch04.hint}</p>
       <ol class="dishes">
-        <li><a href="#gifting"><span class="dn">01</span><span class="dname">{ch04.giftTitle}</span><span class="lead" aria-hidden="true"></span><span class="dgo" aria-hidden="true">↓</span></a></li>
-        <li><a href="#florist"><span class="dn">02</span><span class="dname">{ch04.florTitle}</span><span class="lead" aria-hidden="true"></span><span class="dgo" aria-hidden="true">↓</span></a></li>
+        {ch04.order.map((k) => (
+          <li class={k === 'gift' ? 'em' : ''}><a href={k === 'gift' ? '#gifting' : '#florist'}><span class="dn">{sectionNum(k)}</span><span class="dname">{k === 'gift' ? ch04.giftTitle : ch04.florTitle}</span><span class="lead" aria-hidden="true"></span><span class="dgo" aria-hidden="true">↓</span></a></li>
+        ))}
       </ol>
     </div>
   </section>
 
-  <!-- 01 GIFTING (the one to emphasise) -->
-  <section id="gifting" class="gift" aria-labelledby="gift-title">
-
-    <!-- G1: I give -->
-    <div class="g1">
-      <p class="gnum" aria-hidden="true">01</p>
-      <h2 id="gift-title" class="g-title">{ch04.giftTitle}</h2>
-      <p class="g1-text" set:html={g1} />
-      <div class="g1-pic">
-        <span class="ribbon-v" aria-hidden="true"></span><span class="ribbon-h" aria-hidden="true"></span>
-        <Slot tag="G1" a="4 / 5" tone="pink" />
-      </div>
-      <Slot tag="G2" a="1 / 1" tone="cream" class="g1-small" />
-    </div>
-
-    <!-- G2: a box of cake -->
-    <div class="g2">
-      <p class="g2-text" set:html={g2} />
-      <div class="g2-row">
-        <Slot tag="G3" a="4 / 5" tone="blush" />
-        <Slot tag="G4" a="4 / 5" tone="lime" />
-        <Slot tag="G5" a="4 / 5" tone="cream" />
-      </div>
-    </div>
-
-    <!-- G3: the book -->
-    <div class="g3">
-      <div class="book">
-        <Slot tag="G6" a="3 / 2" tone="cream" class="spine-l" />
-        <Slot tag="G7" a="3 / 4" tone="blush" class="spine-r" />
-        {photoChip && <p class="chip"><span class="ph">{photoChip}</span></p>}
-      </div>
-      <p class="g3-text" set:html={g3} />
-    </div>
-
-    <!-- G4: sharing, caring, "I love you" -->
-    <div class="g4">
-      <p class="l-pre">{lovePre}</p>
-      <p class="l-word w1">{loveWords[0]}</p>
-      <p class="l-word w2">{loveWords[1]}</p>
-      <p class="l-say" set:html={inline(loveSay)} />
-      <p class="l-end">{loveEnd}</p>
-    </div>
-
-    <!-- G5: a connection -->
-    <div class="g5">
-      <span class="g5-ribbon" aria-hidden="true"></span>
-      <div class="g5-in">
-        <p class="c1">{connect[0]}</p>
-        <p class="c2">{connect[1]}</p>
-        <p class="c3">{stomach}</p>
-      </div>
-      <div class="g5-row">
-        <Slot tag="G8" a="1 / 1" tone="cream" />
-        <Slot tag="G9" a="1 / 1" tone="lime" />
-        <Slot tag="G10" a="1 / 1" tone="blush" />
-      </div>
-    </div>
-  </section>
-
-  <!-- 02 THE FLORIST IN ME: lots of photos and videos -->
+  <!-- THE FLORIST IN ME: lots of photos and videos -->
   <section id="florist" class="flor" aria-labelledby="flor-title">
     <div class="f-head wrap">
-      <p class="gnum" aria-hidden="true">02</p>
-      <h2 id="flor-title" class="f-title">{ch04.florTitle}</h2>
-      <p class="f-text">{flor[0]}</p>
+      <p class="gnum" aria-hidden="true">{sectionNum('flor')}</p>
+      <h2 id="flor-title" class="f-title" set:html={titleUnits(ch04.florTitle)} />
+      <p class="f-text" set:html={phrases(flor[0] ?? '')} />
     </div>
 
     <div class="f-hero"><Slot tag="F1" a="16 / 9" kind="video" tone="plum" /></div>
@@ -129,12 +77,78 @@ const stomach = last.slice(2).join(' ');
       <Slot tag="F16" a="3 / 2" tone="blush" />
     </div>
   </section>
+
+  <!-- GIFTING (the one to emphasise) -->
+  <section id="gifting" class="gift" aria-labelledby="gift-title">
+
+    <!-- G1: I give -->
+    <div class="g1">
+      <p class="gnum" aria-hidden="true">{sectionNum('gift')}</p>
+      <h2 id="gift-title" class="g-title" set:html={titleUnits(ch04.giftTitle)} />
+      <p class="g1-text" set:html={g1} />
+      <div class="g1-pic">
+        <span class="ribbon-v" aria-hidden="true"></span><span class="ribbon-h" aria-hidden="true"></span>
+        <div class="pic" style="--a: 4 / 5"><Photo id="g-parcel" sizes="(min-width: 900px) 30vw, 90vw" /></div>
+      </div>
+      <div class="pic g1-small" style="--a: 1 / 1"><Photo id="g-bag" sizes="(min-width: 900px) 10vw, 12rem" /></div>
+    </div>
+
+    <!-- G2: a box of cake -->
+    <div class="g2">
+      <p class="g2-text"><span set:html={g2} /><span class="g2-sub" set:html={g2sub} /></p>
+      <div class="g2-row">
+        <div class="pic" style="--a: 4 / 5"><Photo id="g-cakecase" sizes="(min-width: 900px) 28vw, 33vw" /></div>
+        <div class="pic" style="--a: 4 / 5"><Photo id="g-strawberry" sizes="(min-width: 900px) 28vw, 33vw" /></div>
+        <div class="pic" style="--a: 4 / 5"><Photo id="g-redbox" sizes="(min-width: 900px) 28vw, 33vw" /></div>
+      </div>
+    </div>
+
+    <!-- G3: the book -->
+    <div class="g3">
+      <div class="book">
+        <div class="pic spine-l" style="--a: 3 / 2"><Photo id="g-book" sizes="(min-width: 900px) 35vw, 60vw" /></div>
+        <div class="pic spine-r" style="--a: 3 / 4"><Photo id="g-card" sizes="(min-width: 900px) 25vw, 40vw" /></div>
+      </div>
+      <p class="g3-text" set:html={g3} />
+    </div>
+
+    <!-- G4: sharing, caring, "I love you" -->
+    <div class="g4">
+      <p class="l-pre" set:html={phrases(lovePre)} />
+      <p class="l-word w1">{loveWords[0]}</p>
+      <p class="l-word w2">{loveWords[1]}</p>
+      <p class="l-say" set:html={inline(loveSay)} />
+      <p class="l-end" set:html={loveEnd} />
+    </div>
+
+    <!-- G5: a connection -->
+    <div class="g5">
+      <span class="g5-ribbon" aria-hidden="true"></span>
+      <div class="g5-in">
+        <p class="c1">{connect[0]}</p>
+        <p class="c2">{connect[1]}</p>
+        <p class="c3" set:html={stomach} />
+      </div>
+      <div class="g5-row">
+        <div class="pic" style="--a: 1 / 1"><Photo id="g-hug" sizes="(min-width: 900px) 16rem, 33vw" /></div>
+        <div class="pic" style="--a: 1 / 1"><Photo id="g-friend" sizes="(min-width: 900px) 16rem, 33vw" /></div>
+        <div class="pic" style="--a: 1 / 1"><Photo id="g-team" sizes="(min-width: 900px) 16rem, 33vw" /></div>
+      </div>
+    </div>
+  </section>
 </article>
 
 <style>
   .om { background: var(--paper); --pad: clamp(1.25rem, 4vw, 4rem); overflow-x: clip; }
   .wrap { width: min(100% - 2 * var(--pad), 88rem); margin-inline: auto; }
   .label { font-family: var(--sans); }
+  /* photo frame: the picture is already cropped to this ratio, cover only absorbs rounding */
+  .pic { position: relative; width: 100%; aspect-ratio: var(--a); overflow: hidden; background: var(--blush); }
+  .pic :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  /* phrase units (see phrases() in md.ts): one meaning per line, a new idea after each comma */
+  .u { display: block; text-wrap: balance; }
+  .f-text :global(.u), .g1-text :global(.u), .g2-text :global(.u), .g3-text :global(.u), .l-end :global(.u), .c3 :global(.u), .l-pre :global(.u) { display: block; text-wrap: balance; }
+  :global(.ul) { text-decoration: underline; text-decoration-thickness: .08em; text-underline-offset: .22em; text-decoration-color: var(--pink); }
   .gnum { font-family: var(--display); font-weight: 300; font-size: clamp(5rem, 14vw, 12rem); line-height: .75; letter-spacing: -.04em; }
 
   /* ---------- opener: a menu card ---------- */
@@ -150,42 +164,43 @@ const stomach = last.slice(2).join(' ');
   .lead { flex: 1; border-bottom: 2px dotted var(--ink); transform: translateY(-.3em); min-width: 1rem; }
   .dgo { transition: transform .3s var(--ease); }
   .dishes a:hover .dgo { transform: translateY(5px); }
-  .dishes li:first-child .dname { font-style: italic; color: var(--pink); }
+  .dishes li.em .dname { font-style: italic; color: var(--pink); }
 
   /* ---------- gifting ---------- */
   .gift { background: var(--pink); color: #fff; }
   .g1 { padding: clamp(3rem, 7vw, 7rem) var(--pad); display: grid; gap: 1.6rem; position: relative; }
   .g1 .gnum { color: var(--cream); }
-  .g-title { font-size: clamp(3rem, 10.5vw, 10rem); line-height: .88; letter-spacing: -.045em; font-weight: 300; max-width: 9ch; }
-  .g1-text { font-family: var(--display); font-size: clamp(1.4rem, 2.6vw, 2.3rem); line-height: 1.22; max-width: 24em; }
+  .g-title { font-size: clamp(2.5rem, 8.6vw, 8.6rem); line-height: .92; letter-spacing: -.045em; font-weight: 300; }
+  .g-title :global(.tu), .f-title :global(.tu) { display: block; white-space: nowrap; }
+  .g1-text { font-family: var(--display); font-size: clamp(1.4rem, 2.4vw, 2.2rem); line-height: 1.22; max-width: 30em; }
   .g1-text :global(.give) { display: block; font-style: italic; font-size: 2.6em; line-height: .9; letter-spacing: -.04em; color: var(--cream); margin: .15em 0; }
   .g1-pic { position: relative; max-width: 26rem; }
-  .ribbon-v, .ribbon-h { position: absolute; background: var(--cream); z-index: 2; pointer-events: none; opacity: .92; }
-  .ribbon-v { left: 50%; width: 2.2rem; top: -1rem; bottom: -1rem; transform: translateX(-50%); }
-  .ribbon-h { top: 50%; height: 2.2rem; left: -1rem; right: -1rem; transform: translateY(-50%); }
-  .g1-small { max-width: 12rem; }
+  .ribbon-v, .ribbon-h { position: absolute; background: var(--cream); z-index: 0; pointer-events: none; } /* behind the photo: only the ends show, like a ribbon it sits on */
+  .g1-pic .pic { position: relative; z-index: 1; }
+  .ribbon-v { left: 50%; width: 2.2rem; top: -1.6rem; bottom: -1.6rem; transform: translateX(-50%); }
+  .ribbon-h { top: 50%; height: 2.2rem; left: -1.6rem; right: -1.6rem; transform: translateY(-50%); }
+  .pic.g1-small { max-width: 12rem; }
   @media (min-width: 900px) {
     .g1 { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; row-gap: 1.5rem; min-height: 100svh; align-content: start; }
     .g1 .gnum { grid-column: 1 / 4; grid-row: 1; }
-    .g-title { grid-column: 1 / 9; grid-row: 2; }
-    .g1-text { grid-column: 1 / 7; grid-row: 3; margin-top: 1rem; }
+    .g-title { grid-column: 1 / 8; grid-row: 2; }
+    .g1-text { grid-column: 1 / 8; grid-row: 3; margin-top: 1rem; }
     .g1-pic { grid-column: 8 / 12; grid-row: 1 / 4; align-self: center; max-width: none; margin: 2.5rem 0; }
-    .g1-small { grid-column: 12 / 13; grid-row: 3; align-self: end; max-width: none; }
+    .pic.g1-small { grid-column: 12 / 13; grid-row: 3; align-self: end; max-width: none; }
   }
 
   .g2 { background: var(--cream); color: var(--ink); padding: var(--section) var(--pad); display: grid; gap: 3rem; }
-  .g2-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.8rem, 4.2vw, 4rem); line-height: 1.08; letter-spacing: -.02em; max-width: 24em; }
-  .g2-text :global(.mk) { background: linear-gradient(transparent 58%, var(--pink) 58% 92%, transparent 92%); color: inherit; padding: 0 .08em; font-style: italic; }
+  .g2-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.1vw, 3rem); line-height: 1.1; letter-spacing: -.02em; max-width: 36em; }
+  .g2-sub { display: block; margin-top: 1.6rem; font-size: clamp(1.1rem, 1.55vw, 1.45rem); line-height: 1.35; letter-spacing: -.005em; color: var(--ink-soft); max-width: 34em; }
+  .g2-text :global(.mk) { background: linear-gradient(transparent 70%, var(--pink) 70% 96%, transparent 96%); color: inherit; padding: 0 .08em; font-style: italic; white-space: nowrap; }
   .g2-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(.5rem, 2vw, 1.5rem); align-items: start; }
-  .g2-row :global(.slot:nth-child(2)) { margin-top: 2.5rem; } .g2-row :global(.slot:nth-child(3)) { margin-top: 5rem; }
+  .g2-row .pic:nth-child(2) { margin-top: 2.5rem; } .g2-row .pic:nth-child(3) { margin-top: 5rem; }
 
   .g3 { background: var(--plum); color: var(--cream); padding: var(--section) var(--pad); display: grid; gap: 2.5rem; align-items: center; }
   .book { position: relative; display: grid; grid-template-columns: 1.3fr 1fr; gap: 0; align-items: stretch; box-shadow: 0 30px 60px -30px rgb(0 0 0 / .6); background: #fff; padding: .4rem; }
-  .book :global(.spine-l), .book :global(.spine-r) { height: 100%; aspect-ratio: auto !important; min-height: 16rem; }
+  .book .pic { height: 100%; aspect-ratio: auto; min-height: 16rem; }
   .book::after { content: ''; position: absolute; left: 56.5%; top: 0; bottom: 0; width: 2rem; transform: translateX(-50%); background: linear-gradient(90deg, transparent, rgb(0 0 0 / .18), transparent); pointer-events: none; }
-  .chip { position: absolute; left: 0; bottom: -2.6rem; }
-  .g3 .ph { background: rgb(246 237 230 / .14); color: var(--blush); box-shadow: inset 0 0 0 1px rgb(235 219 215 / .4); }
-  .g3-text { font-family: var(--display); font-size: clamp(1.7rem, 3.6vw, 3.4rem); line-height: 1.12; letter-spacing: -.02em; max-width: 14em; }
+  .g3-text { font-family: var(--display); font-size: clamp(1.6rem, 2.9vw, 2.9rem); line-height: 1.14; letter-spacing: -.02em; max-width: 18em; }
   .g3-text :global(em) { color: var(--lime); }
   @media (min-width: 900px) { .g3 { grid-template-columns: 7fr 5fr; column-gap: clamp(3rem, 7vw, 8rem); } }
 
@@ -194,7 +209,7 @@ const stomach = last.slice(2).join(' ');
   .l-pre { font-size: clamp(1.05rem, 1.5vw, 1.3rem); max-width: 30rem; margin-left: 0; }
   .l-word { font-family: var(--display); font-weight: 300; font-size: clamp(4.4rem, 17vw, 16rem); line-height: .84; letter-spacing: -.05em; }
   .l-word.w1 { color: var(--pink); } .l-word.w2 { color: var(--plum); padding-left: 1.2em; }
-  .l-say { font-family: var(--display); font-style: italic; font-size: clamp(2rem, 6vw, 5.4rem); line-height: 1; letter-spacing: -.03em; margin-top: .4em; padding-left: 0; }
+  .l-say { text-wrap: balance; font-family: var(--display); font-style: italic; font-size: clamp(2rem, 6vw, 5.4rem); line-height: 1; letter-spacing: -.03em; margin-top: .4em; padding-left: 0; }
   .l-say :global(em) { font-style: normal; }
   .l-end { margin-top: 1.5rem; font-size: clamp(1.05rem, 1.5vw, 1.3rem); max-width: 30rem; margin-left: auto; margin-right: 0; }
 
@@ -202,6 +217,7 @@ const stomach = last.slice(2).join(' ');
   .g5-ribbon { position: absolute; left: 50%; top: 0; bottom: 0; width: clamp(3rem, 8vw, 7rem); transform: translateX(-50%); background: rgb(252 239 219 / .22); }
   .g5-in { position: relative; max-width: 66rem; margin: 0 auto; font-family: var(--display); }
   .g5 .c1, .g5 .c2 { font-weight: 300; font-size: clamp(2.8rem, 9.4vw, 9rem); line-height: .94; letter-spacing: -.045em; }
+  .g5 .c1, .g5 .c2 { text-wrap: balance; }
   .g5 .c2 { font-style: italic; color: var(--cream); padding-left: 1em; }
   .g5 .c3 { font-family: var(--sans); font-size: clamp(1.05rem, 1.6vw, 1.4rem); line-height: 1.55; max-width: 26rem; margin: 2.5rem 0 0 auto; background: var(--pink); padding: .4rem 0; }
   .g5-row { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; max-width: 48rem; margin: clamp(3rem, 6vw, 5rem) auto 0; }
@@ -210,7 +226,7 @@ const stomach = last.slice(2).join(' ');
   .flor { background: var(--lime); color: var(--ink); padding: var(--section) 0 clamp(2rem, 4vw, 4rem); }
   .f-head { display: grid; gap: 1.2rem; }
   .flor .gnum { color: var(--plum); }
-  .f-title { font-size: clamp(3rem, 11vw, 11rem); line-height: .86; letter-spacing: -.05em; font-weight: 300; max-width: 8ch; }
+  .f-title { font-size: clamp(2.6rem, 9vw, 9rem); line-height: .9; letter-spacing: -.05em; font-weight: 300; }
   .f-title { font-style: italic; }
   .f-text { font-family: var(--display); font-size: clamp(1.5rem, 2.6vw, 2.4rem); line-height: 1.18; max-width: 20em; }
   .f-hero { margin: clamp(2.5rem, 6vw, 5rem) 0 0; }
@@ -224,7 +240,7 @@ const stomach = last.slice(2).join(' ');
   @media (min-width: 900px) {
     .f-head { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; align-items: start; }
     .f-head .gnum { grid-column: 1 / 3; grid-row: 1 / 3; }
-    .f-title { grid-column: 3 / 10; grid-row: 1; }
+    .f-title { grid-column: 3 / 13; grid-row: 1; }
     .f-text { grid-column: 8 / 13; grid-row: 2; }
     .f-hero { margin-top: clamp(3rem, 6vw, 5rem); }
     .bento { grid-template-columns: repeat(12, 1fr); gap: 1rem; }

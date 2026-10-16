@@ -1,6 +1,6 @@
 // Reads the markdown in ../content and turns it into blocks and inline HTML.
 // No copy lives here: this only recognises structure and the small markup conventions from CLAUDE.md:
-//   BUILD NOTE: ...  (never rendered)   {{Name}} (sidepath)   {{vi: ...}} (handwritten note)   [text] (placeholder)
+//   BUILD NOTE: ...  (never rendered)   {{Name}} (sidepath)   {{vi: ...}} (handwritten note)   [text] (placeholder)   ++text++ (underline)
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
@@ -75,7 +75,7 @@ export interface InlineOpts {
   accent?: string[];
 }
 
-const TOKEN = /\{\{vi:\s*([^}]+?)\}\}|\{\{([^}]+?)\}\}|\[([^\]]+?)\]|\*\*([^*]+?)\*\*|(?<![A-Za-z0-9])_([^_\s][^_]*?)_(?![A-Za-z0-9])/g;
+const TOKEN = /\{\{vi:\s*([^}]+?)\}\}|\{\{([^}]+?)\}\}|\[([^\]]+?)\]|\*\*([^*]+?)\*\*|\+\+([^+]+?)\+\+|(?<![A-Za-z0-9])_([^_\s][^_]*?)_(?![A-Za-z0-9])/g;
 
 export function sidepathButton(name: string) {
   return `<button type="button" class="sp" data-sp="${slug(name)}" aria-haspopup="dialog">${esc(name)}<span class="sp-arrow" aria-hidden="true">↗</span></button>`;
@@ -101,7 +101,8 @@ export function inline(text: string, opts: InlineOpts = {}): string {
     else if (m[2] !== undefined) html += sidepathButton(m[2].trim());
     else if (m[3] !== undefined) html += `<span class="ph">[${esc(m[3])}]</span>`;
     else if (m[4] !== undefined) html += `<strong>${inline(m[4], opts)}</strong>`;
-    else if (m[5] !== undefined) html += `<em>${inline(m[5], opts)}</em>`;
+    else if (m[5] !== undefined) html += `<u class="ul">${inline(m[5], opts)}</u>`;
+    else if (m[6] !== undefined) html += `<em>${inline(m[6], opts)}</em>`;
     last = (m.index ?? 0) + m[0].length;
   }
   html += plain(text.slice(last), opts);
@@ -110,11 +111,37 @@ export function inline(text: string, opts: InlineOpts = {}): string {
 
 /** Plain text of an inline string (markup removed), used for aria-labels and matching. */
 export function textOf(text: string): string {
-  return text.replace(/\{\{vi:\s*([^}]+?)\}\}/g, '$1').replace(/\{\{([^}]+?)\}\}/g, '$1').replace(/\*\*([^*]+?)\*\*/g, '$1');
+  return text.replace(/\{\{vi:\s*([^}]+?)\}\}/g, '$1').replace(/\{\{([^}]+?)\}\}/g, '$1').replace(/\*\*([^*]+?)\*\*/g, '$1').replace(/\+\+([^+]+?)\+\+/g, '$1');
 }
 
 /** Splits "**Lead.** rest" into lead + rest (lead keeps its punctuation). */
 export function leadSplit(text: string): { lead: string; rest: string } {
   const m = /^\*\*(.+?)\*\*\s*([\s\S]*)$/.exec(text.trim());
   return m ? { lead: m[1], rest: m[2].trim() } : { lead: '', rest: text.trim() };
+}
+
+/** Sentences of a paragraph (a sentence ends at . ! ? ; or an ellipsis, followed by a space). */
+export const sentences = (text: string) => text.trim().split(/(?<=[.!?;…]["”]?)\s+/).filter(Boolean);
+
+/**
+ * Line-break rules for display-size text, so a phrase that carries one meaning stays on one line:
+ * the text is cut into units after every comma and sentence end; a very short unit that ends in a comma
+ * ("Honestly," "well," "Family,") stays with the next one; the last two words of a unit are tied together so
+ * no line ends on a lone word. Each unit is a <span class="u">; the stylesheet decides whether units stack.
+ * Only wraps the author's own words: nothing is added or changed.
+ */
+export function phrases(text: string, opts: InlineOpts = {}): string {
+  const words = (t: string) => t.trim().split(/\s+/).length;
+  const open = (t: string) => (t.match(/_/g)?.length ?? 0) % 2 === 1 || (t.match(/\+\+/g)?.length ?? 0) % 2 === 1 || (t.match(/\*\*/g)?.length ?? 0) % 2 === 1 || t.includes('[') !== t.includes(']') || t.includes('{{') !== t.includes('}}');
+  const raw = text.trim().split(/(?<=[.!?;,…]["”]?)\s+/).filter(Boolean);
+  const units: string[] = [];
+  for (let i = 0; i < raw.length; i++) {
+    let cur = raw[i];
+    while (i + 1 < raw.length && (open(cur) || (/,$/.test(cur) && words(cur) <= 2))) cur += ' ' + raw[++i];
+    units.push(cur);
+  }
+  return units.map((u) => {
+    const tied = words(u) >= 4 ? u.replace(/\s+(\S+)\s*$/, '\u00a0$1') : u;
+    return `<span class="u">${inline(tied, opts)}</span>`;
+  }).join(' ');
 }

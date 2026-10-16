@@ -529,6 +529,106 @@
    960
   ]
  },
+ "g-parcel": {
+  "alt": "A parcel wrapped in kraft paper and tied with a wide cream satin ribbon, an illustrated card tucked under the bow.",
+  "width": 1600,
+  "height": 2000,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-bag": {
+  "alt": "A hand holding a small yellow-and-white striped gift bag with a gold ribbon and a round cream label.",
+  "width": 1600,
+  "height": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-cakecase": {
+  "alt": "Cam Anh in a braid, seen from behind, choosing from a glass cabinet of whole cakes in a café.",
+  "width": 1600,
+  "height": 2000,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-strawberry": {
+  "alt": "A plate of strawberry cream cake, cut open, with a fork, seen from above in warm sunlight.",
+  "width": 1600,
+  "height": 2000,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-redbox": {
+  "alt": "A red box of chocolate bark studded with nuts and dried rose petals, on a wooden table.",
+  "width": 1283,
+  "height": 1604,
+  "widths": [
+   480,
+   960,
+   1283
+  ]
+ },
+ "g-book": {
+  "alt": "An open book with a passage highlighted in green, the word “Introduction” on the facing page.",
+  "width": 1600,
+  "height": 1067,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-card": {
+  "alt": "A hand holding a blue greeting card that reads “Emotional support card” in front of a shelf of colourful cards.",
+  "width": 1600,
+  "height": 2133,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-hug": {
+  "alt": "Cam Anh smiling and hugging a kraft-paper parcel with a ribbon, in a gallery with deep blue walls.",
+  "width": 1600,
+  "height": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-friend": {
+  "alt": "A woman in a beige top holding up a gift wrapped in red-and-green check paper in front of her face, in a café.",
+  "width": 1600,
+  "height": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-team": {
+  "alt": "A group of smiling people in aprons standing behind a café counter, some giving a thumbs-up.",
+  "width": 1284,
+  "height": 1284,
+  "widths": [
+   480,
+   960,
+   1284
+  ]
+ },
  "w-bike": {
   "alt": "Cam Anh in a black coat and glasses standing beside an orange motorbike on a mountain road, green hills behind her under a grey sky.",
   "width": 327,
