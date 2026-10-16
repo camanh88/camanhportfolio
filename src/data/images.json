@@ -529,8 +529,8 @@
    960
   ]
  },
- "g-parcel": {
-  "alt": "A parcel wrapped in kraft paper and tied with a wide cream satin ribbon, an illustrated card tucked under the bow.",
+ "g-friend": {
+  "alt": "A woman in a beige top holding up a gift wrapped in red-and-green check paper in front of her face, in a café.",
   "width": 1600,
   "height": 2000,
   "widths": [
@@ -539,8 +539,8 @@
    1600
   ]
  },
- "g-bag": {
-  "alt": "A hand holding a small yellow-and-white striped gift bag with a gold ribbon and a round cream label.",
+ "g-card": {
+  "alt": "A hand holding a blue greeting card that reads “Emotional support card” in front of a shelf of colourful cards.",
   "width": 1600,
   "height": 1600,
   "widths": [
@@ -549,18 +549,18 @@
    1600
   ]
  },
- "g-cakecase": {
-  "alt": "Cam Anh in a braid, seen from behind, choosing from a glass cabinet of whole cakes in a café.",
-  "width": 1600,
-  "height": 2000,
+ "g-story": {
+  "alt": "A friend’s Instagram story: a hand holding a handwritten note card above a green gift bag, with two short Vietnamese reply captions on top.",
+  "width": 1284,
+  "height": 2283,
   "widths": [
    480,
    960,
-   1600
+   1284
   ]
  },
- "g-strawberry": {
-  "alt": "A plate of strawberry cream cake, cut open, with a fork, seen from above in warm sunlight.",
+ "g-cakecase": {
+  "alt": "Cam Anh in a braid, seen from behind, choosing from a glass cabinet of whole cakes in a café.",
   "width": 1600,
   "height": 2000,
   "widths": [
@@ -579,20 +579,40 @@
    1283
   ]
  },
- "g-book": {
-  "alt": "An open book with a passage highlighted in green, the word “Introduction” on the facing page.",
+ "g-box": {
+  "alt": "Two cream compostable takeaway boxes on a wooden table, one with “Chúc mạnh phúc!” handwritten on the lid.",
   "width": 1600,
-  "height": 1067,
+  "height": 900,
   "widths": [
    480,
    960,
    1600
   ]
  },
- "g-card": {
-  "alt": "A hand holding a blue greeting card that reads “Emotional support card” in front of a shelf of colourful cards.",
+ "g-book": {
+  "alt": "An open book with a passage highlighted in green, the word “Introduction” on the facing page.",
   "width": 1600,
-  "height": 2133,
+  "height": 1200,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-chat": {
+  "alt": "A chat message bubble: “Thực sự là tớ chưa đc ai tặng quà sinh nhật kỳ công như thế này luôn á...”",
+  "width": 1284,
+  "height": 317,
+  "widths": [
+   480,
+   960,
+   1284
+  ]
+ },
+ "g-team": {
+  "alt": "A group of smiling people in aprons standing behind a café counter, some giving a thumbs-up.",
+  "width": 1600,
+  "height": 902,
   "widths": [
    480,
    960,
@@ -602,31 +622,41 @@
  "g-hug": {
   "alt": "Cam Anh smiling and hugging a kraft-paper parcel with a ribbon, in a gallery with deep blue walls.",
   "width": 1600,
-  "height": 1600,
+  "height": 2133,
   "widths": [
    480,
    960,
    1600
   ]
  },
- "g-friend": {
-  "alt": "A woman in a beige top holding up a gift wrapped in red-and-green check paper in front of her face, in a café.",
+ "g-cappuccino": {
+  "alt": "A hand holding a cappuccino with a heart in the foam, an espresso glass and a small tray on a round wooden café table.",
   "width": 1600,
-  "height": 1600,
+  "height": 2133,
   "widths": [
    480,
    960,
    1600
   ]
  },
- "g-team": {
-  "alt": "A group of smiling people in aprons standing behind a café counter, some giving a thumbs-up.",
-  "width": 1284,
-  "height": 1284,
+ "g-choc": {
+  "alt": "A slice of chocolate cake with whipped cream, nuts and a chocolate heart on a white plate, seen from above with a fork.",
+  "width": 1600,
+  "height": 2133,
   "widths": [
    480,
    960,
-   1284
+   1600
+  ]
+ },
+ "g-strawberry": {
+  "alt": "A plate of strawberry cream cake, cut open, with a fork, seen from above in warm sunlight.",
+  "width": 1600,
+  "height": 2133,
+  "widths": [
+   480,
+   960,
+   1600
   ]
  },
  "w-bike": {
