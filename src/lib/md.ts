@@ -141,7 +141,6 @@ export function phrases(text: string, opts: InlineOpts = {}): string {
     units.push(cur);
   }
   return units.map((u) => {
-    const tied = words(u) >= 4 ? u.replace(/\s+(\S+)\s*$/, '\u00a0$1') : u;
-    return `<span class="u">${inline(tied, opts)}</span>`;
+    return `<span class="u">${inline(u, opts)}</span>`;
   }).join(' ');
 }
