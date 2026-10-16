@@ -83,25 +83,17 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
       <p class="gnum" aria-hidden="true">{sectionNum('gift')}</p>
       <h2 id="gift-title" class="g-title" >{ch04.giftTitle}</h2>
       <p class="g1-text" set:html={g1} />
-      <div class="g1-pic collage" style="--ar: 1016 / 915">
-        <div class="cl" style="left: 0; top: 0; width: 60.2%"><Photo id="g-parcel" sizes="(min-width: 900px) 24vw, 56vw" /></div>
-        <div class="cl" style="left: 57%; top: 50%; width: 43%"><Photo id="g-card-cut" sizes="(min-width: 900px) 18vw, 42vw" /></div>
+      <div class="g1-pic">
+        <span class="ribbon-v" aria-hidden="true"></span><span class="ribbon-h" aria-hidden="true"></span>
+        <div class="pic" style="--a: 4 / 5"><Photo id="g-parcel" sizes="(min-width: 900px) 30vw, 90vw" /></div>
       </div>
+      <div class="pic g1-small" style="--a: 1 / 1"><Photo id="g-card" sizes="(min-width: 900px) 13rem, 12.8rem" /></div>
     </div>
 
     <!-- G2: a box of cake -->
     <div class="g2">
       <p class="g2-text"><span set:html={g2} /><span class="g2-sub" set:html={g2sub} /></p>
-      <div class="g2-collage collage" style="--ar: 1013 / 918">
-        <div class="cl" style="left: 0%; top: 0%; width: 28.9%; z-index: 1"><Photo id="g-cakecase" sizes="(min-width: 900px) 30vw, 30vw" /></div>
-        <div class="cl" style="left: 30.7%; top: 3.3%; width: 28.4%; z-index: 1"><Photo id="g-strawberry" sizes="(min-width: 900px) 30vw, 30vw" /></div>
-        <div class="cl" style="left: 61%; top: 9.6%; width: 27.4%; z-index: 1"><Photo id="g-story" sizes="(min-width: 900px) 30vw, 30vw" /></div>
-        <div class="cl" style="left: 10.5%; top: 46.9%; width: 30.6%; z-index: 1"><Photo id="g-redbox" sizes="(min-width: 900px) 30vw, 30vw" /></div>
-        <div class="cl" style="left: 43%; top: 46.9%; width: 33.2%; z-index: 1"><Photo id="g-cappuccino" sizes="(min-width: 900px) 30vw, 30vw" /></div>
-        <div class="cl" style="left: 82.5%; top: 43%; width: 17.5%; z-index: 3"><Photo id="g-bag-cut" sizes="(min-width: 900px) 14vw, 18vw" /></div>
-        <div class="cl" style="left: 55%; top: 62.6%; width: 39.7%; z-index: 2"><Photo id="g-friend-cut" sizes="(min-width: 900px) 30vw, 40vw" /></div>
-        <div class="cl" style="left: 1%; top: 86.9%; width: 35.3%; z-index: 3"><Photo id="g-chat" sizes="(min-width: 900px) 28vw, 36vw" /></div>
-      </div>
+      <div class="g2-spread"><Photo id="g-honestly" sizes="(min-width: 1400px) 88rem, 100vw" /></div>
     </div>
 
     <!-- G3: the book -->
@@ -182,19 +174,25 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   .collage { position: relative; width: 100%; aspect-ratio: var(--ar); }
   .cl { position: absolute; }
   .cl :global(img) { display: block; width: 100%; height: auto; }
-  .g1-pic { max-width: 30rem; }
+  .g1-pic { position: relative; max-width: 26rem; }
+  .ribbon-v, .ribbon-h { position: absolute; background: var(--cream); z-index: 2; pointer-events: none; opacity: .92; }
+  .ribbon-v { left: 50%; width: 2.2rem; top: -1rem; bottom: -1rem; transform: translateX(-50%); }
+  .ribbon-h { top: 50%; height: 2.2rem; left: -1rem; right: -1rem; transform: translateY(-50%); }
+  .pic.g1-small { max-width: 12.8rem; }
   @media (min-width: 900px) {
     .g1 { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; row-gap: 1.5rem; min-height: 100svh; align-content: start; }
     .g1 .gnum { grid-column: 1 / 4; grid-row: 1; }
     .g-title { grid-column: 1 / 9; grid-row: 2; }
     .g1-text { grid-column: 1 / 7; grid-row: 3; margin-top: 1rem; }
-    .g1-pic { grid-column: 7 / 13; grid-row: 1 / 4; align-self: center; max-width: none; margin: 2.5rem 0; }
+    .g1-pic { grid-column: 7 / 11; grid-row: 1 / 4; align-self: center; max-width: none; margin: 2.5rem 0; }
+    .pic.g1-small { grid-column: 11 / 13; grid-row: 3; align-self: end; justify-self: end; max-width: 12.8rem; }
   }
 
   .g2 { background: var(--cream); color: var(--ink); padding: var(--section) var(--pad); display: grid; gap: 3rem; }
   .g2-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.8rem, 4.2vw, 4rem); line-height: 1.08; letter-spacing: -.02em; max-width: 24em; }
   .g2-sub { display: block; margin-top: 1.8rem; font-family: var(--sans); font-size: clamp(1.05rem, 1.45vw, 1.35rem); line-height: 1.5; color: var(--ink); max-width: 34em; }
-  .g2-collage { max-width: 64rem; }
+  .g2-spread { width: 100%; max-width: 88rem; margin-inline: auto; }
+  .g2-spread :global(img) { display: block; width: 100%; height: auto; }
   .g2-text :global(.mk) { background: linear-gradient(transparent 70%, var(--pink) 70% 96%, transparent 96%); color: inherit; padding: 0 .08em; font-style: italic; white-space: nowrap; }
 
   .g3 { background: var(--plum); color: var(--cream); padding: var(--section) var(--pad); display: grid; gap: 2.5rem; align-items: center; }
