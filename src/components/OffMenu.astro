@@ -175,8 +175,8 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   .cl { position: absolute; }
   .cl :global(img) { display: block; width: 100%; height: auto; }
   .g1-pic { position: relative; max-width: 26rem; }
-    /* faded blue ribbon cross laid over the parcel photo, placed to follow the real ribbon (Cam Anh's marked-up screenshot) */
-  .ribbon-v, .ribbon-h { position: absolute; background: #2B5FE0; z-index: 2; pointer-events: none; opacity: .42; }
+    /* faded cream ribbon cross laid over the parcel photo, placed to follow the real ribbon (Cam Anh's marked-up screenshot) */
+  .ribbon-v, .ribbon-h { position: absolute; background: var(--cream); z-index: 2; pointer-events: none; opacity: .38; }
   .ribbon-v { left: 30%; width: 2.2rem; top: -9.2%; bottom: -9.4%; transform: translateX(-50%) rotate(-1.2deg); }
   .ribbon-h { top: 36%; height: 2.2rem; left: -15.6%; right: -10.2%; transform: translateY(-50%); }
   .pic.g1-small { max-width: 12.8rem; }
