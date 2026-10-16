@@ -26,6 +26,7 @@ const loveEnd = phrases(sent.slice(4).join(' '));
 const last = sentences(gift[4] ?? '');
 const connect = last.slice(0, 2);
 const stomach = phrases(last.slice(2).join(' '));
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).padStart(2, '0');
 ---
 <article id="off-menu" class="om" aria-labelledby="om-title">
@@ -51,7 +52,9 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
       <p class="f-text" set:html={phrases(flor[0] ?? '')} />
     </div>
 
-    <div class="f-hero"><Slot tag="F1" a="16 / 9" kind="video" tone="plum" /></div>
+    <div class="f-hero">
+      <video class="f-video" muted loop playsinline preload="none" poster={`${base}img/f1-poster-1600.webp`} data-hd={`${base}video/f1-1080.mp4`} data-sd={`${base}video/f1-540.mp4`} aria-label="A woman in a red top, seen from behind, arranging a large bouquet of orange, pink and red flowers with berries on a wooden table."></video>
+    </div>
 
     <div class="bento wrap">
       <Slot tag="F2" a="3 / 4" tone="pink" class="b1" />
@@ -239,7 +242,7 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   .f-title { font-style: italic; }
   .f-text { font-family: var(--display); font-size: clamp(1.5rem, 2.6vw, 2.4rem); line-height: 1.18; max-width: 20em; }
   .f-hero { margin: clamp(2.5rem, 6vw, 5rem) 0 0; }
-  .f-hero :global(.slot) { aspect-ratio: 16 / 9; }
+  .f-video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--plum); }
   .bento { display: grid; grid-template-columns: repeat(2, 1fr); gap: .6rem; margin-top: .6rem; align-items: start; }
   .bento :global(.b3) { grid-column: 1 / -1; }
   .reel { margin-top: clamp(2rem, 5vw, 4rem); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; padding: 0 var(--pad) 1rem; }
@@ -284,3 +287,22 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   }
 </script>
 
+<script>
+  // Florist hero video: loads only when it comes into view (laptop copy, or the light copy on phones), plays muted and looped,
+  // pauses when scrolled away. With "reduce motion" it stays on the poster and shows controls instead of autoplaying.
+  const vid = document.querySelector<HTMLVideoElement>('.f-video');
+  if (vid) {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let ready = false;
+    const load = () => {
+      if (ready) return;
+      ready = true;
+      vid.src = (matchMedia('(max-width: 700px)').matches ? vid.dataset.sd : vid.dataset.hd) ?? '';
+    };
+    if (reduce) { vid.controls = true; vid.removeAttribute('loop'); }
+    new IntersectionObserver((es) => es.forEach((e) => {
+      if (e.isIntersecting) { load(); if (!reduce) vid.play().catch(() => {}); }
+      else vid.pause();
+    }), { rootMargin: '200px 0px', threshold: 0.15 }).observe(vid);
+  }
+</script>
