@@ -529,118 +529,28 @@
    960
   ]
  },
- "g-friend": {
-  "alt": "A woman in a beige top holding up a gift wrapped in red-and-green check paper in front of her face, in a café.",
+ "g-parcel": {
+  "alt": "A parcel wrapped in kraft paper and tied with a wide cream satin ribbon, an illustrated card tucked under the bow.",
   "width": 1600,
-  "height": 2000,
+  "height": 2134,
   "widths": [
    480,
    960,
    1600
   ]
  },
- "g-card": {
-  "alt": "A hand holding a blue greeting card that reads “Emotional support card” in front of a shelf of colourful cards.",
+ "g-card-cut": {
+  "alt": "A hand holding a blue greeting card that reads “Emotional support card”, a gold envelope behind it.",
   "width": 1600,
-  "height": 1600,
+  "height": 1414,
   "widths": [
    480,
    960,
    1600
-  ]
- },
- "g-story": {
-  "alt": "A friend’s Instagram story: a hand holding a handwritten note card above a green gift bag, with two short Vietnamese reply captions on top.",
-  "width": 1284,
-  "height": 2283,
-  "widths": [
-   480,
-   960,
-   1284
   ]
  },
  "g-cakecase": {
   "alt": "Cam Anh in a braid, seen from behind, choosing from a glass cabinet of whole cakes in a café.",
-  "width": 1600,
-  "height": 2000,
-  "widths": [
-   480,
-   960,
-   1600
-  ]
- },
- "g-redbox": {
-  "alt": "A red box of chocolate bark studded with nuts and dried rose petals, on a wooden table.",
-  "width": 1283,
-  "height": 1604,
-  "widths": [
-   480,
-   960,
-   1283
-  ]
- },
- "g-box": {
-  "alt": "Two cream compostable takeaway boxes on a wooden table, one with “Chúc mạnh phúc!” handwritten on the lid.",
-  "width": 1600,
-  "height": 900,
-  "widths": [
-   480,
-   960,
-   1600
-  ]
- },
- "g-book": {
-  "alt": "An open book with a passage highlighted in green, the word “Introduction” on the facing page.",
-  "width": 1600,
-  "height": 1200,
-  "widths": [
-   480,
-   960,
-   1600
-  ]
- },
- "g-chat": {
-  "alt": "A chat message bubble: “Thực sự là tớ chưa đc ai tặng quà sinh nhật kỳ công như thế này luôn á...”",
-  "width": 1284,
-  "height": 317,
-  "widths": [
-   480,
-   960,
-   1284
-  ]
- },
- "g-team": {
-  "alt": "A group of smiling people in aprons standing behind a café counter, some giving a thumbs-up.",
-  "width": 1600,
-  "height": 902,
-  "widths": [
-   480,
-   960,
-   1600
-  ]
- },
- "g-hug": {
-  "alt": "Cam Anh smiling and hugging a kraft-paper parcel with a ribbon, in a gallery with deep blue walls.",
-  "width": 1600,
-  "height": 2133,
-  "widths": [
-   480,
-   960,
-   1600
-  ]
- },
- "g-cappuccino": {
-  "alt": "A hand holding a cappuccino with a heart in the foam, an espresso glass and a small tray on a round wooden café table.",
-  "width": 1600,
-  "height": 2133,
-  "widths": [
-   480,
-   960,
-   1600
-  ]
- },
- "g-choc": {
-  "alt": "A slice of chocolate cake with whipped cream, nuts and a chocolate heart on a white plate, seen from above with a fork.",
   "width": 1600,
   "height": 2133,
   "widths": [
@@ -657,6 +567,105 @@
    480,
    960,
    1600
+  ]
+ },
+ "g-story": {
+  "alt": "A friend’s Instagram story: a hand holding a handwritten note card above a green gift bag, with two short Vietnamese reply captions on top.",
+  "width": 1284,
+  "height": 1712,
+  "widths": [
+   480,
+   960,
+   1284
+  ]
+ },
+ "g-redbox": {
+  "alt": "A red box of chocolate bark studded with nuts and dried rose petals, on a wooden table.",
+  "width": 1283,
+  "height": 1604,
+  "widths": [
+   480,
+   960,
+   1283
+  ]
+ },
+ "g-cappuccino": {
+  "alt": "A hand holding a cappuccino with a heart in the foam, an espresso glass and a small tray on a round wooden café table.",
+  "width": 1600,
+  "height": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-bag-cut": {
+  "alt": "A hand holding a small yellow-and-white striped gift bag tied with a gold ribbon.",
+  "width": 1600,
+  "height": 2204,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-friend-cut": {
+  "alt": "A woman in a beige top holding up a gift wrapped in red-and-green check paper in front of her face, at a café table.",
+  "width": 1600,
+  "height": 1390,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-chat": {
+  "alt": "A chat message bubble: “Thực sự là tớ chưa đc ai tặng quà sinh nhật kỳ công như thế này luôn á...”",
+  "width": 890,
+  "height": 312,
+  "widths": [
+   480,
+   890
+  ]
+ },
+ "g-book": {
+  "alt": "A close-up of an open book: a passage about food as a link to the rest of the world, highlighted in green, signed René Redzepi.",
+  "width": 1600,
+  "height": 900,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-hug": {
+  "alt": "Cam Anh smiling and hugging a kraft-paper parcel with a ribbon, in a gallery with deep blue walls.",
+  "width": 1600,
+  "height": 2000,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-choc": {
+  "alt": "A slice of chocolate cake with whipped cream, nuts and a chocolate heart on a white plate, seen from above with a fork.",
+  "width": 1600,
+  "height": 2000,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "g-team": {
+  "alt": "A group of smiling people in aprons standing behind a café counter, some giving a thumbs-up.",
+  "width": 1027,
+  "height": 1284,
+  "widths": [
+   480,
+   960,
+   1027
   ]
  },
  "w-bike": {

@@ -17,6 +17,25 @@ for (const [id, [rel, alt, opts = {}]] of Object.entries(photos)) {
   if (!existsSync(src)) { console.warn('missing', rel); continue; }
   let img = sharp(readable(src)).rotate();
   if (opts.trim) img = sharp(await img.trim({ background: '#000000', threshold: 24 }).toBuffer()); // black screenshot bars
+  if (opts.knockout) { // a flat white screenshot (chat bubble): remove the white that touches the border
+    const { data, info } = await img.ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    const { width: w, height: h } = info;
+    const seen = new Uint8Array(w * h), stack = [];
+    for (let x = 0; x < w; x++) stack.push(x, (h - 1) * w + x);
+    for (let y = 0; y < h; y++) stack.push(y * w, y * w + w - 1);
+    while (stack.length) {
+      const q = stack.pop();
+      if (seen[q] || data[q * 4] < 248 || data[q * 4 + 1] < 248 || data[q * 4 + 2] < 248) continue;
+      seen[q] = 1; data[q * 4 + 3] = 0;
+      const x = q % w;
+      if (x > 0) stack.push(q - 1);
+      if (x < w - 1) stack.push(q + 1);
+      if (q >= w) stack.push(q - w);
+      if (q < w * (h - 1)) stack.push(q + w);
+    }
+    img = sharp(data, { raw: { width: w, height: h, channels: 4 } });
+  }
+  if (opts.alpha || opts.knockout) img = sharp(await img.trim({ threshold: 1 }).png().toBuffer()); // cut-outs: crop to the visible shape
   if (opts.crop) { // largest box of the wanted aspect; x / y place it inside the leftover space (0..1)
     const buf = await img.toBuffer(); const m = await sharp(buf).metadata();
     const a = opts.crop.aspect;

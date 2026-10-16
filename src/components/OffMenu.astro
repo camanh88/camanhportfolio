@@ -83,31 +83,42 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
       <p class="gnum" aria-hidden="true">{sectionNum('gift')}</p>
       <h2 id="gift-title" class="g-title" >{ch04.giftTitle}</h2>
       <p class="g1-text" set:html={g1} />
-      <div class="g1-pic">
-        <span class="ribbon-v" aria-hidden="true"></span><span class="ribbon-h" aria-hidden="true"></span>
-        <div class="pic" style="--a: 4 / 5"><Photo id="g-friend" sizes="(min-width: 900px) 30vw, 90vw" /></div>
+      <div class="g1-pic collage" style="--ar: 1016 / 915">
+        <div class="cl" style="left: 0; top: 0; width: 60.2%"><Photo id="g-parcel" sizes="(min-width: 900px) 24vw, 56vw" /></div>
+        <div class="cl" style="left: 57%; top: 50%; width: 43%"><Photo id="g-card-cut" sizes="(min-width: 900px) 18vw, 42vw" /></div>
       </div>
-      <div class="pic g1-small" style="--a: 1 / 1"><Photo id="g-card" sizes="(min-width: 900px) 16vw, 16rem" /></div>
     </div>
 
     <!-- G2: a box of cake -->
     <div class="g2">
       <p class="g2-text"><span set:html={g2} /><span class="g2-sub" set:html={g2sub} /></p>
-      <div class="g2-row">
-        <div class="pic" style="--a: 9 / 16"><Photo id="g-story" sizes="(min-width: 900px) 28vw, 33vw" /></div>
-        <div class="pic" style="--a: 4 / 5"><Photo id="g-cakecase" sizes="(min-width: 900px) 28vw, 33vw" /></div>
-        <div class="pic" style="--a: 4 / 5"><Photo id="g-redbox" sizes="(min-width: 900px) 28vw, 33vw" /></div>
+      <div class="g2-collage collage" style="--ar: 1013 / 918">
+        <div class="cl" style="left: 0%; top: 0%; width: 28.9%; z-index: 1"><Photo id="g-cakecase" sizes="(min-width: 900px) 30vw, 30vw" /></div>
+        <div class="cl" style="left: 30.7%; top: 3.3%; width: 28.4%; z-index: 1"><Photo id="g-strawberry" sizes="(min-width: 900px) 30vw, 30vw" /></div>
+        <div class="cl" style="left: 61%; top: 9.6%; width: 27.4%; z-index: 1"><Photo id="g-story" sizes="(min-width: 900px) 30vw, 30vw" /></div>
+        <div class="cl" style="left: 10.5%; top: 46.9%; width: 30.6%; z-index: 1"><Photo id="g-redbox" sizes="(min-width: 900px) 30vw, 30vw" /></div>
+        <div class="cl" style="left: 43%; top: 46.9%; width: 33.2%; z-index: 1"><Photo id="g-cappuccino" sizes="(min-width: 900px) 30vw, 30vw" /></div>
+        <div class="cl" style="left: 82.5%; top: 43%; width: 17.5%; z-index: 3"><Photo id="g-bag-cut" sizes="(min-width: 900px) 14vw, 18vw" /></div>
+        <div class="cl" style="left: 55%; top: 62.6%; width: 39.7%; z-index: 2"><Photo id="g-friend-cut" sizes="(min-width: 900px) 30vw, 40vw" /></div>
+        <div class="cl" style="left: 1%; top: 86.9%; width: 35.3%; z-index: 3"><Photo id="g-chat" sizes="(min-width: 900px) 28vw, 36vw" /></div>
       </div>
-      <div class="pic g2-wide" style="--a: 16 / 9"><Photo id="g-box" sizes="(min-width: 900px) 44rem, 100vw" /></div>
     </div>
 
     <!-- G3: the book -->
     <div class="g3">
       <div class="book">
-        <div class="pic" style="--a: 4 / 3"><Photo id="g-book" sizes="(min-width: 900px) 55vw, 92vw" /></div>
+        <button type="button" class="book-open" aria-haspopup="dialog" aria-label={ui.expand}>
+          <div class="pic" style="--a: 16 / 9"><Photo id="g-book" sizes="(min-width: 900px) 55vw, 92vw" /></div>
+          <span class="book-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span>
+        </button>
       </div>
       <p class="g3-text" set:html={g3} />
     </div>
+
+    <dialog class="zoom" aria-label={ui.expand}>
+      <button type="button" class="zoom-x" aria-label={ui.close}><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button>
+      <Photo id="g-book" sizes="100vw" />
+    </dialog>
 
     <!-- G4: sharing, caring, "I love you" -->
     <div class="g4">
@@ -116,7 +127,6 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
       <p class="l-word w2">{loveWords[1]}</p>
       <p class="l-say" set:html={inline(loveSay)} />
       <p class="l-end" set:html={loveEnd} />
-      <div class="pic l-chat" style="--a: 1284 / 317"><Photo id="g-chat" sizes="(min-width: 900px) 24rem, 80vw" /></div>
     </div>
 
     <!-- G5: a connection -->
@@ -128,11 +138,9 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
         <p class="c3" set:html={stomach} />
       </div>
       <div class="g5-photos">
-        <div class="pic g5-wide" style="--a: 2277 / 1284"><Photo id="g-team" sizes="(min-width: 900px) 56rem, 100vw" /></div>
-        <div class="pic" style="--a: 3 / 4"><Photo id="g-hug" sizes="(min-width: 900px) 14rem, 50vw" /></div>
-        <div class="pic" style="--a: 3 / 4"><Photo id="g-cappuccino" sizes="(min-width: 900px) 14rem, 50vw" /></div>
-        <div class="pic" style="--a: 3 / 4"><Photo id="g-choc" sizes="(min-width: 900px) 14rem, 50vw" /></div>
-        <div class="pic" style="--a: 3 / 4"><Photo id="g-strawberry" sizes="(min-width: 900px) 14rem, 50vw" /></div>
+        <div class="pic" style="--a: 4 / 5"><Photo id="g-hug" sizes="(min-width: 900px) 18rem, 33vw" /></div>
+        <div class="pic" style="--a: 4 / 5"><Photo id="g-choc" sizes="(min-width: 900px) 18rem, 33vw" /></div>
+        <div class="pic" style="--a: 4 / 5"><Photo id="g-team" sizes="(min-width: 900px) 18rem, 33vw" /></div>
       </div>
     </div>
   </section>
@@ -170,31 +178,39 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   .g-title { font-size: clamp(3rem, 10.5vw, 10rem); line-height: .88; letter-spacing: -.045em; font-weight: 300; max-width: 9ch; }
   .g1-text { font-family: var(--display); font-size: clamp(1.4rem, 2.6vw, 2.3rem); line-height: 1.22; max-width: 24em; }
   .g1-text :global(.give) { display: block; font-style: italic; font-size: 2.6em; line-height: .9; letter-spacing: -.04em; color: var(--cream); margin: .15em 0; }
-  .g1-pic { position: relative; max-width: 26rem; }
-  .ribbon-v, .ribbon-h { position: absolute; background: var(--cream); z-index: 0; pointer-events: none; } /* behind the photo: only the ends show, like a ribbon it sits on */
-  .g1-pic .pic { position: relative; z-index: 1; }
-  .ribbon-v { left: 50%; width: 2.2rem; top: -1.6rem; bottom: -1.6rem; transform: translateX(-50%); }
-  .ribbon-h { top: 50%; height: 2.2rem; left: -1.6rem; right: -1.6rem; transform: translateY(-50%); }
-  .pic.g1-small { max-width: 16rem; }
+  /* collages: pictures placed by percentages of one frame, overlapping like a pasted spread; cut-outs have transparent edges */
+  .collage { position: relative; width: 100%; aspect-ratio: var(--ar); }
+  .cl { position: absolute; }
+  .cl :global(img) { display: block; width: 100%; height: auto; }
+  .g1-pic { max-width: 30rem; }
   @media (min-width: 900px) {
     .g1 { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; row-gap: 1.5rem; min-height: 100svh; align-content: start; }
     .g1 .gnum { grid-column: 1 / 4; grid-row: 1; }
     .g-title { grid-column: 1 / 9; grid-row: 2; }
     .g1-text { grid-column: 1 / 7; grid-row: 3; margin-top: 1rem; }
-    .g1-pic { grid-column: 7 / 11; grid-row: 1 / 4; align-self: center; max-width: none; margin: 2.5rem 0; }
-    .pic.g1-small { grid-column: 11 / 13; grid-row: 3; align-self: end; max-width: none; }
+    .g1-pic { grid-column: 7 / 13; grid-row: 1 / 4; align-self: center; max-width: none; margin: 2.5rem 0; }
   }
 
   .g2 { background: var(--cream); color: var(--ink); padding: var(--section) var(--pad); display: grid; gap: 3rem; }
   .g2-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.8rem, 4.2vw, 4rem); line-height: 1.08; letter-spacing: -.02em; max-width: 24em; }
   .g2-sub { display: block; margin-top: 1.8rem; font-family: var(--sans); font-size: clamp(1.05rem, 1.45vw, 1.35rem); line-height: 1.5; color: var(--ink); max-width: 34em; }
-  .g2-wide { max-width: 44rem; margin-left: auto; }
+  .g2-collage { max-width: 64rem; }
   .g2-text :global(.mk) { background: linear-gradient(transparent 70%, var(--pink) 70% 96%, transparent 96%); color: inherit; padding: 0 .08em; font-style: italic; white-space: nowrap; }
-  .g2-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(.5rem, 2vw, 1.5rem); align-items: start; }
-  .g2-row .pic:nth-child(2) { margin-top: 2.5rem; } .g2-row .pic:nth-child(3) { margin-top: 5rem; }
 
   .g3 { background: var(--plum); color: var(--cream); padding: var(--section) var(--pad); display: grid; gap: 2.5rem; align-items: center; }
   .book { position: relative; display: block; box-shadow: 0 30px 60px -30px rgb(0 0 0 / .6); background: #fff; padding: .4rem; }
+  .book-open { appearance: none; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; position: relative; color: inherit; }
+  .book-open :global(img) { transition: transform 1.2s var(--ease); }
+  .book-open:hover :global(img), .book-open:focus-visible :global(img) { transform: scale(1.03); }
+  .book-zoom { position: absolute; right: .8rem; bottom: .8rem; width: 2.75rem; height: 2.75rem; display: grid; place-items: center; background: var(--paper); color: var(--ink); }
+  .zoom { border: 0; padding: 0; margin: 0; max-width: none; max-height: none; position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; background: rgb(20 19 18 / 0); transition: background .45s var(--ease); cursor: zoom-out; }
+  .zoom[open] { display: grid; place-items: center; }
+  .zoom::backdrop { background: transparent; }
+  .zoom.is-open { background: rgb(20 19 18 / .95); }
+  .zoom :global(img) { max-width: 96vw; max-height: 88svh; width: auto; height: auto; transform: scale(.92); opacity: 0; transition: transform .55s var(--ease), opacity .45s var(--ease); }
+  .zoom.is-open :global(img) { transform: none; opacity: 1; }
+  .zoom-x { position: absolute; top: 1rem; right: 1rem; width: 3rem; height: 3rem; display: grid; place-items: center; background: transparent; border: 0; color: #fff; cursor: pointer; }
+  .zoom-x:hover { opacity: .65; }
   .g3-text { font-family: var(--display); font-size: clamp(1.7rem, 3.6vw, 3.4rem); line-height: 1.12; letter-spacing: -.02em; max-width: 14em; }
   .g3-text :global(em) { color: var(--lime); }
   @media (min-width: 900px) { .g3 { grid-template-columns: 7fr 5fr; column-gap: clamp(3rem, 7vw, 8rem); } }
@@ -206,7 +222,6 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   .l-word.w1 { color: var(--pink); } .l-word.w2 { color: var(--plum); padding-left: 1.2em; }
   .l-say { font-family: var(--display); font-style: italic; font-size: clamp(2rem, 6vw, 5.4rem); line-height: 1; letter-spacing: -.03em; margin-top: .4em; padding-left: 0; }
   .l-say :global(em) { font-style: normal; }
-  .g4 .l-chat { width: min(24rem, 100%); margin: clamp(2rem, 5vw, 4rem) 0 0 auto; }
   .l-end { margin-top: 1.5rem; font-size: clamp(1.05rem, 1.5vw, 1.3rem); max-width: 30rem; margin-left: auto; margin-right: 0; }
 
   .g5 { position: relative; background: var(--pink); color: #fff; padding: var(--section) var(--pad) clamp(3rem, 6vw, 5rem); overflow: hidden; }
@@ -215,9 +230,7 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   .g5 .c1, .g5 .c2 { font-weight: 300; font-size: clamp(2.8rem, 9.4vw, 9rem); line-height: .94; letter-spacing: -.045em; }
   .g5 .c2 { font-style: italic; color: var(--cream); padding-left: 1em; }
   .g5 .c3 { font-family: var(--sans); font-size: clamp(1.05rem, 1.6vw, 1.4rem); line-height: 1.55; max-width: 26rem; margin: 2.5rem 0 0 auto; background: var(--pink); padding: .4rem 0; }
-  .g5-photos { position: relative; display: grid; grid-template-columns: repeat(2, 1fr); gap: .6rem; max-width: 56rem; margin: clamp(3rem, 6vw, 5rem) auto 0; }
-  .g5-wide { grid-column: 1 / -1; }
-  @media (min-width: 700px) { .g5-photos { grid-template-columns: repeat(4, 1fr); } }
+  .g5-photos { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(.5rem, 1.6vw, 1rem); max-width: 56rem; margin: clamp(3rem, 6vw, 5rem) auto 0; }
 
   /* ---------- florist ---------- */
   .flor { background: var(--lime); color: var(--ink); padding: var(--section) 0 clamp(2rem, 4vw, 4rem); }
@@ -252,5 +265,22 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
     .reel li { width: 14rem; }
     .f-end { gap: 1rem; }
   }
-  @media (prefers-reduced-motion: reduce) { .dgo { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .dgo, .zoom, .zoom :global(img), .book-open :global(img) { transition: none; } .zoom :global(img) { transform: none; } }
 </style>
+
+<script>
+  // The book photo opens large in a native <dialog> (focus trap, Esc, backdrop click to close).
+  const zoom = document.querySelector<HTMLDialogElement>('.zoom');
+  const opener = document.querySelector<HTMLButtonElement>('.book-open');
+  if (zoom && opener) {
+    const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const close = () => {
+      zoom.classList.remove('is-open');
+      const done = () => { zoom.close(); opener.focus(); };
+      reduce() ? done() : setTimeout(done, 350);
+    };
+    opener.addEventListener('click', () => { zoom.showModal(); requestAnimationFrame(() => zoom.classList.add('is-open')); });
+    zoom.addEventListener('cancel', (e) => { e.preventDefault(); close(); });
+    zoom.addEventListener('click', (e) => { if (!(e.target as HTMLElement).closest('.zoom-x') && (e.target as HTMLElement).closest('img') === null) close(); else if ((e.target as HTMLElement).closest('.zoom-x')) close(); });
+  }
+</script>
