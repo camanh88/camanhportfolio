@@ -108,7 +108,7 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
     <!-- G2: a box of cake -->
     <div class="g2">
       <p class="g2-text"><span set:html={g2} /><span class="g2-sub" set:html={g2sub} /></p>
-      <div class="g2-spread"><Photo id="g-honestly" sizes="(min-width: 1400px) 88rem, 100vw" /></div>
+      <div class="g2-spread"><Photo id="g-honestly" sizes="(min-width: 1600px) 100rem, 100vw" /></div>
     </div>
 
     <!-- G3: the book -->
@@ -204,10 +204,10 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
     .pic.g1-small { grid-column: 11 / 13; grid-row: 3; align-self: end; justify-self: end; max-width: 12.8rem; }
   }
 
-  .g2 { background: var(--cream); color: var(--ink); padding: var(--section) var(--pad); display: grid; gap: 3rem; }
+  .g2 { background: var(--cream); color: var(--ink); padding: var(--section) var(--pad); display: grid; grid-template-columns: minmax(0, 1fr); gap: 3rem; }
   .g2-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.8rem, 4.2vw, 4rem); line-height: 1.08; letter-spacing: -.02em; max-width: 24em; }
   .g2-sub { display: block; margin-top: 1.8rem; font-family: var(--sans); font-size: clamp(1.05rem, 1.45vw, 1.35rem); line-height: 1.5; color: var(--ink); max-width: 34em; }
-  .g2-spread { width: 100%; max-width: 88rem; margin-inline: auto; }
+  .g2-spread { --fp: clamp(.5rem, 1.2vw, 1.1rem); width: min(calc(100vw - 2 * var(--fp)), 100rem); justify-self: center; } /* same width as the florist video (F1) */
   .g2-spread :global(img) { display: block; width: 100%; height: auto; }
   .g2-text :global(.mk) { background: linear-gradient(transparent 70%, var(--pink) 70% 96%, transparent 96%); color: inherit; padding: 0 .08em; font-style: italic; white-space: nowrap; }
 
