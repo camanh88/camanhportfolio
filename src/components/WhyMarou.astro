@@ -41,13 +41,15 @@ const [v2a, v2b] = v2.split('§');
         <path id="road-line" class="road-line" d="M0,215 C140,190 260,180 400,205 C560,235 640,230 780,200 C920,170 1050,175 1180,200 C1290,220 1380,215 1440,198" />
         <!-- a car that reads the same in both directions: mirror-symmetric, lights at both ends -->
         <g class="jeep" data-jeep>
-          <rect x="-34" y="-25" width="68" height="15" rx="6" class="j-body" />
-          <path d="M-23,-25 L-15,-40 H15 L23,-25 Z" class="j-top" />
-          <path d="M-18,-27 L-12,-37 H-2 V-27 Z" class="j-win" /><path d="M18,-27 L12,-37 H2 V-27 Z" class="j-win" />
-          <rect x="-11" y="-44" width="22" height="3" rx="1.5" class="j-rack" />
-          <circle cx="-30" cy="-18" r="2.4" class="j-lamp" /><circle cx="30" cy="-18" r="2.4" class="j-lamp" />
-          <circle cx="-21" cy="-8" r="8" class="j-wheel" /><circle cx="21" cy="-8" r="8" class="j-wheel" />
-          <circle cx="-21" cy="-8" r="2.8" class="j-hub" /><circle cx="21" cy="-8" r="2.8" class="j-hub" />
+          <!-- long, low, boxy wagon (proportions from Cam Anh's reference picture); mirror-symmetric so it reads both ways, no letter on it -->
+          <rect x="-60" y="-26" width="120" height="17" rx="3" class="j-body" />
+          <path d="M-46,-26 L-41,-45 H41 L46,-26 Z" class="j-top" />
+          <path d="M-40,-28 L-36,-42 H-5 V-28 Z" class="j-win" /><path d="M40,-28 L36,-42 H5 V-28 Z" class="j-win" />
+          <rect x="-2.2" y="-42" width="4.4" height="14" class="j-pillar" />
+          <rect x="-26" y="-49" width="52" height="3" rx="1.5" class="j-rack" />
+          <rect x="-60" y="-19" width="5" height="4" rx="1" class="j-lamp" /><rect x="55" y="-19" width="5" height="4" rx="1" class="j-lamp" />
+          <circle cx="-38" cy="-9" r="9.5" class="j-wheel" /><circle cx="38" cy="-9" r="9.5" class="j-wheel" />
+          <circle cx="-38" cy="-9" r="3.2" class="j-hub" /><circle cx="38" cy="-9" r="3.2" class="j-hub" />
         </g>
       </svg>
       <p class="r-tail" data-tail>{ch05.hint}</p>
@@ -141,8 +143,8 @@ const [v2a, v2b] = v2.split('§');
   .hill-back { fill: #3f1a47; }
   .hill-front { fill: var(--plum); }
   .road-line { fill: none; stroke: var(--lime); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 11; }
-  .jeep .j-body { fill: var(--pink); } .jeep .j-top { fill: var(--cream); } .jeep .j-rack { fill: var(--lime); } .jeep .j-win { fill: var(--plum); } .jeep .j-lamp { fill: var(--cream); }
-  .jeep .j-wheel { fill: var(--dark); stroke: var(--cream); stroke-width: 2; } .jeep .j-hub { fill: var(--cream); }
+  .jeep .j-body { fill: var(--cream); } .jeep .j-top { fill: var(--pink); } .jeep .j-rack { fill: var(--lime); } .jeep .j-win { fill: var(--dark); } .jeep .j-pillar { fill: var(--pink); } .jeep .j-lamp { fill: var(--lime); }
+  .jeep .j-wheel { fill: var(--dark); stroke: var(--cream); stroke-width: 2.4; } .jeep .j-hub { fill: var(--cream); }
   @media (prefers-reduced-motion: reduce) { .road-track { height: auto; } .road-stage { position: relative; } }
 
   /* ---------- W2 ---------- */
@@ -257,15 +259,15 @@ const [v2a, v2b] = v2.split('§');
   const place = (p: number) => {
     if (!jeep || !line || !svg || !tail || !stage) return;
     if (Math.abs(p - lastP) > 0.0004) { dir = p > lastP ? 1 : -1; lastP = p; }
-    const carPx = Math.min(180, Math.max(84, innerWidth * 0.1));
-    const s = carPx / (68 * k);
-    const xs = Math.min(1438, Math.max(2, (x0 - 40 * s) + p * (vw * 0.88 + 40 * s)));
+    const carPx = Math.min(300, Math.max(150, innerWidth * 0.17));
+    const s = carPx / (120 * k);
+    const xs = Math.min(1438, Math.max(2, (x0 - 60 * s) + p * (vw * 0.86 + 60 * s)));
     const a = pointAtX(xs - 12), b = pointAtX(xs + 12), pt = pointAtX(xs);
     const ang = Math.max(-14, Math.min(14, (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI));
     jeep.setAttribute('transform', `translate(${pt.x},${pt.y}) rotate(${ang}) scale(${s})`);
     const r = svg.getBoundingClientRect(), sr = stage.getBoundingClientRect();
     const px = r.left - sr.left + (pt.x - x0) * k, py = r.top - sr.top + pt.y * k;
-    const half = 34 * s * k + 10, up = 20 * s * k;
+    const half = 60 * s * k + 10, up = 26 * s * k;
     tail.style.transform = `translate(${px}px, ${py}px) rotate(${ang}deg) translate(${dir > 0 ? `calc(-100% - ${half}px)` : `${half}px`}, calc(-50% - ${up}px))`;
   };
   fit();
