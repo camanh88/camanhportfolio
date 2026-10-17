@@ -22,8 +22,10 @@ const turn = sentences[2] ?? '';
 const belong = sentences.slice(3).join(' ');
 // "(to apply to Marou)" stays as written; the story is shown in two beats
 // words that are bold in Cam Anh's text are shown highlighted
-const hl = (t: string) => inline(t).replace(/<strong>/g, '<mark class="mk">').replace(/<\/strong>/g, '</mark>');
-const storyHtml = story.map(hl);
+// Emphasis (Cam Anh's bold words) is shown by colour and by deliberate line breaks, as in her reference: the coloured phrase
+// sits on its own line, indented, and the last lines of the vision step to the right. Only the layout changes, never the words.
+const accent = (t: string) => inline(t).replace(/<strong>/g, '<span class="ac ac-block">').replace(/<\/strong>/g, '</span>');
+const storyHtml = story.map(accent);
 // gift box sentence: TASTING GOOD / CONNECTING GOOD get colour
 // gift box: TASTING GOOD and CONNECTING GOOD each on one line, big and parallel; the words around them smaller
 const bm = /^(.*?)(TASTING GOOD[,.]?)\s*(.*?)(CONNECTING GOOD[,.]?)\s*$/.exec(box);
@@ -42,7 +44,16 @@ const contactRow = (t: string) => {
   return `<span class="ci">${icons[kind]}</span><span class="sr-only">${m[1]}: </span>${linkContact(m[2])}`;
 };
 const linkContact = (t: string) => inline(t).replace(/[\w.+-]+@[\w-]+\.[\w.]+/, (m) => `<a href="mailto:${m}">${m}</a>`).replace(/\+\d[\d ]{7,}\d/, (m) => `<a href="tel:${m.replace(/ /g, '')}">${m}</a>`);
-const visionHtml = hl(vision[0] ?? '');
+// vision: lead text, the big pink 360°, more lead text, then the bold ending on two stepped lines
+const vRaw = (vision[0] ?? '').replace('**360°**', '§');
+const [vA, vRest = ''] = vRaw.split('§');
+const vm = /^([\s\S]*?)\*\*(.+?)\*\*([\s\S]*)$/.exec(vRest);
+const vLead = inline(vA) + (vRaw.includes('§') ? '<span class="deg">360°</span>' : '') + inline(vm ? vm[1] : vRest);
+const vEnd = vm ? vm[2] : '';
+const cut = vEnd.search(/,\s+and\s/);
+const vEnd1 = cut > -1 ? vEnd.slice(0, cut + 1) : vEnd;
+const vEnd2 = cut > -1 ? vEnd.slice(cut + 1).trim() : '';
+const vTail = vm ? inline(vm[3]) : '';
 ---
 <article id="why-marou" class="wm" aria-labelledby="wm-title">
 
@@ -115,7 +126,7 @@ const visionHtml = hl(vision[0] ?? '');
   <!-- W4: the vision -->
   <section class="vision">
     <div class="vis-in wrap">
-      <p class="vis2" set:html={visionHtml} />
+      <p class="vis2"><span set:html={vLead} /><span class="ac ac1">{vEnd1}</span>{vEnd2 && <span class="ac ac2">{vEnd2}</span>}{vTail && <span set:html={vTail} />}</p>
       <div class="vis-slots">
         <Slot tag="W5" a="1 / 1" tone="blush" />
         <Slot tag="W6" a="4 / 5" tone="lime" />
@@ -208,7 +219,12 @@ const visionHtml = hl(vision[0] ?? '');
   .story-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.3vw, 3.1rem); line-height: 1.14; letter-spacing: -.015em; max-width: 24em; }
   .story-text { display: grid; gap: 1.2em; }
   .story-text :global(p:first-child) { font-size: .74em; line-height: 1.2; }
-  .story-text :global(.mk), .vis2 :global(.mk) { background: var(--lime); color: inherit; font: inherit; letter-spacing: inherit; padding: .02em .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .story-text :global(.ac), .vis2 .ac { color: var(--pink); }
+  .story-text :global(.ac-block) { display: block; padding-left: min(1.6em, 7vw); margin: .12em 0; }
+  .vis2 .ac { display: block; margin-top: .1em; }
+  .vis2 .ac1 { padding-left: min(1.6em, 6vw); }
+  .vis2 .ac2 { padding-left: min(3.4em, 13vw); font-style: italic; }
+  .vis2 :global(.deg) { font-style: italic; font-size: 1.2em; line-height: .8; color: var(--pink); padding: 0 .06em; }
   .story-slot { max-width: 18rem; }
   @media (min-width: 900px) {
     .story-in { grid-template-columns: 4fr 6fr 2fr; column-gap: clamp(2rem, 5vw, 6rem); }
