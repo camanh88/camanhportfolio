@@ -8,7 +8,6 @@
   --blush: #EBDBD7;
   --cream: #FCEFDB;
   --lime: #BDCC30;
-  --green: #6E7C0E; /* a deeper, readable green in the lime family, for text on white / blush (text-sized lime is too pale) */
   --plum: #61216A;
   --dark: #2B1030;        /* plum, darkened: photo shade and deep blocks */
   --accent: var(--plum);
