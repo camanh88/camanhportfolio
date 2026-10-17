@@ -17,7 +17,7 @@ const contactItems = ch05.ul('contact');
 const valueTone = ['pink', 'plum', 'lime'] as const;
 // "It's easy to say I love chocolate. I do: ..." sentence by sentence for the big statement
 const sentences = intro.match(/[^.]+\.(?:\s|$)/g)?.map((x) => x.trim()) ?? [intro];
-const statement = sentences.slice(0, 2).join(' ');
+const statement = inline(sentences.slice(0, 2).join(' ')).replace('I do:', '<span class="nw"><span class="pk">I do</span>:</span>');
 const turn = sentences[2] ?? '';
 const belong = sentences.slice(3).join(' ');
 // "(to apply to Marou)" stays as written; the story is shown in two beats
@@ -35,30 +35,31 @@ const [v2a, v2b] = v2.split('§');
   <section class="road-track" data-road>
     <div class="road-stage">
       <h1 id="wm-title" class="r-title">{ch05.title}</h1>
-      <p class="r-hint">{ch05.hint}</p>
-      <svg class="hills" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <svg class="hills" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
         <path class="hill-back" d="M0,190 C160,140 300,130 440,165 C580,200 660,190 800,150 C940,110 1060,100 1180,128 C1290,154 1380,150 1440,130 L1440,300 L0,300 Z" />
         <path class="hill-front" d="M0,215 C140,190 260,180 400,205 C560,235 640,230 780,200 C920,170 1050,175 1180,200 C1290,220 1380,215 1440,198 L1440,300 L0,300 Z" />
         <path id="road-line" class="road-line" d="M0,215 C140,190 260,180 400,205 C560,235 640,230 780,200 C920,170 1050,175 1180,200 C1290,220 1380,215 1440,198" />
+        <!-- a car that reads the same in both directions: mirror-symmetric, lights at both ends -->
         <g class="jeep" data-jeep>
-          <g transform="translate(-34,-40)">
-            <rect x="6" y="14" width="56" height="18" rx="4" class="j-body" />
-            <path d="M16,14 L24,3 H46 L52,14 Z" class="j-top" />
-            <rect x="26" y="0" width="22" height="3" class="j-rack" />
-            <circle cx="18" cy="34" r="7" class="j-wheel" /><circle cx="50" cy="34" r="7" class="j-wheel" />
-            <circle cx="18" cy="34" r="2.5" class="j-hub" /><circle cx="50" cy="34" r="2.5" class="j-hub" />
-          </g>
+          <rect x="-34" y="-25" width="68" height="15" rx="6" class="j-body" />
+          <path d="M-23,-25 L-15,-40 H15 L23,-25 Z" class="j-top" />
+          <path d="M-18,-27 L-12,-37 H-2 V-27 Z" class="j-win" /><path d="M18,-27 L12,-37 H2 V-27 Z" class="j-win" />
+          <rect x="-11" y="-44" width="22" height="3" rx="1.5" class="j-rack" />
+          <circle cx="-30" cy="-18" r="2.4" class="j-lamp" /><circle cx="30" cy="-18" r="2.4" class="j-lamp" />
+          <circle cx="-21" cy="-8" r="8" class="j-wheel" /><circle cx="21" cy="-8" r="8" class="j-wheel" />
+          <circle cx="-21" cy="-8" r="2.8" class="j-hub" /><circle cx="21" cy="-8" r="2.8" class="j-hub" />
         </g>
       </svg>
+      <p class="r-tail" data-tail>{ch05.hint}</p>
     </div>
   </section>
 
   <!-- W2: values -->
   <section class="values">
     <div class="v-in wrap">
-      <p class="v-state">{statement}</p>
+      <p class="v-lead" set:html={statement} />
       <p class="v-turn">{turn}</p>
-      <p class="v-belong">{belong}</p>
+      <p class="v-state">{belong}</p>
     </div>
     <ul class="v-cards">
       {values.map((v, i) => (
@@ -78,7 +79,7 @@ const [v2a, v2b] = v2.split('§');
     </svg>
     <div class="story-in wrap">
       <div class="diecut">
-        <Photo id="w-bike" alt={undefined} sizes="(min-width: 900px) 30vw, 70vw" />
+        <Slot tag="W0" a="3 / 4" tone="cream" />
       </div>
       <p class="story-text" set:html={storyAll} />
       <Slot tag="W4" a="3 / 4" tone="cream" class="story-slot" />
@@ -133,12 +134,14 @@ const [v2a, v2b] = v2.split('§');
   .road-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; align-content: start; justify-items: center; text-align: center; padding: clamp(4rem, 12svh, 8rem) var(--pad) 0; }
   .r-num { color: var(--lime); letter-spacing: .2em; }
   .r-title { font-size: clamp(4.4rem, 17vw, 16rem); line-height: .82; letter-spacing: -.05em; font-weight: 300; margin-top: .4rem; }
-  .r-hint { font-family: var(--display); font-style: italic; font-size: clamp(1.4rem, 3vw, 2.6rem); color: var(--blush); margin-top: 1rem; }
+  /* the line follows the car like a tail (set by the script below): behind it, along the road, whichever way it drives */
+  .r-tail { position: absolute; left: 0; top: 0; z-index: 2; white-space: nowrap; transform-origin: 0 0; font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(1.5rem, 4vw, 3.6rem); line-height: 1; color: var(--blush); will-change: transform; }
   .hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: min(46svh, 26rem); }
+  @media (max-width: 700px) { .hills { height: min(30svh, 15rem); } }
   .hill-back { fill: #3f1a47; }
   .hill-front { fill: var(--plum); }
   .road-line { fill: none; stroke: var(--lime); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 11; }
-  .jeep .j-body { fill: var(--pink); } .jeep .j-top { fill: var(--cream); } .jeep .j-rack { fill: var(--lime); }
+  .jeep .j-body { fill: var(--pink); } .jeep .j-top { fill: var(--cream); } .jeep .j-rack { fill: var(--lime); } .jeep .j-win { fill: var(--plum); } .jeep .j-lamp { fill: var(--cream); }
   .jeep .j-wheel { fill: var(--dark); stroke: var(--cream); stroke-width: 2; } .jeep .j-hub { fill: var(--cream); }
   @media (prefers-reduced-motion: reduce) { .road-track { height: auto; } .road-stage { position: relative; } }
 
@@ -146,8 +149,9 @@ const [v2a, v2b] = v2.split('§');
   .values { background: var(--cream); padding: var(--section) 0 clamp(4rem, 8vw, 7rem); }
   .v-in { display: grid; gap: 1.4rem; }
   .v-state { font-family: var(--display); font-weight: 300; font-size: clamp(2.4rem, 6.4vw, 6.2rem); line-height: .98; letter-spacing: -.035em; max-width: 14em; }
+  .v-lead { font-family: var(--sans); font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.6; max-width: 36rem; }
+  .v-lead :global(.nw) { white-space: nowrap; } .v-lead :global(.pk) { color: var(--pink); }
   .v-turn { font-family: var(--display); font-style: italic; font-size: clamp(1.8rem, 4vw, 3.6rem); line-height: 1.04; letter-spacing: -.02em; color: var(--pink); max-width: 18em; }
-  .v-belong { max-width: 34rem; font-size: 1.08rem; }
   .v-cards { margin-top: clamp(3rem, 7vw, 6rem); display: grid; gap: 0; }
   .vc { background: var(--c); color: #fff; padding: clamp(2rem, 5vw, 4.5rem) var(--pad); display: grid; gap: 1.2rem; align-content: start; }
   .vc2 { color: #fff; } .vc3 { color: var(--ink); }
@@ -155,7 +159,7 @@ const [v2a, v2b] = v2.split('§');
   .vt { font-family: var(--display); font-weight: 300; font-size: clamp(2rem, 4.6vw, 4.4rem); line-height: 1; letter-spacing: -.03em; }
   @media (min-width: 900px) {
     .v-in { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; }
-    .v-state { grid-column: 1 / 11; } .v-turn { grid-column: 4 / 13; } .v-belong { grid-column: 7 / 13; }
+    .v-lead { grid-column: 1 / 8; } .v-turn { grid-column: 4 / 13; } .v-state { grid-column: 1 / 11; }
     .v-cards { grid-template-columns: repeat(3, 1fr); }
     .vc { min-height: 80svh; grid-template-rows: auto 1fr auto; }
     .vc :global(.slot) { align-self: end; }
@@ -168,6 +172,7 @@ const [v2a, v2b] = v2.split('§');
   .wind path { fill: none; stroke: var(--plum); stroke-width: 3; stroke-dasharray: 3 14; stroke-linecap: round; opacity: .55; vector-effect: non-scaling-stroke; }
   .story-in { position: relative; display: grid; gap: 2.5rem; align-items: center; }
   .diecut { width: min(100%, 22rem); justify-self: center; border-radius: 50% 50% 0 0 / 38% 38% 0 0; background: #fff; padding: .7rem .7rem 0; filter: drop-shadow(8px 10px 0 var(--plum)); }
+  .diecut :global(.slot) { aspect-ratio: 3 / 4 !important; border-radius: 50% 50% 0 0 / 38% 38% 0 0; }
   .diecut :global(img) { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 50% 50% 0 0 / 38% 38% 0 0; image-rendering: auto; }
   .story-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.3vw, 3.1rem); line-height: 1.14; letter-spacing: -.015em; max-width: 24em; }
   .story-text :global(.mk) { background: linear-gradient(transparent 58%, var(--lime) 58% 92%, transparent 92%); color: inherit; font-style: italic; padding: 0 .08em; }
@@ -228,15 +233,43 @@ const [v2a, v2b] = v2.split('§');
   };
   const road = document.querySelector<HTMLElement>('[data-road]');
   const box = document.querySelector<HTMLElement>('[data-box]');
+  const svg = document.querySelector<SVGSVGElement>('.hills');
   const jeep = document.querySelector<SVGGElement>('[data-jeep]');
+  const tail = document.querySelector<HTMLElement>('[data-tail]');
+  const stage = document.querySelector<HTMLElement>('.road-stage');
   const line = document.getElementById('road-line') as unknown as SVGPathElement | null;
   const L = line?.getTotalLength() ?? 0;
-  const place = (p: number) => {
-    if (!jeep || !line) return;
-    const a = line.getPointAtLength(p * L), b = line.getPointAtLength(Math.min(L, p * L + 3));
-    jeep.setAttribute('transform', `translate(${a.x},${a.y}) rotate(${(Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI})`);
+  // The scene keeps its proportions at every width: the viewBox shows as much of the 1440-wide road as fits the box.
+  let vw = 1440, x0 = 0, k = 1, dir = 1, lastP = 0;
+  const fit = () => {
+    if (!svg) return;
+    const r = svg.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    vw = Math.min(1440, (300 * r.width) / r.height); x0 = (1440 - vw) / 2; k = r.width / vw;
+    svg.setAttribute('viewBox', `${x0} 0 ${vw} 300`);
   };
-  if (reduce) { place(0.62); box?.style.setProperty('--p', '1'); }
+  const pointAtX = (x: number) => {
+    let lo = 0, hi = L;
+    for (let i = 0; i < 22; i++) { const mid = (lo + hi) / 2; if (line!.getPointAtLength(mid).x < x) lo = mid; else hi = mid; }
+    return line!.getPointAtLength(hi);
+  };
+  // p = 0..1: the car drives in from the left edge and stops near the right; its tail (the hint line) trails behind it
+  const place = (p: number) => {
+    if (!jeep || !line || !svg || !tail || !stage) return;
+    if (Math.abs(p - lastP) > 0.0004) { dir = p > lastP ? 1 : -1; lastP = p; }
+    const carPx = Math.min(180, Math.max(84, innerWidth * 0.1));
+    const s = carPx / (68 * k);
+    const xs = Math.min(1438, Math.max(2, (x0 - 40 * s) + p * (vw * 0.88 + 40 * s)));
+    const a = pointAtX(xs - 12), b = pointAtX(xs + 12), pt = pointAtX(xs);
+    const ang = Math.max(-14, Math.min(14, (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI));
+    jeep.setAttribute('transform', `translate(${pt.x},${pt.y}) rotate(${ang}) scale(${s})`);
+    const r = svg.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+    const px = r.left - sr.left + (pt.x - x0) * k, py = r.top - sr.top + pt.y * k;
+    const half = 34 * s * k + 10, up = 20 * s * k;
+    tail.style.transform = `translate(${px}px, ${py}px) rotate(${ang}deg) translate(${dir > 0 ? `calc(-100% - ${half}px)` : `${half}px`}, calc(-50% - ${up}px))`;
+  };
+  fit();
+  if (reduce) { place(0.62); box?.style.setProperty('--p', '1'); addEventListener('resize', () => { fit(); place(0.62); }); }
   else {
     const update = () => {
       if (road) { const p = progress(road); road.style.setProperty('--p', p.toFixed(4)); place(p); }
@@ -244,7 +277,7 @@ const [v2a, v2b] = v2.split('§');
     };
     let raf = 0;
     addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
-    addEventListener('resize', update);
+    addEventListener('resize', () => { fit(); update(); });
     update();
   }
 </script>
