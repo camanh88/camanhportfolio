@@ -52,20 +52,15 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
     </div>
 
     <div class="f-spread">
-      <!-- the layout follows Cam Anh's second mock-up (Oct 16): hero video, then one tall lime block with photos, cut-outs and video tiles -->
-      <div class="f-hero">
-        <video class="f-video" muted loop playsinline preload="none" poster={`${base}img/f1-poster-1600.webp`} data-hd={`${base}video/f1-1080.mp4`} data-sd={`${base}video/f1-540.mp4`} aria-label="A woman in a red top, seen from behind, arranging a large bouquet of orange, pink and red flowers with berries on a wooden table."></video>
-      </div>
-
-      <div class="band" style="--ar: 478 / 1501">
-        <div class="it blk lime" style="--l:23.6%;--t:0;--w:76.4%;--h:100%"></div>
-        <div class="it" style="--l:0;--t:1%;--w:54%;--h:21.5%"><Photo id="f-box" sizes="(min-width: 900px) 50vw, 55vw" /></div>
-        <div class="it cut" style="--l:47.3%;--t:14.4%;--w:51%;z-index:3"><Photo id="f-lily-cut" sizes="(min-width: 900px) 50vw, 55vw" /></div>
-        <div class="it cut" style="--l:27.8%;--t:23.5%;--w:36.6%;z-index:2"><Photo id="f-woman" sizes="(min-width: 900px) 50vw, 55vw" /></div>
-        <div class="it vid" style="--l:0;--t:39%;--w:49.2%;--h:19.5%"><video class="f-video" muted loop playsinline preload="none" poster={`${base}img/fv-bouquet-poster-960.webp`} data-hd={`${base}video/fv-bouquet-hd.mp4`} data-sd={`${base}video/fv-bouquet-sd.mp4`} aria-label="A large bouquet of blue hydrangeas, pink lilies and white flowers on a wooden cabinet beneath an orange painting."></video></div>
-        <div class="it vid" style="--l:53.8%;--t:49.6%;--w:42.9%;--h:24.1%"><video class="f-video" muted loop playsinline preload="none" poster={`${base}img/fv-window-poster-960.webp`} data-hd={`${base}video/fv-window-hd.mp4`} data-sd={`${base}video/fv-window-sd.mp4`} aria-label="A woman in a pink top arranging flowers on a long counter by a window with a red flag outside."></video></div>
-        <div class="it vid" style="--l:.6%;--t:63.4%;--w:48.5%;--h:20.7%"><video class="f-video" muted loop playsinline preload="none" poster={`${base}img/fv-drum-poster-960.webp`} data-hd={`${base}video/fv-drum-hd.mp4`} data-sd={`${base}video/fv-drum-sd.mp4`} aria-label="A bouquet of orange, yellow and white flowers in a vase between two carved dark figures, under a bronze drum on a white wall."></video></div>
-        <div class="it vid" style="--l:29.1%;--t:86%;--w:67.8%;--h:11.8%"><video class="f-video" muted loop playsinline preload="none" poster={`${base}img/fv-hydrangea-poster-960.webp`} data-hd={`${base}video/fv-hydrangea-hd.mp4`} data-sd={`${base}video/fv-hydrangea-sd.mp4`} aria-label="Close-up of blue hydrangeas, purple irises, white roses and blue delphiniums in a large bouquet."></video></div>
+      <!-- the layout follows Cam Anh's third mock-up (Oct 17): one tall lime block, photo and cut-outs on top, video tiles below, the F1 hero video at the end -->
+      <div class="band" style="--ar: 352 / 1114">
+        <div class="it blk lime" style="--l:27%;--t:0;--w:73%;--h:100%"></div>
+        <div class="it" style="--l:0;--t:1.1%;--w:54%;--h:21.4%"><Photo id="f-box" sizes="(min-width: 900px) 50vw, 55vw" /></div>
+        <div class="it cut" style="--l:46.3%;--t:15.6%;--w:51.7%;z-index:3"><Photo id="f-lily-cut" sizes="(min-width: 900px) 50vw, 55vw" /></div>
+        <div class="it vid" style="--l:0;--t:27.3%;--w:61.4%;--h:24.6%"><video class="f-video" muted loop playsinline preload="none" poster={`${base}img/fv-bouquet-poster-960.webp`} data-hd={`${base}video/fv-bouquet-hd.mp4`} data-sd={`${base}video/fv-bouquet-sd.mp4`} aria-label="A large bouquet of blue hydrangeas, pink lilies and white flowers on a wooden cabinet beneath an orange painting."></video></div>
+        <div class="it vid" style="--l:42%;--t:54.5%;--w:42.6%;--h:23.8%"><video class="f-video" muted loop playsinline preload="none" poster={`${base}img/fv-window-poster-960.webp`} data-hd={`${base}video/fv-window-hd.mp4`} data-sd={`${base}video/fv-window-sd.mp4`} aria-label="A woman in a pink top arranging flowers on a long counter by a window with a red flag outside."></video></div>
+        <div class="it cut" style="--l:0;--t:60.1%;--w:34.7%;z-index:2"><Photo id="f-woman" sizes="(min-width: 900px) 50vw, 55vw" /></div>
+        <div class="it vid" style="--l:0;--t:81.7%;--w:100%;--h:17.8%"><video class="f-video" muted loop playsinline preload="none" poster={`${base}img/f1-poster-1600.webp`} data-hd={`${base}video/f1-1080.mp4`} data-sd={`${base}video/f1-540.mp4`} aria-label="A woman in a red top, seen from behind, arranging a large bouquet of orange, pink and red flowers with berries on a wooden table."></video></div>
       </div>
     </div>
   </section>
@@ -236,7 +231,6 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   .f-spread { --fp: clamp(.5rem, 1.2vw, 1.1rem); background: var(--paper); margin-top: clamp(2.5rem, 6vw, 5rem); padding: var(--fp) 0 clamp(2rem, 4vw, 4rem); }
   .f-spread > * { width: calc(100% - 2 * var(--fp)); max-width: 100rem; margin-inline: auto; }
   .f-video { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--plum); }
-  .f-hero { aspect-ratio: 16 / 9; }
   .band { position: relative; aspect-ratio: var(--ar); }
   .it { position: absolute; left: var(--l); top: var(--t); width: var(--w); height: var(--h, auto); overflow: hidden; background: var(--blush); }
   .it :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
