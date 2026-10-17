@@ -6,7 +6,7 @@ import { inline } from '../lib/md';
 
 const values = ch05.ul('values');
 const intro = ch05.ps('values')[0] ?? '';
-const story = ch05.ps('story')[0] ?? '';
+const story = ch05.ps('story');
 const vision = ch05.ps('vision');
 const box = ch05.ps('gift box')[0] ?? '';
 const contactP = ch05.ps('contact');
@@ -21,13 +21,20 @@ const statement = inline(sentences.slice(0, 2).join(' ')).replace('I do:', '<spa
 const turn = sentences[2] ?? '';
 const belong = sentences.slice(3).join(' ');
 // "(to apply to Marou)" stays as written; the story is shown in two beats
-const storyAll = inline(story).replace('going global', '<mark class="mk">going global</mark>');
+// words that are bold in Cam Anh's text are shown highlighted
+const hl = (t: string) => inline(t).replace(/<strong>/g, '<mark class="mk">').replace(/<\/strong>/g, '</mark>');
+const storyHtml = story.map(hl);
 // gift box sentence: TASTING GOOD / CONNECTING GOOD get colour
-const boxHtml = inline(box).replace('TASTING GOOD', '<span class="tg">TASTING GOOD</span>').replace('CONNECTING GOOD', '<span class="cg">CONNECTING GOOD</span>');
+// gift box: TASTING GOOD and CONNECTING GOOD each on one line, big and parallel; the words around them smaller
+const bm = /^(.*?)(TASTING GOOD[,.]?)\s*(.*?)(CONNECTING GOOD[,.]?)\s*$/.exec(box);
+const boxParts = bm ? { pre: bm[1].trim(), a: bm[2], mid: bm[3].trim(), b: bm[4] } : null;
 const contactHtml = inline(contactLine).replace(';)', '<span class="wink">;)</span>');
+// e-mail and phone become links
+const linkContact = (t: string) => inline(t).replace(/[\w.+-]+@[\w-]+\.[\w.]+/, (m) => `<a href="mailto:${m}">${m}</a>`).replace(/\+\d[\d ]{7,}\d/, (m) => `<a href="tel:${m.replace(/ /g, '')}">${m}</a>`);
 const v1 = vision[0] ?? '';
-const v2 = (vision[1] ?? '').replace('360°', '§');
+const v2 = (vision[1] ?? '').replace('**360°**', '§');
 const [v2a, v2b] = v2.split('§');
+const v2aHtml = hl(v2a ?? ''), v2bHtml = hl(v2b ?? '');
 ---
 <article id="why-marou" class="wm" aria-labelledby="wm-title">
 
@@ -38,8 +45,16 @@ const [v2a, v2b] = v2.split('§');
       <svg class="hills" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
         <path class="hill-back" d="M0,190 C160,140 300,130 440,165 C580,200 660,190 800,150 C940,110 1060,100 1180,128 C1290,154 1380,150 1440,130 L1440,300 L0,300 Z" />
         <path class="hill-front" d="M0,215 C140,190 260,180 400,205 C560,235 640,230 780,200 C920,170 1050,175 1180,200 C1290,220 1380,215 1440,198 L1440,300 L0,300 Z" />
+        <defs>
+          <linearGradient id="reveal-fade" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff" /><stop offset="1" stop-color="#000" /></linearGradient>
+          <mask id="reveal" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="300">
+            <rect data-m1 x="0" y="0" width="0" height="300" fill="#fff" />
+            <rect data-m2 x="0" y="0" width="0" height="300" fill="url(#reveal-fade)" />
+          </mask>
+        </defs>
         <path id="road-line" class="road-line" d="M0,215 C140,190 260,180 400,205 C560,235 640,230 780,200 C920,170 1050,175 1180,200 C1290,220 1380,215 1440,198" />
         <!-- a car that reads the same in both directions: mirror-symmetric, lights at both ends -->
+        <text class="r-text" mask="url(#reveal)"><textPath href="#road-line" data-tp startOffset="0">{ch05.hint}</textPath></text>
         <g class="jeep" data-jeep>
           <!-- long, low, boxy wagon (proportions from Cam Anh's reference picture); mirror-symmetric so it reads both ways, no letter on it -->
           <rect x="-60" y="-26" width="120" height="17" rx="3" class="j-body" />
@@ -52,7 +67,7 @@ const [v2a, v2b] = v2.split('§');
           <circle cx="-38" cy="-9" r="3.2" class="j-hub" /><circle cx="38" cy="-9" r="3.2" class="j-hub" />
         </g>
       </svg>
-      <p class="r-tail" data-tail>{ch05.hint}</p>
+      <p class="sr-only">{ch05.hint}</p>
     </div>
   </section>
 
@@ -83,7 +98,7 @@ const [v2a, v2b] = v2.split('§');
       <div class="diecut">
         <Slot tag="W0" a="3 / 4" tone="cream" />
       </div>
-      <p class="story-text" set:html={storyAll} />
+      <div class="story-text">{storyHtml.map((h) => <p set:html={h} />)}</div>
       <Slot tag="W4" a="3 / 4" tone="cream" class="story-slot" />
     </div>
   </section>
@@ -93,7 +108,7 @@ const [v2a, v2b] = v2.split('§');
     <p class="ghost" aria-hidden="true">360°</p>
     <div class="vis-in wrap">
       <p class="vis1" set:html={inline(v1)} />
-      <p class="vis2">{v2a}<span class="deg">360°</span>{v2b}</p>
+      <p class="vis2"><span set:html={v2aHtml} /><span class="deg">360°</span><span set:html={v2bHtml} /></p>
       <div class="vis-slots">
         <Slot tag="W5" a="1 / 1" tone="blush" />
         <Slot tag="W6" a="4 / 5" tone="lime" />
@@ -105,7 +120,14 @@ const [v2a, v2b] = v2.split('§');
   <!-- W5: the gift box opens -->
   <section class="box-track" data-box>
     <div class="box-stage">
-      <p class="bx-text" set:html={boxHtml} />
+      <p class="bx-text">
+        {boxParts ? (<>
+          <span class="bx-s">{boxParts.pre}</span>
+          <span class="bx-b tg">{boxParts.a}</span>
+          <span class="bx-s">{boxParts.mid}</span>
+          <span class="bx-b cg">{boxParts.b}</span>
+        </>) : box}
+      </p>
       <div class="giftbox" aria-hidden="true">
         <div class="lid"><span class="band"></span></div>
         <div class="base"><span class="band"></span></div>
@@ -119,7 +141,7 @@ const [v2a, v2b] = v2.split('§');
       <h2 id="ct-title" class="ct-line" set:html={contactHtml} />
       <p class="ct-label label">{contactLabel}</p>
       <ul class="ct-list">
-        {contactItems.map((t) => <li set:html={inline(t)} />)}
+        {contactItems.map((t) => <li set:html={linkContact(t)} />)}
       </ul>
     </div>
     <svg class="end-hills" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,70 C140,40 260,30 400,58 C560,90 640,86 780,56 C920,26 1050,30 1180,56 C1290,78 1380,74 1440,56 L1440,120 L0,120 Z" /></svg>
@@ -136,8 +158,8 @@ const [v2a, v2b] = v2.split('§');
   .road-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; align-content: start; justify-items: center; text-align: center; padding: clamp(4rem, 12svh, 8rem) var(--pad) 0; }
   .r-num { color: var(--lime); letter-spacing: .2em; }
   .r-title { font-size: clamp(4.4rem, 17vw, 16rem); line-height: .82; letter-spacing: -.05em; font-weight: 300; margin-top: .4rem; }
-  /* the line follows the car like a tail (set by the script below): behind it, along the road, whichever way it drives */
-  .r-tail { position: absolute; left: 0; top: 0; z-index: 2; white-space: nowrap; transform-origin: 0 0; font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(1.5rem, 4vw, 3.6rem); line-height: 1; color: var(--blush); will-change: transform; }
+  /* the line lies along the road and is revealed softly as the car passes (mask edge follows the car) */
+  .r-text { font-family: var(--display); font-style: italic; font-weight: 300; fill: var(--blush); letter-spacing: .04em; }
   .hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: min(46svh, 26rem); }
   @media (max-width: 700px) { .hills { height: min(30svh, 15rem); } }
   .hill-back { fill: #3f1a47; }
@@ -150,7 +172,7 @@ const [v2a, v2b] = v2.split('§');
   /* ---------- W2 ---------- */
   .values { background: var(--cream); padding: var(--section) 0 clamp(4rem, 8vw, 7rem); }
   .v-in { display: grid; gap: 1.4rem; }
-  .v-state { font-family: var(--display); font-weight: 300; font-size: clamp(2.4rem, 6.4vw, 6.2rem); line-height: .98; letter-spacing: -.035em; max-width: 14em; }
+  .v-state { font-family: var(--display); font-weight: 300; font-size: clamp(2.04rem, 5.44vw, 5.27rem); line-height: .98; letter-spacing: -.035em; max-width: 14em; }
   .v-lead { font-family: var(--sans); font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.6; max-width: 36rem; }
   .v-lead :global(.nw) { white-space: nowrap; } .v-lead :global(.pk) { color: var(--pink); }
   .v-turn { font-family: var(--display); font-style: italic; font-size: clamp(1.8rem, 4vw, 3.6rem); line-height: 1.04; letter-spacing: -.02em; color: var(--pink); max-width: 18em; }
@@ -177,7 +199,8 @@ const [v2a, v2b] = v2.split('§');
   .diecut :global(.slot) { aspect-ratio: 3 / 4 !important; border-radius: 50% 50% 0 0 / 38% 38% 0 0; }
   .diecut :global(img) { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 50% 50% 0 0 / 38% 38% 0 0; image-rendering: auto; }
   .story-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.3vw, 3.1rem); line-height: 1.14; letter-spacing: -.015em; max-width: 24em; }
-  .story-text :global(.mk) { background: linear-gradient(transparent 58%, var(--lime) 58% 92%, transparent 92%); color: inherit; font-style: italic; padding: 0 .08em; }
+  .story-text { display: grid; gap: 1.2em; }
+  .story-text :global(.mk), .vis2 :global(.mk) { background: linear-gradient(transparent 58%, var(--lime) 58% 92%, transparent 92%); color: inherit; font-style: italic; padding: 0 .08em; }
   .story-slot { max-width: 18rem; }
   @media (min-width: 900px) {
     .story-in { grid-template-columns: 4fr 6fr 2fr; column-gap: clamp(2rem, 5vw, 6rem); }
@@ -203,9 +226,11 @@ const [v2a, v2b] = v2.split('§');
   /* ---------- W5: the gift box ---------- */
   .box-track { height: 300svh; position: relative; background: var(--dark); color: #fff; --p: 0; }
   .box-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; place-items: center; }
-  .bx-text { position: absolute; z-index: 1; left: 0; right: 0; top: 38%; transform: translateY(calc(-50% + (1 - min(1, max(0, (var(--p) - .25) * 2))) * 18vh)); text-align: center; padding: 0 var(--pad); font-family: var(--display); font-weight: 300; font-size: clamp(2.2rem, 6.6vw, 6.6rem); line-height: 1; letter-spacing: -.035em; max-width: 14em; margin: 0 auto; opacity: min(1, max(0, calc((var(--p) - .25) * 2.4))); }
-  .bx-text :global(.tg) { color: var(--lime); font-style: italic; }
-  .bx-text :global(.cg) { color: var(--pink); font-style: italic; }
+  .bx-text { position: absolute; z-index: 1; left: 0; right: 0; top: 38%; transform: translateY(calc(-50% + (1 - min(1, max(0, (var(--p) - .25) * 2))) * 18vh)); text-align: center; padding: 0 var(--pad); font-family: var(--display); font-weight: 300; line-height: 1; margin: 0 auto; display: grid; justify-items: center; gap: .2em; opacity: min(1, max(0, calc((var(--p) - .25) * 2.4))); }
+  .bx-s { font-size: clamp(1.1rem, 2.1vw, 2rem); letter-spacing: .01em; color: var(--blush); white-space: nowrap; }
+  .bx-b { font-size: clamp(2rem, 7.2vw, 7rem); letter-spacing: -.035em; font-style: italic; white-space: nowrap; line-height: .95; }
+  .bx-text .tg { color: var(--lime); }
+  .bx-text .cg { color: var(--pink); }
   .giftbox { --w: min(54vw, 24rem); position: absolute; left: 50%; bottom: 5svh; width: var(--w); height: calc(var(--w) * .9); transform: translateX(-50%) translateY(calc(var(--p) * 9svh)); z-index: 2; }
   .base { position: absolute; left: 0; right: 0; bottom: 0; height: 74%; background: var(--pink); }
   .lid { position: absolute; left: -4%; right: -4%; top: 0; height: 28%; background: var(--plum); transform-origin: 0 100%; transform: translateY(calc(var(--p) * -70svh)) rotate(calc(var(--p) * -24deg)); opacity: calc(1 - var(--p) * .6); box-shadow: 0 10px 30px rgb(0 0 0 / .35); }
@@ -237,38 +262,46 @@ const [v2a, v2b] = v2.split('§');
   const box = document.querySelector<HTMLElement>('[data-box]');
   const svg = document.querySelector<SVGSVGElement>('.hills');
   const jeep = document.querySelector<SVGGElement>('[data-jeep]');
-  const tail = document.querySelector<HTMLElement>('[data-tail]');
-  const stage = document.querySelector<HTMLElement>('.road-stage');
+  const txt = document.querySelector<SVGTextElement>('.r-text');
+  const tp = document.querySelector<SVGTextPathElement>('[data-tp]');
+  const m1 = document.querySelector<SVGRectElement>('[data-m1]');
+  const m2 = document.querySelector<SVGRectElement>('[data-m2]');
   const line = document.getElementById('road-line') as unknown as SVGPathElement | null;
   const L = line?.getTotalLength() ?? 0;
   // The scene keeps its proportions at every width: the viewBox shows as much of the 1440-wide road as fits the box.
-  let vw = 1440, x0 = 0, k = 1, dir = 1, lastP = 0;
+  let vw = 1440, x0 = 0, k = 1;
+  const lenAtX = (x: number) => {
+    let lo = 0, hi = L;
+    for (let i = 0; i < 22; i++) { const mid = (lo + hi) / 2; if (line!.getPointAtLength(mid).x < x) lo = mid; else hi = mid; }
+    return hi;
+  };
   const fit = () => {
-    if (!svg) return;
+    if (!svg || !line) return;
     const r = svg.getBoundingClientRect();
     if (!r.width || !r.height) return;
     vw = Math.min(1440, (300 * r.width) / r.height); x0 = (1440 - vw) / 2; k = r.width / vw;
     svg.setAttribute('viewBox', `${x0} 0 ${vw} 300`);
+    // the line of text lies along the road, a little above it, starting a fifth into the picture
+    const px = Math.min(26, Math.max(14, innerWidth * 0.02));
+    txt?.setAttribute('font-size', String(px / k));
+    tp?.setAttribute('dy', String(-(px * 0.95) / k));
+    tp?.setAttribute('startOffset', String(lenAtX(x0 + vw * 0.2)));
   };
-  const pointAtX = (x: number) => {
-    let lo = 0, hi = L;
-    for (let i = 0; i < 22; i++) { const mid = (lo + hi) / 2; if (line!.getPointAtLength(mid).x < x) lo = mid; else hi = mid; }
-    return line!.getPointAtLength(hi);
-  };
-  // p = 0..1: the car drives in from the left edge and stops near the right; its tail (the hint line) trails behind it
+  // p = 0..1: the car drives in from the left edge and stops near the right; the text appears softly behind it
   const place = (p: number) => {
-    if (!jeep || !line || !svg || !tail || !stage) return;
-    if (Math.abs(p - lastP) > 0.0004) { dir = p > lastP ? 1 : -1; lastP = p; }
-    const carPx = Math.min(300, Math.max(150, innerWidth * 0.17));
+    if (!jeep || !line || !svg) return;
+    const carPx = Math.min(150, Math.max(75, innerWidth * 0.085));
     const s = carPx / (120 * k);
     const xs = Math.min(1438, Math.max(2, (x0 - 60 * s) + p * (vw * 0.86 + 60 * s)));
-    const a = pointAtX(xs - 12), b = pointAtX(xs + 12), pt = pointAtX(xs);
-    const ang = Math.max(-14, Math.min(14, (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI));
+    const a = lenAtX(xs - 12), b = lenAtX(xs + 12);
+    const pa = line.getPointAtLength(a), pb = line.getPointAtLength(b), pt = line.getPointAtLength(lenAtX(xs));
+    const ang = Math.max(-14, Math.min(14, (Math.atan2(pb.y - pa.y, pb.x - pa.x) * 180) / Math.PI));
     jeep.setAttribute('transform', `translate(${pt.x},${pt.y}) rotate(${ang}) scale(${s})`);
-    const r = svg.getBoundingClientRect(), sr = stage.getBoundingClientRect();
-    const px = r.left - sr.left + (pt.x - x0) * k, py = r.top - sr.top + pt.y * k;
-    const half = 60 * s * k + 10, up = 26 * s * k;
-    tail.style.transform = `translate(${px}px, ${py}px) rotate(${ang}deg) translate(${dir > 0 ? `calc(-100% - ${half}px)` : `${half}px`}, calc(-50% - ${up}px))`;
+    // reveal everything behind the car, with a soft edge
+    const edge = pt.x - 30 * s, feather = 70 / Math.max(.5, k);
+    m1?.setAttribute('width', String(Math.max(0, edge - feather)));
+    m2?.setAttribute('x', String(Math.max(0, edge - feather)));
+    m2?.setAttribute('width', String(feather));
   };
   fit();
   if (reduce) { place(0.62); box?.style.setProperty('--p', '1'); addEventListener('resize', () => { fit(); place(0.62); }); }
