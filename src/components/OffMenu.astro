@@ -44,7 +44,7 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   </section>
 
   <!-- THE FLORIST IN ME: lots of photos and videos -->
-  <section id="florist" class="flor" data-lime="a" aria-labelledby="flor-title">
+  <section id="florist" class="flor" aria-labelledby="flor-title">
     <div class="f-head wrap">
       <p class="gnum" aria-hidden="true">{sectionNum('flor')}</p>
       <h2 id="flor-title" class="f-title" >{ch04.florTitle}</h2>
@@ -60,7 +60,7 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
         <div class="it vid" style="--l:0;--t:29.79%;--w:61.4%;--h:23.55%"><video class="f-video" muted loop playsinline preload="none" poster={`${base}img/fv-bouquet-poster-960.webp`} data-hd={`${base}video/fv-bouquet-hd.mp4`} data-sd={`${base}video/fv-bouquet-sd.mp4`} aria-label="A large bouquet of blue hydrangeas, pink lilies and white flowers on a wooden cabinet beneath an orange painting."></video></div>
         <div class="it vid" style="--l:42%;--t:55.87%;--w:42.6%;--h:22.78%"><video class="f-video" muted loop playsinline preload="none" poster={`${base}img/fv-window-poster-960.webp`} data-hd={`${base}video/fv-window-hd.mp4`} data-sd={`${base}video/fv-window-sd.mp4`} aria-label="A woman in a pink top arranging flowers on a long counter by a window with a red flag outside."></video></div>
         <div class="it cut" style="--l:0;--t:61.23%;--w:34.7%;z-index:2"><Photo id="f-woman" sizes="(min-width: 900px) 50vw, 55vw" /></div>
-        <div class="it vid" style="--l:0;--t:81.92%;--w:100%;--h:17.02%"><video class="f-video" muted loop playsinline preload="none" poster={`${base}img/f1-poster-1600.webp`} data-hd={`${base}video/f1-1080.mp4`} data-sd={`${base}video/f1-540.mp4`} aria-label="A woman in a red top, seen from behind, arranging a large bouquet of orange, pink and red flowers with berries on a wooden table."></video></div>
+        <div class="it vid" style="--l:0;--t:81.95%;--w:100%;--h:17.02%"><video class="f-video" muted loop playsinline preload="none" poster={`${base}img/f1-poster-1600.webp`} data-hd={`${base}video/f1-1080.mp4`} data-sd={`${base}video/f1-540.mp4`} aria-label="A woman in a red top, seen from behind, arranging a large bouquet of orange, pink and red flowers with berries on a wooden table."></video></div>
       </div>
     </div>
   </section>
@@ -229,9 +229,8 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   .f-title { font-style: italic; }
   .f-text { font-family: var(--display); font-size: clamp(1.5rem, 2.6vw, 2.4rem); line-height: 1.18; max-width: 20em; }
   .f-spread { --fp: clamp(.5rem, 1.2vw, 1.1rem); --gap: clamp(1rem, 2.5vw, 2.5rem); background: var(--paper); margin-top: clamp(2.5rem, 6vw, 5rem); padding: var(--gap) 0; }
-  /* option A: equal lime overhang above and below the photos, and equal white gaps above and below the block.
-     option B: the lime block runs straight into the lime title above and the pink page below. */
-  .flor[data-lime="b"] .f-spread { margin-top: clamp(2.5rem, 6vw, 5rem); padding: 0; }
+  /* equal spacing (Cam Anh chose option A): the lime overhangs the first photo and the F1 video by the same amount (12/1163 of the block),
+     and the white gaps above and below the block are both var(--gap) */
   .f-spread > * { width: calc(100% - 2 * var(--fp)); max-width: 100rem; margin-inline: auto; }
   .f-video { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--plum); }
   .band { position: relative; aspect-ratio: var(--ar); }
@@ -284,9 +283,3 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   });
 </script>
 
-<script>
-  // TEMPORARY preview of the two lime-spacing options: ?lime=a (equal) or ?lime=b (connected to the pages above and below).
-  // Remove this block, the data-lime attribute and the unused CSS once Cam Anh picks one.
-  const lm = new URLSearchParams(location.search).get('lime');
-  if (lm === 'a' || lm === 'b') document.querySelector<HTMLElement>('.flor')?.setAttribute('data-lime', lm);
-</script>
