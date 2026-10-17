@@ -219,11 +219,13 @@ const vTail = vm ? inline(vm[3]) : '';
   .story-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.3vw, 3.1rem); line-height: 1.14; letter-spacing: -.015em; max-width: 24em; }
   .story-text { display: grid; gap: 1.2em; }
   .story-text :global(p:first-child) { font-size: .74em; line-height: 1.2; }
-  .story-text :global(.ac), .vis2 .ac { color: var(--pink); }
+  .story-text :global(.ac) { color: var(--green); font-style: italic; }
+  .vis2 { color: var(--green); }
+  .vis2 .ac { color: var(--pink); }
   .story-text :global(.ac-block) { display: block; padding-left: min(1.6em, 7vw); margin: .12em 0; }
   .vis2 .ac { display: block; margin-top: .1em; }
   .vis2 .ac1 { padding-left: min(1.6em, 6vw); }
-  .vis2 .ac2 { padding-left: min(3.4em, 13vw); font-style: italic; }
+  .vis2 .ac2 { padding-left: min(3.1em, 12vw); font-style: italic; color: var(--plum); font-size: 1.12em; }
   .vis2 :global(.deg) { font-style: italic; font-size: 1.2em; line-height: .8; color: var(--pink); padding: 0 .06em; }
   .story-slot { max-width: 18rem; }
   @media (min-width: 900px) {
