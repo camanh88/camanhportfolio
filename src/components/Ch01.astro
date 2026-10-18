@@ -78,20 +78,20 @@ const count = (k: string) => albums.find((a) => a.key === k)!.ids.length;
 
   <!-- PAGE 4 (Layout 4): Studio visits, a magazine spread -->
   {studio && (
-    <section class="p4 wrap" aria-labelledby="p4-title">
+    <section class="p4" aria-labelledby="p4-title">
       <div class="spread">
         <header class="p4-text">
           <p class="p4-kick label">{ui['label highlight']}</p>
           <h3 id="p4-title" class="p4-title">{studio.lead.replace(/\.$/, '')}</h3>
           <p class="p4-intro" set:html={inline(studio.rest)} />
         </header>
-        <figure class="s s-tubes"><Photo id="p4-tubes" sizes="(min-width: 900px) 12vw, 40vw" /></figure>
-        <figure class="s s-shelf"><Photo id="p4-shelf" sizes="(min-width: 900px) 36vw, 80vw" /></figure>
-        <figure class="s s-palette"><Photo id="p4-palette" sizes="(min-width: 900px) 17vw, 40vw" /></figure>
-        <figure class="s s-talk"><Photo id="p4-talk" sizes="(min-width: 900px) 18vw, 50vw" /></figure>
-        <figure class="s s-hold"><Photo id="p4-hold" sizes="(min-width: 900px) 13vw, 40vw" /></figure>
-        <figure class="s s-flowers"><Photo id="p4-flowers" sizes="(min-width: 900px) 25vw, 60vw" /></figure>
-        <figure class="s s-draw"><Photo id="p4-draw" sizes="(min-width: 900px) 18vw, 50vw" /></figure>
+        <figure class="s s-tubes"><Photo id="p4-tubes" sizes="(min-width: 900px) 14vw, 40vw" /></figure>
+        <figure class="s s-shelf"><Photo id="p4-shelf" sizes="(min-width: 900px) 46vw, 80vw" /></figure>
+        <figure class="s s-palette"><Photo id="p4-palette" sizes="(min-width: 900px) 27vw, 40vw" /></figure>
+        <figure class="s s-talk"><Photo id="p4-talk" sizes="(min-width: 900px) 23vw, 50vw" /></figure>
+        <figure class="s s-hold"><Photo id="p4-hold" sizes="(min-width: 900px) 18vw, 40vw" /></figure>
+        <figure class="s s-flowers"><Photo id="p4-flowers" sizes="(min-width: 900px) 28vw, 60vw" /></figure>
+        <figure class="s s-draw"><Photo id="p4-draw" sizes="(min-width: 900px) 28vw, 50vw" /></figure>
       </div>
     </section>
   )}
@@ -232,9 +232,10 @@ const count = (k: string) => albums.find((a) => a.key === k)!.ids.length;
   }
 
   /* PAGE 4: Layout 4, the spread. Photo positions follow *Design Style/01/Photo on Layout/Page 4.png */
-  .p4 { padding: var(--section) 0; }
+  /* the spread fills the page: edge to edge with a small margin, photos enlarged but in the same order and arrangement */
+  .p4 { padding: var(--section) clamp(.5rem, 1.2vw, 1.1rem); }
   .spread { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
-  .p4-text { grid-column: 1 / -1; margin-bottom: 1.2rem; }
+  .p4-text { grid-column: 1 / -1; margin-bottom: 1.2rem; padding: 0 calc(var(--pad) - .5rem); }
   .p4-kick { color: var(--pink); margin-bottom: .8rem; }
   .p4-title { font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(3.4rem, 9vw, 8rem); line-height: .92; letter-spacing: -.03em; }
   .p4-intro { font-family: var(--display); font-size: clamp(1.2rem, 1.7vw, 1.55rem); line-height: 1.35; margin-top: 1.5rem; max-width: 34rem; }
@@ -243,18 +244,18 @@ const count = (k: string) => albums.find((a) => a.key === k)!.ids.length;
   .s-flowers { grid-row: span 2; aspect-ratio: .73; }
   .s-tubes, .s-palette, .s-talk, .s-hold, .s-draw { aspect-ratio: 1.35; }
   @media (min-width: 900px) {
-    .spread { display: block; position: relative; aspect-ratio: 1100 / 690; }
+    .spread { display: block; position: relative; aspect-ratio: 100 / 62; max-width: 120rem; margin-inline: auto; }
     .spread .s { position: absolute; }
-    .p4-text { position: absolute; left: 3.4%; top: 2%; width: 44%; margin: 0; }
-    .p4-title { font-size: clamp(3.4rem, 7vw, 7.4rem); }
-    .p4-intro { font-size: clamp(1rem, 1.35vw, 1.3rem); margin-top: 1rem; }
-    .s-tubes { left: 27.3%; top: 39.1%; width: 11.4%; height: 8.7%; aspect-ratio: auto; }
-    .s-shelf { left: 3.4%; top: 49.6%; width: 35.3%; height: 22.5%; aspect-ratio: auto; }
-    .s-palette { left: 3.4%; top: 74.2%; width: 16.4%; height: 10.4%; aspect-ratio: auto; }
-    .s-talk { left: 50.4%; top: 9.9%; width: 17.6%; height: 21.2%; aspect-ratio: auto; }
-    .s-hold { left: 55.2%; top: 44.9%; width: 12.8%; height: 25%; aspect-ratio: auto; }
-    .s-flowers { left: 69.6%; top: 9.9%; width: 24.9%; height: 54.3%; aspect-ratio: auto; grid-row: auto; }
-    .s-draw { left: 69.6%; top: 65.9%; width: 17.6%; height: 18.6%; aspect-ratio: auto; }
+    .p4-text { position: absolute; left: 2%; top: 2.5%; width: 44%; margin: 0; padding: 0; }
+    .p4-title { font-size: clamp(3.4rem, 7.6vw, 9rem); }
+    .p4-intro { font-size: clamp(1rem, 1.45vw, 1.5rem); margin-top: 1rem; }
+    .s-talk { left: 47%; top: 4.8%; width: 22%; height: 26.9%; aspect-ratio: auto; }
+    .s-flowers { left: 71%; top: 4.8%; width: 27%; height: 59.7%; aspect-ratio: auto; grid-row: auto; }
+    .s-tubes { left: 34%; top: 41.1%; width: 13%; height: 10%; aspect-ratio: auto; }
+    .s-shelf { left: 2%; top: 50%; width: 44%; height: 28.4%; aspect-ratio: auto; }
+    .s-palette { left: 24%; top: 80.6%; width: 26%; height: 16.8%; aspect-ratio: auto; }
+    .s-hold { left: 50%; top: 43.5%; width: 17%; height: 33.4%; aspect-ratio: auto; }
+    .s-draw { left: 71%; top: 69.4%; width: 27%; height: 29%; aspect-ratio: auto; }
   }
 
   /* PAGE 5: Layout 5 */
