@@ -344,7 +344,9 @@ const index = [
   .cafe-pics :global(.c1) { grid-column: 1 / -1; }
   .brunch-pics { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; align-items: start; }
   .brunch-pics :global(.b1) { grid-column: 1 / -1; }
-  .m-close { background: #fff; color: var(--plum); padding: clamp(4rem, 9vw, 8rem) 0 var(--pad); }
+  .m-close { background: #fff; color: var(--plum); position: relative; --cut: clamp(3rem, 6vw, 6rem); padding: clamp(4rem, 9vw, 8rem) 0 var(--pad); }
+  /* the foot of the page before the conclusion: an angled edge (a long shallow V) cut into the dark, like Cam Anh's reference */
+  .m-close::before { content: ''; position: absolute; left: 0; right: 0; top: calc(-1 * var(--cut)); height: calc(var(--cut) + 1px); background: #fff; clip-path: polygon(0 21%, 25% 100%, 100% 21%, 100% 100%, 0 100%); pointer-events: none; }
   .close-in { display: grid; gap: 1.6rem; }
   .c-mid { font-family: var(--display); font-weight: 300; font-size: clamp(1.9rem, 4vw, 3.8rem); line-height: 1.1; letter-spacing: -.025em; max-width: 16em; }
   .c-mid :global(strong) { font-weight: 300; font-style: italic; }
