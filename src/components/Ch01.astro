@@ -305,13 +305,13 @@ const count = (k: string) => albums.find((a) => a.key === k)!.ids.length;
 
   /* CLOSING: Layout 7, staggered lines on dark */
   .close { background: var(--dark); color: var(--cream); padding: clamp(6rem, 14vw, 12rem) var(--pad) 0; }
-  .close-in { max-width: 62rem; margin: 0 auto; font-family: var(--display); font-weight: 300; font-size: clamp(1.9rem, 5.4vw, 4.6rem); line-height: 1.04; letter-spacing: -.02em; }
+  .close-in { max-width: 74rem; margin: 0 auto; font-family: var(--display); font-weight: 300; font-size: clamp(1.25rem, 2.6vw, 2.3rem); line-height: 1.15; letter-spacing: -.01em; }
   .l { margin: 0; }
   .l1, .l2 { max-width: 16em; }
   .l2 { padding-left: 1.5em; }
   .l3 { margin-top: 1.2em; padding-left: 3em; max-width: 14em; }
   .l3 :global(.accent-word) { font-family: inherit; font-size: 1em; line-height: inherit; color: var(--lime); font-style: italic; padding: 0; }
-  .l4 { margin-top: 1.4em; text-align: right; font-style: italic; color: var(--lime); font-size: 1.35em; letter-spacing: -.03em; }
+  .l4 { margin-top: 1.2em; text-align: right; font-style: italic; color: var(--lime); font-size: clamp(3.2rem, 11vw, 9.5rem); line-height: .96; letter-spacing: -.035em; text-wrap: balance; }
   .next { display: block; width: 3rem; height: clamp(6rem, 14vw, 10rem); margin: 3rem auto 0; position: relative; }
   .line { position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--cream); transform-origin: top; animation: draw 2.8s var(--ease) infinite; }
   @keyframes draw { 0% { transform: scaleY(0); } 60%, 100% { transform: scaleY(1); } }
