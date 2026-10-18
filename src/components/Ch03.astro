@@ -309,7 +309,7 @@ const index = [
   .heart :global(strong) { font-weight: 300; }
   /* the two paragraphs after the heart line: the first is the main one (large), the second is secondary (small, quieter) */
   .m-intro { display: grid; gap: clamp(1.4rem, 3vw, 2.4rem); padding-bottom: clamp(2.4rem, 4.5vw, 4rem); }
-  .mi-main { font-family: var(--sans); font-weight: 400; font-size: clamp(1.15rem, 2vw, 1.85rem); line-height: 1.35; letter-spacing: -.012em; max-width: 26em; }
+  .mi-main { font-family: var(--display); font-weight: 300; font-size: clamp(1.45rem, 2.5vw, 2.35rem); line-height: 1.18; letter-spacing: -.015em; max-width: 24em; color: rgb(200 192 200 / .62); }
   .mi-main :global(em) { color: var(--pink); }
   .mi-sub { font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.6; max-width: 30rem; color: var(--blush); padding-left: 1.1rem; border-left: 1px solid rgb(235 219 215 / .45); }
   /* the mission stays joined to the intro above it: same dark ground, with a soft light rising from the foot of the block */
@@ -317,6 +317,14 @@ const index = [
   .m-briefband .m-bl { color: var(--lime); }
   .m-brief { display: grid; gap: .8rem; }
   /* 01 On social starts on its own colour */
+  /* soft edges: each colour block melts into the next instead of meeting it with a hard line */
+  .m-social, .g-cafe, .m-close { position: relative; }
+  .m-social > *, .g-cafe > *, .m-close > * { position: relative; z-index: 1; }
+  .m-social::before, .m-social::after, .g-cafe::after, .m-close::before { content: ''; position: absolute; left: 0; right: 0; pointer-events: none; z-index: 0; }
+  .m-social::before { top: 0; height: clamp(3rem, 7vw, 6rem); background: linear-gradient(rgb(214 74 110 / .55), transparent); }
+  .m-social::after { bottom: 0; height: clamp(4rem, 9vw, 8rem); background: linear-gradient(transparent, var(--plum)); }
+  .g-cafe::after { bottom: 0; height: clamp(4rem, 9vw, 8rem); background: linear-gradient(transparent, var(--dark)); }
+  .m-close::before { top: 0; height: clamp(4rem, 9vw, 8rem); background: linear-gradient(var(--dark), transparent); }
   .m-social { background: var(--cream); color: var(--ink); }
   .m-social .gt h4 { color: var(--ink); }
   .m-social .ba .label { color: var(--ink-soft); }
