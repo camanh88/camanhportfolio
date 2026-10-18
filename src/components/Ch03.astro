@@ -200,7 +200,6 @@ const index = [
     </div>
   </section>
 
-  <a class="next" href={pages.menu} aria-label={ui['chapter nav']}><span class="line" aria-hidden="true"></span></a>
 </article>
 
 <style>
@@ -366,8 +365,4 @@ const index = [
     .close-in { grid-template-columns: repeat(12, 1fr); }
     .c-mid { grid-column: 1 / 8; grid-row: 1; } .c-first { grid-column: 7 / 13; grid-row: 2; margin-top: clamp(1.5rem, 4vw, 4rem); }
   }
-  .next { display: block; width: 3rem; height: clamp(6rem, 14vw, 10rem); margin: 0 auto; position: relative; background: var(--pink); width: 100%; }
-  .line { position: absolute; left: 50%; top: 1.2rem; width: 1px; height: calc(100% - 2.4rem); background: #fff; transform-origin: top; animation: draw 2.8s var(--ease) infinite; }
-  @keyframes draw { 0% { transform: scaleY(0); } 60%, 100% { transform: scaleY(1); } }
-  @media (prefers-reduced-motion: reduce) { .line { animation: none; } }
 </style>
