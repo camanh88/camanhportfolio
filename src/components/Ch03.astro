@@ -309,7 +309,7 @@ const index = [
   .heart :global(strong) { font-weight: 300; }
   /* the two paragraphs after the heart line: the first is the main one (large), the second is secondary (small, quieter) */
   .m-intro { display: grid; gap: clamp(1.4rem, 3vw, 2.4rem); padding-bottom: clamp(2.4rem, 4.5vw, 4rem); }
-  .mi-main { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.4vw, 3.2rem); line-height: 1.12; letter-spacing: -.02em; max-width: 22em; }
+  .mi-main { font-family: var(--sans); font-weight: 400; font-size: clamp(1.35rem, 2.5vw, 2.3rem); line-height: 1.32; letter-spacing: -.012em; max-width: 26em; }
   .mi-main :global(em) { color: var(--pink); }
   .mi-sub { font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.6; max-width: 30rem; color: var(--blush); padding-left: 1.1rem; border-left: 1px solid rgb(235 219 215 / .45); }
   /* the mission stays joined to the intro above it: same dark ground, with a soft light rising from the foot of the block */
@@ -339,7 +339,7 @@ const index = [
   .pts { display: grid; gap: .55rem; margin-top: .4rem; max-width: 26rem; }
   .pts li { position: relative; padding-left: 1.4rem; line-height: 1.45; }
   .pts li::before { content: ''; position: absolute; left: 0; top: .7em; width: .6rem; height: 1px; background: var(--lime); }
-  .g-cafe { background: var(--plum); margin: clamp(1rem, 2vw, 2rem) 0; }
+  .g-cafe { background: var(--plum); }
   .cafe-in { display: grid; gap: 2rem; padding: clamp(3rem, 6vw, 6rem) 0; }
   .cafe-pics { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; align-items: start; }
   .cafe-pics :global(.c1) { grid-column: 1 / -1; }
