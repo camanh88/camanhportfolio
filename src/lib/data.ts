@@ -168,6 +168,7 @@ export const ch03 = (() => {
     num: num.trim(), title: t.join('·').trim(),
     hint: (top.find((b) => b.t === 'p') as { text: string } | undefined)?.text ?? '',
     projects,
+    note,
     facebook: /https?:\/\/\S+facebook\S+?(?=[\s.,;)]|$)/.exec(note)?.[0].replace(/\.$/, '') ?? '',
   };
 })();
