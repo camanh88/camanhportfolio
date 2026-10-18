@@ -27,6 +27,9 @@ button { font: inherit; color: inherit; }
   text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: .24em; }
 .sp:hover { text-decoration-style: solid; color: var(--accent); }
 .sp-arrow { font-size: .62em; margin-left: .15em; vertical-align: .55em; display: inline-block; text-decoration: none; }
+.xl { color: inherit; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .24em; }
+.xl:hover { color: var(--accent); }
+.xl-arrow { font-size: .62em; margin-left: .15em; vertical-align: .55em; display: inline-block; text-decoration: none; }
 .hand-note { font-family: var(--hand); font-size: 1.1em; display: inline-block; transform: rotate(-2deg); line-height: 1.2; color: var(--accent); }
 strong { font-weight: 500; }
 

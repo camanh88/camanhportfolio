@@ -1,5 +1,6 @@
 // Reads the markdown in ../content and turns it into blocks and inline HTML.
 // No copy lives here: this only recognises structure and the small markup conventions from CLAUDE.md:
+//   [text](https://...) (external link, opens in a new tab, shown with an arrow)
 //   BUILD NOTE: ...  (never rendered)   {{Name}} (sidepath)   {{vi: ...}} (handwritten note)   [text] (placeholder)   ++text++ (underline)
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -75,10 +76,17 @@ export interface InlineOpts {
   accent?: string[];
 }
 
-const TOKEN = /\{\{vi:\s*([^}]+?)\}\}|\{\{([^}]+?)\}\}|\[([^\]]+?)\]|\*\*([^*]+?)\*\*|\+\+([^+]+?)\+\+|(?<![A-Za-z0-9])_([^_\s][^_]*?)_(?![A-Za-z0-9])/g;
+const TOKEN = /\{\{vi:\s*([^}]+?)\}\}|\{\{([^}]+?)\}\}|\[([^\]]+?)\]\((https?:\/\/[^)\s]+)\)|\[([^\]]+?)\]|\*\*([^*]+?)\*\*|\+\+([^+]+?)\+\+|(?<![A-Za-z0-9])_([^_\s][^_]*?)_(?![A-Za-z0-9])/g;
 
 export function sidepathButton(name: string) {
   return `<button type="button" class="sp" data-sp="${slug(name)}" aria-haspopup="dialog">${esc(name)}<span class="sp-arrow" aria-hidden="true">↗</span></button>`;
+}
+
+// the words "opens in a new tab" come from content/ui.md (key "new tab"), read once
+let newTab: string | null = null;
+const newTabLabel = () => (newTab ??= (/^- new tab:\s*(.*)$/m.exec(readContent('ui.md'))?.[1] ?? '').trim());
+export function externalLink(text: string, url: string) {
+  return `<a class="xl" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(text)}<span class="xl-arrow" aria-hidden="true">↗</span><span class="sr-only"> (${esc(newTabLabel())})</span></a>`;
 }
 
 function plain(text: string, opts: InlineOpts): string {
@@ -99,10 +107,11 @@ export function inline(text: string, opts: InlineOpts = {}): string {
     html += plain(text.slice(last, m.index), opts);
     if (m[1] !== undefined) html += `<span class="hand-note" lang="vi">${esc(m[1])}</span>`;
     else if (m[2] !== undefined) html += sidepathButton(m[2].trim());
-    else if (m[3] !== undefined) html += `<span class="ph">[${esc(m[3])}]</span>`;
-    else if (m[4] !== undefined) html += `<strong>${inline(m[4], opts)}</strong>`;
-    else if (m[5] !== undefined) html += `<u class="ul">${inline(m[5], opts)}</u>`;
-    else if (m[6] !== undefined) html += `<em>${inline(m[6], opts)}</em>`;
+    else if (m[3] !== undefined) html += externalLink(m[3], m[4]);
+    else if (m[5] !== undefined) html += `<span class="ph">[${esc(m[5])}]</span>`;
+    else if (m[6] !== undefined) html += `<strong>${inline(m[6], opts)}</strong>`;
+    else if (m[7] !== undefined) html += `<u class="ul">${inline(m[7], opts)}</u>`;
+    else if (m[8] !== undefined) html += `<em>${inline(m[8], opts)}</em>`;
     last = (m.index ?? 0) + m[0].length;
   }
   html += plain(text.slice(last), opts);
@@ -111,7 +120,7 @@ export function inline(text: string, opts: InlineOpts = {}): string {
 
 /** Plain text of an inline string (markup removed), used for aria-labels and matching. */
 export function textOf(text: string): string {
-  return text.replace(/\{\{vi:\s*([^}]+?)\}\}/g, '$1').replace(/\{\{([^}]+?)\}\}/g, '$1').replace(/\*\*([^*]+?)\*\*/g, '$1').replace(/\+\+([^+]+?)\+\+/g, '$1');
+  return text.replace(/\[([^\]]+?)\]\(https?:\/\/[^)\s]+\)/g, '$1').replace(/\{\{vi:\s*([^}]+?)\}\}/g, '$1').replace(/\{\{([^}]+?)\}\}/g, '$1').replace(/\*\*([^*]+?)\*\*/g, '$1').replace(/\+\+([^+]+?)\+\+/g, '$1');
 }
 
 /** Splits "**Lead.** rest" into lead + rest (lead keeps its punctuation). */
