@@ -311,8 +311,7 @@ const count = (k: string) => albums.find((a) => a.key === k)!.ids.length;
   .l2 { padding-left: 1.5em; }
   .l3 { margin-top: 1.2em; padding-left: 3em; max-width: 14em; }
   .l3 :global(.accent-word) { font-family: inherit; font-size: 1em; line-height: inherit; color: var(--lime); font-style: italic; padding: 0; }
-  /* "But my true dream was…": the biggest line, set apart, as in the first version */
-  .l4 { font-style: italic; color: var(--lime); font-size: clamp(2.8rem, 11vw, 8.5rem); line-height: .98; letter-spacing: -.03em; max-width: 14ch; margin: clamp(5rem, 16vw, 11rem) auto 0; text-align: center; text-wrap: balance; }
+  .l4 { margin-top: 1.4em; text-align: right; font-style: italic; color: var(--lime); font-size: 1.35em; letter-spacing: -.03em; }
   .next { display: block; width: 3rem; height: clamp(6rem, 14vw, 10rem); margin: 3rem auto 0; position: relative; }
   .line { position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--cream); transform-origin: top; animation: draw 2.8s var(--ease) infinite; }
   @keyframes draw { 0% { transform: scaleY(0); } 60%, 100% { transform: scaleY(1); } }
