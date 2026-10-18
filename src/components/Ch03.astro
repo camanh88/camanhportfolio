@@ -34,11 +34,13 @@ const tiktok = /https?:\/\/\S*tiktok\.com\S*/.exec(ch03.note)?.[0] ?? '';
 const mP = ptxt(mono.blocks);
 const mRole = splitDate(mP[0]);
 const heart = mP[1] ?? '';
-const brief = mP[2] ?? '';
+const briefAt = Math.max(2, mP.findIndex((t) => /^the brief:/i.test(t)));
+const intro = mP.slice(2, briefAt);                            // two paragraphs after the heart line: main, then secondary
+const brief = mP[briefAt] ?? '';
 const mItems = (lists(mono.blocks)[0] ?? []).map(leadSplit);
-const gallery = mP[3] ?? '';                                   // "[Gallery link]" until Cam Anh gives the address
+const gallery = mP[briefAt + 1] ?? '';                                   // "[Gallery link]" until Cam Anh gives the address
 const galleryUrl = urlIn(gallery);
-const mClose = mP.slice(4);                                    // the two closing paragraphs
+const mClose = mP.slice(briefAt + 2);                                    // the two closing paragraphs
 const heartHtml = inline(heart).replace('service', '<em class="svc">service</em>');
 // "In the café": three short points, one per comma-separated part
 const cafeParts = (mItems[1]?.rest ?? '').split(/,\s+/);
@@ -130,6 +132,13 @@ const index = [
     <div class="m-heart">
       <p class="heart" set:html={heartHtml} />
     </div>
+
+    {intro.length > 0 && (
+      <div class="m-intro wrap">
+        <p class="mi-main" set:html={inline(intro[0])} />
+        {intro[1] && <p class="mi-sub" set:html={inline(intro[1])} />}
+      </div>
+    )}
 
     <div class="m-brief wrap">
       <p class="m-bl label">{brief.split(':')[0]}</p>
@@ -294,6 +303,11 @@ const index = [
   .heart { max-width: 15em; margin: 0 auto; font-family: var(--display); font-weight: 300; font-size: clamp(2.2rem, 6vw, 5.8rem); line-height: 1; letter-spacing: -.03em; }
   .heart :global(.svc) { font-style: italic; color: var(--pink); }
   .heart :global(strong) { font-weight: 300; }
+  /* the two paragraphs after the heart line: the first is the main one (large), the second is secondary (small, quieter) */
+  .m-intro { display: grid; gap: clamp(1.4rem, 3vw, 2.4rem); padding-bottom: clamp(3.5rem, 7vw, 6rem); }
+  .mi-main { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.4vw, 3.2rem); line-height: 1.12; letter-spacing: -.02em; max-width: 22em; }
+  .mi-main :global(em) { color: var(--pink); }
+  .mi-sub { font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.6; max-width: 30rem; color: var(--blush); padding-left: 1.1rem; border-left: 1px solid rgb(235 219 215 / .45); }
   .m-brief { display: grid; gap: .8rem; padding-bottom: clamp(3rem, 6vw, 5rem); }
   .m-bl { color: var(--lime); font-size: .79rem; }
   .m-bt { font-family: var(--display); font-size: clamp(1.5rem, 2.6vw, 2.3rem); line-height: 1.2; max-width: 28em; }
@@ -324,6 +338,8 @@ const index = [
   .c-mid :global(strong) { font-weight: 300; font-style: italic; }
   .c-first { font-family: var(--display); font-weight: 300; font-size: clamp(1.45rem, 2.4vw, 2.2rem); line-height: 1.2; letter-spacing: -.01em; max-width: 18em; margin-left: auto; text-align: left; }
   @media (min-width: 900px) {
+    .m-intro { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; }
+    .mi-main { grid-column: 1 / 9; } .mi-sub { grid-column: 7 / 13; margin-top: .4rem; }
     .m-brief { grid-template-columns: 3fr 9fr; column-gap: 2rem; align-items: baseline; }
     .m-group { grid-template-columns: 4fr 8fr; column-gap: clamp(2rem, 5vw, 6rem); align-items: start; }
     .g-social .gt { position: sticky; top: 5rem; }
