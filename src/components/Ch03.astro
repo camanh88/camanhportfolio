@@ -140,12 +140,15 @@ const index = [
       </div>
     )}
 
+    <div class="m-briefband">
     <div class="m-brief wrap">
       <p class="m-bl label">{brief.split(':')[0]}</p>
       <p class="m-bt" set:html={inline(brief.slice(brief.indexOf(':') + 1).trim())} />
     </div>
+    </div>
 
     <!-- three groups of photos, one for each thing Mono needed -->
+    <div class="m-social">
     <div class="m-group g-social wrap">
       <div class="gt"><p class="gk">01</p><h4>{mItems[0]?.lead.replace(/:$/, '')}</h4><p set:html={inline(mItems[0]?.rest ?? '')} /></div>
       <div class="ba-wrap">
@@ -153,17 +156,18 @@ const index = [
           ? <a class="ba ba-link" href={galleryUrl} target="_blank" rel="noopener noreferrer" aria-label={`${textOf(gallery)} (${ui['new tab']})`}>
               <figure><Slot tag="M2" a="4 / 5" tone="pink" /><figcaption class="label">{ui.before}</figcaption></figure>
               <span class="ba-arrow" aria-hidden="true">→</span>
-              <figure><Slot tag="M3" a="4 / 5" tone="cream" /><figcaption class="label">{ui.after}</figcaption></figure>
+              <figure><Slot tag="M3" a="4 / 5" tone="blush" /><figcaption class="label">{ui.after}</figcaption></figure>
             </a>
           : <div class="ba">
               <figure><Slot tag="M2" a="4 / 5" tone="pink" /><figcaption class="label">{ui.before}</figcaption></figure>
               <span class="ba-arrow" aria-hidden="true">→</span>
-              <figure><Slot tag="M3" a="4 / 5" tone="cream" /><figcaption class="label">{ui.after}</figcaption></figure>
+              <figure><Slot tag="M3" a="4 / 5" tone="blush" /><figcaption class="label">{ui.after}</figcaption></figure>
             </div>}
         <p class="ba-cap" set:html={inline(gallery)} />
       </div>
     </div>
 
+    </div>
     <div class="g-cafe">
       <div class="cafe-in wrap">
         <div class="gt"><p class="gk">02</p><h4>{mItems[1]?.lead.replace(/:$/, '')}</h4>
@@ -308,7 +312,16 @@ const index = [
   .mi-main { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.4vw, 3.2rem); line-height: 1.12; letter-spacing: -.02em; max-width: 22em; }
   .mi-main :global(em) { color: var(--pink); }
   .mi-sub { font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.6; max-width: 30rem; color: var(--blush); padding-left: 1.1rem; border-left: 1px solid rgb(235 219 215 / .45); }
-  .m-brief { display: grid; gap: .8rem; padding-bottom: clamp(3rem, 6vw, 5rem); }
+  /* the mission: a full-width band with a gradient so it stands out */
+  .m-briefband { background: linear-gradient(100deg, var(--plum) 0%, #8b2a6e 52%, var(--pink) 118%); color: #fff; padding: clamp(2.4rem, 5.5vw, 4.5rem) 0; }
+  .m-briefband .m-bl { color: var(--lime); }
+  .m-brief { display: grid; gap: .8rem; }
+  /* 01 On social starts on its own colour */
+  .m-social { background: var(--cream); color: var(--ink); }
+  .m-social .gt h4 { color: var(--ink); }
+  .m-social .ba .label { color: var(--ink-soft); }
+  .m-social .ba-cap :global(.xl) { color: var(--plum); }
+  .m-social :global(.ph) { background: var(--ph-bg); color: var(--ph-ink); box-shadow: inset 0 0 0 1px rgb(138 75 42 / .25); }
   .m-bl { color: var(--lime); font-size: .79rem; }
   .m-bt { font-family: var(--display); font-size: clamp(1.5rem, 2.6vw, 2.3rem); line-height: 1.2; max-width: 28em; }
   .mono .ph { background: rgb(246 237 230 / .12); color: var(--blush); box-shadow: inset 0 0 0 1px rgb(235 219 215 / .35); }
