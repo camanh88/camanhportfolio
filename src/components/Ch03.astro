@@ -308,12 +308,12 @@ const index = [
   .heart :global(.svc) { font-style: italic; color: var(--pink); }
   .heart :global(strong) { font-weight: 300; }
   /* the two paragraphs after the heart line: the first is the main one (large), the second is secondary (small, quieter) */
-  .m-intro { display: grid; gap: clamp(1.4rem, 3vw, 2.4rem); padding-bottom: clamp(3.5rem, 7vw, 6rem); }
+  .m-intro { display: grid; gap: clamp(1.4rem, 3vw, 2.4rem); padding-bottom: clamp(2.4rem, 4.5vw, 4rem); }
   .mi-main { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.4vw, 3.2rem); line-height: 1.12; letter-spacing: -.02em; max-width: 22em; }
   .mi-main :global(em) { color: var(--pink); }
   .mi-sub { font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.6; max-width: 30rem; color: var(--blush); padding-left: 1.1rem; border-left: 1px solid rgb(235 219 215 / .45); }
-  /* the mission: a full-width band with a gradient so it stands out */
-  .m-briefband { background: linear-gradient(100deg, var(--plum) 0%, #8b2a6e 52%, var(--pink) 118%); color: #fff; padding: clamp(2.4rem, 5.5vw, 4.5rem) 0; }
+  /* the mission stays joined to the intro above it: same dark ground, with a soft light rising from the foot of the block */
+  .m-briefband { background: radial-gradient(ellipse 85% 100% at 72% 106%, rgb(243 63 113 / .8), transparent 100%), radial-gradient(ellipse 70% 100% at 18% 106%, rgb(139 42 110 / .9), transparent 100%); color: #fff; padding: clamp(.5rem, 1.5vw, 1.2rem) 0 clamp(4rem, 9vw, 8rem); box-shadow: 0 -2px 0 var(--dark); position: relative; }
   .m-briefband .m-bl { color: var(--lime); }
   .m-brief { display: grid; gap: .8rem; }
   /* 01 On social starts on its own colour */
