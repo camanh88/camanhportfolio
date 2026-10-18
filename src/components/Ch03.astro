@@ -316,7 +316,8 @@ const index = [
   .m-briefband .m-bl { color: var(--lime); }
   .m-brief { display: grid; gap: .8rem; }
   /* 01 On social starts on its own colour */
-  .m-social { background: var(--cream); color: var(--ink); }
+  .m-social { position: relative; --cut: clamp(3rem, 6vw, 6rem); background: var(--cream); color: var(--ink); }
+  .m-social::before { content: ''; position: absolute; left: 0; right: 0; top: calc(-1 * var(--cut)); height: calc(var(--cut) + 1px); background: var(--cream); clip-path: polygon(0 21%, 25% 100%, 100% 21%, 100% 100%, 0 100%); pointer-events: none; }
   .m-social .gt h4 { color: var(--ink); }
   .m-social .ba .label { color: var(--ink-soft); }
   .m-social .ba-cap :global(.xl) { color: var(--plum); }
