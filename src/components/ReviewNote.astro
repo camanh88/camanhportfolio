@@ -33,7 +33,12 @@ const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
           </button>
         </div>
-        <textarea class="rv-text" spellcheck="false" aria-label="Review note"></textarea>
+        <div class="rv-fmt" role="toolbar" aria-label="Text style">
+          <button type="button" class="rv-f" data-fmt="bold" aria-label="Bold" aria-pressed="false" title="Bold (Ctrl/Cmd+B)"><b>B</b></button>
+          <button type="button" class="rv-f" data-fmt="italic" aria-label="Italic" aria-pressed="false" title="Italic (Ctrl/Cmd+I)"><i>I</i></button>
+          <button type="button" class="rv-f" data-fmt="underline" aria-label="Underline" aria-pressed="false" title="Underline (Ctrl/Cmd+U)"><u>U</u></button>
+        </div>
+        <div class="rv-text" contenteditable="true" role="textbox" aria-multiline="true" spellcheck="false" aria-label="Review note"></div>
       </div>
     </aside>
 
@@ -51,7 +56,12 @@ const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
       .rv-grip { flex: 1; height: 100%; }
       .rv-btn { appearance: none; border: 0; background: transparent; color: #141312; width: 2rem; height: 2rem; display: grid; place-items: center; cursor: pointer; opacity: .7; }
       .rv-btn:hover, .rv-btn:focus-visible { opacity: 1; }
-      .rv-text { flex: 1; width: 100%; min-height: 0; resize: none; border: 0; outline: none; background: transparent; padding: .6rem .75rem .75rem; font: 400 .95rem/1.5 var(--sans, sans-serif); color: #141312; }
+      .rv-fmt { display: flex; gap: .1rem; padding: .15rem .5rem 0; flex: none; }
+      .rv-f { appearance: none; border: 0; background: transparent; color: #141312; width: 1.7rem; height: 1.6rem; display: grid; place-items: center; cursor: pointer; font: 400 .95rem/1 Georgia, serif; border-radius: 3px; opacity: .7; }
+      .rv-f:hover, .rv-f:focus-visible { opacity: 1; background: rgb(20 19 18 / .08); }
+      .rv-f[aria-pressed="true"] { opacity: 1; background: rgb(20 19 18 / .16); }
+      .rv-text { flex: 1; width: 100%; min-height: 0; overflow-y: auto; border: 0; outline: none; background: transparent; padding: .35rem .75rem .75rem; font: 400 .95rem/1.5 var(--sans, sans-serif); color: #141312; white-space: pre-wrap; overflow-wrap: anywhere; }
+      .rv-text b, .rv-text strong { font-weight: 700; } .rv-text i, .rv-text em { font-style: italic; } .rv-text u { text-decoration: underline; }
       .rv :focus-visible { outline: 2px solid #141312; outline-offset: -2px; }
       @media (prefers-reduced-motion: reduce) { .rv-tab { transition: none; } }
       @media print { .rv { display: none; } }
@@ -66,7 +76,7 @@ const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
         var tab = root.querySelector('.rv-tab');
         var head = root.querySelector('.rv-head');
         var area = root.querySelector('.rv-text');
-        var st = { text: '', open: false, x: null, y: null, w: null, h: null };
+        var st = { text: '', html: '', open: false, x: null, y: null, w: null, h: null };
         try { var raw = localStorage.getItem(KEY); if (raw) st = Object.assign(st, JSON.parse(raw)); } catch (e) {}
         function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
 
@@ -87,10 +97,55 @@ const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
           if (open) area.focus({ preventScroll: true });
         }
 
-        area.value = st.text || '';
+        // The note keeps its text as simple HTML (bold, italic, underline, line breaks only). Notes saved before formatting existed
+        // were plain text: they are converted on load, so nothing is lost.
+        var OK = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, BR: 1, DIV: 1, P: 1 };
+        function clean(html) {
+          var tpl = document.createElement('template'); tpl.innerHTML = html;
+          (function walk(n) {
+            Array.prototype.slice.call(n.childNodes).forEach(function (c) {
+              if (c.nodeType === 1) {
+                walk(c);
+                if (!OK[c.tagName]) { while (c.firstChild) n.insertBefore(c.firstChild, c); n.removeChild(c); }
+                else Array.prototype.slice.call(c.attributes).forEach(function (a) { c.removeAttribute(a.name); });
+              } else if (c.nodeType !== 3) n.removeChild(c);
+            });
+          })(tpl.content);
+          return tpl.innerHTML;
+        }
+        function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>'); }
+        // plain text with light markup (so it can be pasted into a chat): **bold**, *italic*, <u>underline</u>
+        function toMarkdown(node) {
+          var out = '';
+          node.childNodes.forEach(function (c) {
+            if (c.nodeType === 3) { out += c.nodeValue; return; }
+            if (c.nodeType !== 1) return;
+            var inner = toMarkdown(c), t = c.tagName;
+            if (t === 'BR') out += '\n';
+            else if (t === 'B' || t === 'STRONG') out += inner.trim() ? '**' + inner + '**' : inner;
+            else if (t === 'I' || t === 'EM') out += inner.trim() ? '*' + inner + '*' : inner;
+            else if (t === 'U') out += inner.trim() ? '<u>' + inner + '</u>' : inner;
+            else if (t === 'DIV' || t === 'P') out += (out && !/\n$/.test(out) ? '\n' : '') + inner;
+            else out += inner;
+          });
+          return out;
+        }
+        function persist() { st.html = area.innerHTML; st.text = area.innerText; save(); }
+        area.innerHTML = clean(st.html || esc(st.text || ''));
         setOpen(!!st.open);
+        try { document.execCommand('styleWithCSS', false, false); } catch (e) {}
 
-        area.addEventListener('input', function () { st.text = area.value; save(); });
+        area.addEventListener('input', persist);
+        // pasted text is always plain (no foreign styles); use the buttons to format
+        area.addEventListener('paste', function (e) { e.preventDefault(); var t = (e.clipboardData || window.clipboardData).getData('text/plain'); document.execCommand('insertText', false, t); });
+        // text style buttons: B / I / U (the keyboard shortcuts Ctrl/Cmd+B, I, U also work)
+        var fmts = root.querySelectorAll('.rv-f');
+        function mark() { fmts.forEach(function (b) { var on = false; try { on = document.queryCommandState(b.dataset.fmt); } catch (e) {} b.setAttribute('aria-pressed', String(on && document.activeElement === area)); }); }
+        fmts.forEach(function (b) {
+          b.addEventListener('mousedown', function (e) { e.preventDefault(); });
+          b.addEventListener('click', function () { area.focus(); document.execCommand(b.dataset.fmt, false, null); persist(); mark(); });
+        });
+        document.addEventListener('selectionchange', function () { if (root.contains(document.activeElement)) mark(); });
         tab.addEventListener('click', function () { setOpen(true); });
         // Esc inside the note only minimises the note (it must not also close a dialog behind it)
         root.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); setOpen(false); tab.focus(); } });
@@ -111,11 +166,14 @@ const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
           if (!b) return;
           var act = b.dataset.act;
           if (act === 'min') { setOpen(false); tab.focus(); }
-          else if (act === 'clear') { if (!area.value || confirm('Clear the note?')) { area.value = ''; st.text = ''; save(); area.focus(); } }
+          else if (act === 'clear') { if (!area.innerText.trim() || confirm('Clear the note?')) { area.innerHTML = ''; persist(); area.focus(); } }
           else if (act === 'copy') {
             var done = function () { b.style.opacity = '1'; setTimeout(function () { b.style.opacity = ''; }, 700); };
-            if (navigator.clipboard) navigator.clipboard.writeText(area.value).then(done, function () { area.select(); document.execCommand('copy'); done(); });
-            else { area.select(); document.execCommand('copy'); done(); }
+            var md = toMarkdown(area).replace(/\n{3,}/g, '\n\n').trim();
+            var fallback = function () { var r = document.createRange(); r.selectNodeContents(area); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy'); sel.removeAllRanges(); done(); };
+            if (navigator.clipboard && window.ClipboardItem) navigator.clipboard.write([new ClipboardItem({ 'text/plain': new Blob([md], { type: 'text/plain' }), 'text/html': new Blob([area.innerHTML], { type: 'text/html' }) })]).then(done, fallback);
+            else if (navigator.clipboard) navigator.clipboard.writeText(md).then(done, fallback);
+            else fallback();
           }
         });
 
@@ -168,7 +226,7 @@ const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
         // keep two open tabs of the site in step
         addEventListener('storage', function (e) {
           if (e.key !== KEY || !e.newValue) return;
-          try { var n = JSON.parse(e.newValue); if (n.text !== area.value) { area.value = n.text || ''; st.text = n.text || ''; } } catch (err) {}
+          try { var n = JSON.parse(e.newValue); if (n.html !== area.innerHTML && document.activeElement !== area) { area.innerHTML = clean(n.html || esc(n.text || '')); st.html = area.innerHTML; st.text = n.text || ''; } } catch (err) {}
         });
       })();
     </script>
