@@ -22,6 +22,7 @@ An open application to the **Marketing Department of Maison Marou**, told as a m
 **Not done yet:** every photo/video slot is empty on purpose (Cam Anh wanted to approve the layouts first); contact details are filled (Gmail, Phone; no LinkedIn); tablet width (768 px) has not been screenshot-tested since Chapter 01; no Lighthouse run; nothing deployed.
 
 **Restore points (git tags in `site/`):**
+- `lamyen-before-oct19` — Chapter 02 exactly as it was before Cam Anh's Oct 19 edits (new Word text, comments, page 1-3 changes). Restore with `git checkout lamyen-before-oct19 -- src/components/Ch02.astro ../content/ch02-becoming-whole-in-fb.md` (the content folder is outside git: keep a copy of the .md too).
 - `lamyen-v1` — the Chapter 02 Lam Yên layout **Cam Anh approved and asked to keep**. If it is ever changed and she wants it back: `git checkout lamyen-v1 -- src/components/Ch02.astro content/ch02-becoming-whole-in-fb.md`. Do not restyle Ch02 without asking.
 - `kitchens-v1` — Chapter 03 first layout draft.
 - `pages-v1` — four-page structure with header, Off the menu and Why Marou.

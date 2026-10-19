@@ -1,7 +1,7 @@
 ---
 import Slot from './Slot.astro';
 import { ch02, ui, splitDate, type Block, pages } from '../lib/data';
-import { inline, leadSplit, esc } from '../lib/md';
+import { inline, leadSplit, esc, slug, textOf } from '../lib/md';
 
 type Sec = { h: string; lvl: 3 | 4; body: Block[] };
 const P = ch02.pages;
@@ -22,17 +22,17 @@ const colonSplit = (h: string) => { const i = h.indexOf(':'); return i > 0 ? { l
 // ---- P1 ----
 const p1 = sections('p1');
 const p1Name = p1.secs[0]?.h ?? '';
-const p1Lead = ptxt(p1.secs[0]?.body ?? [])[0] ?? '';
 const p1Roles = (lists(p1.secs[0]?.body ?? [])[0] ?? []).map(splitDate);
 const p1p = ptxt(p1.secs[0]?.body ?? []);
-const p1Quote = [p1p[1], p1p[2]];
-const p1Foot = p1p[3];
+const p1Quote = [p1p[0], p1p[1]];
+const p1Foot = p1p[2];
 
 // ---- P2 ----
 const p2 = sections('p2');
 const p2About = p2.secs[0]?.h ?? '';
 const p2BriefH = p2.secs[1]?.h ?? '';
-const p2Intro = ptxt(p2.secs[1]?.body ?? [])[0] ?? '';
+const p2Sub = ptxt(p2.secs[1]?.body ?? [])[0] ?? '';            // the sub head right after "The brief"
+const p2Intro = ptxt(p2.secs[1]?.body ?? [])[1] ?? '';
 const p2Items = (lists(p2.secs[1]?.body ?? [])[0] ?? []).map((t) => { const { lead, rest } = leadSplit(t); const m = /^(\d+)\.\s*(.*)$/.exec(lead); return { n: m?.[1] ?? '', lead: m?.[2] ?? lead, rest }; });
 
 // ---- P3 ----
@@ -56,15 +56,16 @@ const p5Head = numTitle(p5.secs[0]?.h ?? '');
 const p5p = ptxt(p5.secs[0]?.body ?? []);
 const p5Image = colonSplit(p5.secs[1]?.h ?? '');
 const p5ImageP = ptxt(p5.secs[1]?.body ?? [])[0] ?? '';
+const p5ImageItems = lists(p5.secs[1]?.body ?? [])[0] ?? [];
 const p5Voice = colonSplit(p5.secs[2]?.h ?? '');
 const p5VoiceP = ptxt(p5.secs[2]?.body ?? []);
 // "That small gesture became our signature. Customers ... said, “…” “…”" -> sentence + the two quotes
-const gesture = p5p[3] ?? '';
+const gesture = p5p[4] ?? '';
 const gQuotes = [...gesture.matchAll(/“[^”]+”/g)].map((m) => m[0]);
-const gSentence = gesture.replace(/\s*“[^”]+”/g, '').replace(/\s+$/, '');
+const gSentence = textOf(gesture.replace(/\s*“[^”]+”/g, '').replace(/\s+$/, ''));
 const pullPhrase = 'break it, and pull it apart';
-const kitchenHtml = inline(p5p[1] ?? '').replace(esc(pullPhrase), `<mark class="pull">${esc(pullPhrase)}</mark>`);
-const voiceShop = 'a cordial, welcoming and confident shopkeeper';
+const kitchenHtml = inline(p5p[2] ?? '').replace(esc(pullPhrase), `<mark class="pull">${esc(pullPhrase)}</mark>`);
+const voiceShop = 'a cordial, welcoming and confident baker';
 const voiceHtml = inline(p5VoiceP[1] ?? '').replace(esc(voiceShop), `<mark class="pull">${esc(voiceShop)}</mark>`);
 
 // ---- P6 ----
@@ -72,14 +73,16 @@ const p6 = sections('p6');
 const p6Head = numTitle(p6.secs[0]?.h ?? '');
 const p6Seasons = (lists(p6.secs[0]?.body ?? [])[0] ?? []).map(leadSplit);
 const p6Small = p6.secs[1]?.h ?? '';
-const mochi = p6.secs[2];
+const mochi = p6.secs.find((x) => /mochi/i.test(x.h));
 const mochiHead = (() => { const i = (mochi?.h ?? '').indexOf(' · '); return i > 0 ? { y: mochi!.h.slice(0, i), t: mochi!.h.slice(i + 3) } : { y: '', t: mochi?.h ?? '' }; })();
-const mochiP = ptxt(mochi?.body ?? []);
+const mochiAll = ptxt(mochi?.body ?? []);
+const mochiResultsLabel = mochiAll.find((t) => /^\*\*results/i.test(t)) ?? '';
+const mochiP = mochiAll.filter((t) => t !== mochiResultsLabel);
 const mochiResults = lists(mochi?.body ?? [])[0] ?? [];
-const gia = p6.secs[3];
+const lead = p6.secs.find((x) => /led the way/i.test(x.h))?.h ?? '';     // the conclusion of the three ideas above
+const gia = p6.secs.find((x) => /collab/i.test(x.h));
 const giaHead = splitDash(gia?.h ?? '');
 const giaItems = lists(gia?.body ?? [])[0] ?? [];
-const giaP = ptxt(gia?.body ?? []);
 
 // ---- P7 ----
 const p7 = sections('p7');
@@ -121,7 +124,6 @@ const p9 = ptxt(P['p9'] ?? []);
     <h3 class="p1-giant">{p1Name}</h3>
     <figure class="p1-slot"><Slot tag="1.1" a="3 / 4" tone="pink" /></figure>
     <div class="p1-side">
-      <p class="p1-lead" set:html={inline(p1Lead)} />
       <ul class="p1-roles">
         {p1Roles.map((r) => <li><span class="d">{r.date}</span><span class="r">{r.text}</span></li>)}
       </ul>
@@ -136,11 +138,15 @@ const p9 = ptxt(P['p9'] ?? []);
   <!-- P2: about + the brief -->
   <section class="p2">
     <div class="p2-about">
-      <h3 class="k">{p2About}</h3>
-      <Slot tag="2.1" a="1 / 1" tone="cream" />
+      <button type="button" class="sp sp-photo" data-sp={slug(p2About)} data-side="left" aria-haspopup="dialog">
+        <span class="k">{p2About}</span>
+        <Slot tag="2.1" a="1 / 1" tone="cream" />
+        <span class="sp-more" aria-hidden="true">→</span>
+      </button>
     </div>
     <div class="p2-brief">
       <h3 class="p2-h">{p2BriefH}</h3>
+      <p class="p2-sub" set:html={inline(p2Sub)} />
       <p class="p2-intro" set:html={inline(p2Intro)} />
       <ol class="p2-items">
         {p2Items.map((it) => (
@@ -166,9 +172,9 @@ const p9 = ptxt(P['p9'] ?? []);
         </ul>
       </div>
       <div class="p3-ba">
-        <Slot tag="3.1" a="3 / 4" tone="cream" />
-        <span class="arrow" aria-hidden="true">→</span>
-        <Slot tag="3.2" a="3 / 4" tone="pink" />
+        <Slot tag="3.1" a="3 / 2" tone="cream" />
+        <span class="arrow" aria-hidden="true">↓</span>
+        <Slot tag="3.2" a="3 / 2" tone="pink" />
       </div>
       <p class="p3-renewed" set:html={inline(p3PackP[1] ?? '')} />
     </div>
@@ -187,9 +193,7 @@ const p9 = ptxt(P['p9'] ?? []);
       <div class="p3-bag">
         <div class="bagtext">
           <h4 class="h4i">{splitDash(bag.h).t}<span class="sub">{splitDash(bag.h).sub}</span></h4>
-          <p set:html={inline(ptxt(bag.body)[0] ?? '')} />
-          <p class="big" set:html={inline(ptxt(bag.body)[1] ?? '')} />
-          <p set:html={inline(ptxt(bag.body)[2] ?? '')} />
+          {ptxt(bag.body).map((t, i) => <p class={i === 2 ? 'big' : i === 4 ? 'plain' : i === 5 ? 'aside' : ''} set:html={inline(t)} />)}
         </div>
         <div class="bagpics">
           <Slot tag="3.5" a="1 / 1" tone="cream" class="b1" />
@@ -234,11 +238,11 @@ const p9 = ptxt(P['p9'] ?? []);
     </div>
 
     <div class="p5-kitchen wrap">
-      <p class="owner" set:html={inline(p5p[0] ?? '')} />
+      <div class="owner"><p set:html={inline(p5p[0] ?? '')} /><p class="owner2" set:html={inline(p5p[1] ?? '')} /></div>
       <Slot tag="5.2" a="4 / 5" class="k1" />
       <div class="kt">
         <p set:html={kitchenHtml} />
-        <p class="shot" set:html={inline(p5p[2] ?? '')} />
+        <p class="shot" set:html={inline(p5p[3] ?? '')} />
       </div>
       <Slot tag="5.3" a="3 / 4" class="k2" tone="pink" />
       <Slot tag="5.4" a="3 / 4" class="k3" tone="lime" />
@@ -252,7 +256,7 @@ const p9 = ptxt(P['p9'] ?? []);
     </div>
 
     <div class="p5-library wrap">
-      <p class="lib-text" set:html={inline(p5p[4] ?? '')} />
+      <div class="lib-text"><p set:html={inline(p5p[5] ?? '')} /><p set:html={inline(p5p[6] ?? '')} /></div>
       <div class="reels">
         {[1, 2, 3, 4, 5].map((n) => <Slot tag={`5.${n + 4}`} a="9 / 16" kind="video" class={`r${n}`} tone={n % 2 ? 'blush' : 'cream'} />)}
       </div>
@@ -263,6 +267,7 @@ const p9 = ptxt(P['p9'] ?? []);
         <p class="k">{p5Image.label}</p>
         <h4 class="reg-t">{p5Image.title}</h4>
         <p class="reg-p" set:html={inline(p5ImageP)} />
+        <ul class="reg-l">{p5ImageItems.map((t) => <li set:html={inline(t)} />)}</ul>
       </div>
       <Slot tag="5.10" a="4 / 5" tone="cream" class="reg-a" />
       <Slot tag="5.11" a="4 / 5" tone="plum" class="reg-b" />
@@ -296,8 +301,7 @@ const p9 = ptxt(P['p9'] ?? []);
     <div class="mochi wrap">
       <div class="mo-head"><p class="mo-y">{mochiHead.y}</p><h4 class="mo-t">{mochiHead.t}</h4></div>
       <div class="mo-p">
-        <p set:html={inline(mochiP[0] ?? '')} />
-        <p set:html={inline(mochiP[1] ?? '')} />
+        {mochiP.map((t) => <p set:html={inline(t)} />)}
       </div>
       <div class="phones">
         <Slot tag="6.1" a="9 / 16" kind="video" tone="pink" />
@@ -305,19 +309,20 @@ const p9 = ptxt(P['p9'] ?? []);
         <Slot tag="6.3" a="9 / 16" kind="video" tone="lime" />
       </div>
       <aside class="results">
-        <p class="rl label" set:html={inline(mochiP[2] ?? '')} />
+        <p class="rl label" set:html={inline(mochiResultsLabel)} />
         <ul>{mochiResults.map((t) => <li set:html={inline(t)} />)}</ul>
       </aside>
     </div>
+
+    {lead && <p class="p6-lead wrap">{lead}</p>}
 
     <div class="gia wrap">
       <Slot tag="6.4" a="4 / 3" class="g1" tone="cream" />
       <Slot tag="6.5" a="3 / 4" class="g2" tone="pink" />
       <div class="gt">
-        <h4 class="gh">{giaHead.t}</h4>
+        <h4 class="gh" set:html={inline(giaHead.t)} />
         <p class="gsub">{giaHead.sub}</p>
         <ul class="gl">{giaItems.map((t) => <li set:html={inline(t)} />)}</ul>
-        <p class="gp" set:html={inline(giaP[0] ?? '')} />
       </div>
     </div>
   </section>
@@ -332,7 +337,7 @@ const p9 = ptxt(P['p9'] ?? []);
       {years.map((y, i) => (
         <article class={`panel y${i + 1}`}>
           <p class="yr">{y.y}</p>
-          <h4 class="yn">{y.name}</h4>
+          <h4 class="yn" set:html={inline(y.name)} />
           <ul class="yl">{y.items.map((t) => <li set:html={inline(t)} />)}</ul>
           <Slot tag={`7.${i + 1}`} a="3 / 4" tone={i === 1 ? 'cream' : 'blush'} />
         </article>
@@ -367,8 +372,7 @@ const p9 = ptxt(P['p9'] ?? []);
         <span class="qm" aria-hidden="true">“</span>
         <p class="a" set:html={inline((p9[0] ?? '').replace(/^“/, ''))} />
         <p set:html={inline(p9[1] ?? '')} />
-        <p class="aside" set:html={inline(p9[2] ?? '')} />
-        <p class="end" set:html={inline((p9[3] ?? '').replace(/”$/, ''))} />
+        <p class="end" set:html={inline((p9[2] ?? '').replace(/”$/, ''))} />
       </div>
     </div>
     <a class="next" href="#ch-02-kitchens" aria-label={ui['chapter nav']}><span class="line" aria-hidden="true"></span></a>
@@ -397,6 +401,7 @@ const p9 = ptxt(P['p9'] ?? []);
   .p1-roles .d { display: block; font-size: .72rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--plum); }
   .p1-roles .r { display: block; font-size: 1rem; line-height: 1.4; }
   .p1-quote { margin: 0; font-family: var(--display); font-style: italic; font-size: clamp(1.4rem, 2.6vw, 2.3rem); line-height: 1.22; display: grid; gap: .8rem; max-width: 28ch; color: var(--plum); }
+  .p1-quote :global(strong) { font-weight: 600; }
   .p1-foot { font-size: .98rem; line-height: 1.55; max-width: 26rem; border-top: 1px solid var(--ink); padding-top: .9rem; }
   .p1-foot :global(strong) { background: linear-gradient(transparent 62%, var(--lime) 62% 92%, transparent 92%); padding: 0 .1em; font-weight: 600; }
   @media (min-width: 900px) {
@@ -415,7 +420,13 @@ const p9 = ptxt(P['p9'] ?? []);
   .p2-about .k { font-size: .85rem; }
   .p2-brief { padding: clamp(3rem, 6vw, 6rem) var(--pad); }
   .p2-h { font-size: clamp(3rem, 8vw, 7rem); line-height: .92; letter-spacing: -.035em; font-weight: 300; }
-  .p2-intro { margin-top: 1.6rem; max-width: 30rem; font-size: 1.05rem; }
+  .p2-sub { margin-top: 1.4rem; font-family: var(--display); font-style: italic; font-weight: 400; font-size: clamp(1.4rem, 2.4vw, 2.1rem); line-height: 1.12; max-width: 24ch; }
+  .p2-intro { margin-top: 1.4rem; max-width: 30rem; font-size: 1.05rem; }
+  /* the photo opens an (empty for now) side panel from the left */
+  .p2-about .sp-photo { display: grid; gap: 1.6rem; width: 100%; text-decoration: none; color: inherit; text-align: left; position: relative; }
+  .p2-about .sp-photo .k { text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: .3em; }
+  .p2-about .sp-photo:hover .k { text-decoration-style: solid; }
+  .sp-more { position: absolute; right: .8rem; bottom: .8rem; width: 2.6rem; height: 2.6rem; display: grid; place-items: center; background: #fff; color: var(--ink); font-size: 1.2rem; }
   .p2-items { margin-top: 2.5rem; display: grid; }
   .p2-items li { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1rem; align-items: start; padding: 1.4rem 0; border-top: 1px solid var(--ink); }
   .p2-items li:last-child { border-bottom: 1px solid var(--ink); }
@@ -435,8 +446,9 @@ const p9 = ptxt(P['p9'] ?? []);
   .pl { border-top: 6px solid var(--c, var(--pink)); padding-top: .9rem; }
   .pl1 { --c: var(--pink); } .pl2 { --c: var(--plum); } .pl3 { --c: var(--lime); }
   .pl h5 { font-family: var(--display); font-weight: 600; font-size: 1.5rem; line-height: 1.05; margin-bottom: .3rem; }
-  .p3-ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: .8rem; align-items: center; }
-  .arrow { font-size: 2rem; color: var(--pink); }
+  .p3-ba { display: grid; grid-template-columns: 1fr; gap: .5rem; justify-items: center; align-items: center; }
+  .p3-ba :global(.slot) { width: 100%; }
+  .arrow { font-size: clamp(2.4rem, 4vw, 3.6rem); line-height: 1; color: var(--pink); }
   .p3-renewed { font-family: var(--display); font-size: clamp(1.5rem, 2.6vw, 2.4rem); line-height: 1.2; max-width: 26ch; }
   .h4i { font-family: var(--display); font-style: italic; font-weight: 400; font-size: clamp(1.8rem, 3.4vw, 3rem); line-height: 1.05; }
   .h4i .sub { display: block; font-family: var(--sans); font-style: normal; font-weight: 500; font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; margin-top: .6rem; color: var(--ink-soft); }
@@ -446,11 +458,13 @@ const p9 = ptxt(P['p9'] ?? []);
   .s2 { background: var(--cream); padding: 1.4rem; }
   .p3-bag { display: grid; gap: 2.5rem; }
   .bagtext { display: grid; gap: 1rem; align-content: start; max-width: 34rem; }
+  .bagtext .plain { font-family: var(--display); font-style: italic; font-size: clamp(1.4rem, 2.2vw, 2rem); }
+  .bagtext .aside { font-size: .98rem; color: var(--ink-soft); }
   .bagtext .big { font-family: var(--display); font-size: clamp(1.4rem, 2.1vw, 1.9rem); line-height: 1.25; color: var(--plum); }
   .bagpics { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; align-items: start; }
   .bagpics :global(.b2) { grid-row: span 2; }
   @media (min-width: 900px) {
-    .p3-pack { grid-template-columns: 6fr 5fr; column-gap: clamp(3rem, 6vw, 7rem); align-items: start; }
+    .p3-pack { grid-template-columns: 5fr 7fr; column-gap: clamp(3rem, 6vw, 7rem); align-items: start; }
     .pillars { grid-template-columns: repeat(3, 1fr); }
     .p3-ba { grid-row: 1 / 3; grid-column: 2; }
     .p3-renewed { grid-column: 1; }
@@ -471,7 +485,7 @@ const p9 = ptxt(P['p9'] ?? []);
   .p4-items { display: grid; gap: 1.1rem; font-family: var(--display); font-size: clamp(1.3rem, 2vw, 1.8rem); line-height: 1.22; }
   .p4-items li { display: grid; grid-template-columns: 2.4rem 1fr; align-items: baseline; }
   .p4-items .n { font-family: var(--sans); font-size: .72rem; font-weight: 600; letter-spacing: .1em; color: var(--pink); }
-  .p4-items .i3 { font-style: italic; color: var(--pink); }
+  .p4-items .i3 { font-style: italic; color: var(--plum); }
   @media (min-width: 900px) {
     .wall { grid-template-columns: repeat(12, 1fr); }
     .wall > :global(.slot) { grid-column: span 2; }
@@ -502,6 +516,11 @@ const p9 = ptxt(P['p9'] ?? []);
   
   .p5-kitchen { padding: var(--section) 0 0; display: grid; gap: 1.5rem; }
   .owner { font-family: var(--display); font-size: clamp(1.7rem, 3.6vw, 3.2rem); line-height: 1.15; max-width: 22ch; letter-spacing: -.01em; }
+  .owner2 { margin-top: .8rem; }
+  .lib-text p + p { margin-top: 1rem; }
+  .reg-l { margin-top: 1rem; display: grid; gap: .5rem; font-family: var(--display); font-size: clamp(1.2rem, 1.8vw, 1.6rem); line-height: 1.25; max-width: 24em; }
+  .reg-l li { position: relative; padding-left: 1.3rem; } .reg-l li::before { content: ''; position: absolute; left: 0; top: .62em; width: .7rem; height: 1px; background: var(--ink); }
+  .p6-lead { margin-top: clamp(3rem, 6vw, 5rem); font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(1.8rem, 3.8vw, 3.4rem); line-height: 1.1; letter-spacing: -.02em; color: var(--plum); max-width: 22em; }
   .kt { display: grid; gap: 1.2rem; max-width: 34rem; font-size: 1.05rem; }
   .kt :global(.pull), .vsecond :global(.pull) { background: linear-gradient(transparent 58%, var(--lime) 58% 92%, transparent 92%); color: inherit; padding: 0 .1em; font-weight: 600; }
   .shot { font-family: var(--display); font-style: italic; font-size: clamp(1.6rem, 2.6vw, 2.4rem); line-height: 1.15; color: var(--pink); }
