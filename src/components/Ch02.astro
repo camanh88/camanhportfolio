@@ -24,8 +24,7 @@ const p1 = sections('p1');
 const p1Name = p1.secs[0]?.h ?? '';
 const p1Roles = (lists(p1.secs[0]?.body ?? [])[0] ?? []).map(splitDate);
 const p1p = ptxt(p1.secs[0]?.body ?? []);
-const p1Quote = [p1p[0], p1p[1]];
-const p1Foot = p1p[2];
+const p1Foot = p1p[0];
 
 // ---- P2 ----
 const p2 = sections('p2');
@@ -62,9 +61,13 @@ const p5VoiceP = ptxt(p5.secs[2]?.body ?? []);
 // "That small gesture became our signature. Customers ... said, “…” “…”" -> sentence + the two quotes
 const gesture = p5p[4] ?? '';
 const gQuotes = [...gesture.matchAll(/“[^”]+”/g)].map((m) => m[0]);
-const gSentence = textOf(gesture.replace(/\s*“[^”]+”/g, '').replace(/\s+$/, ''));
+const gSentence = inline(gesture.replace(/\s*“[^”]+”/g, '').replace(/\s+$/, ''));
 const pullPhrase = 'break it, and pull it apart';
-const kitchenHtml = inline(p5p[2] ?? '').replace(esc(pullPhrase), `<mark class="pull">${esc(pullPhrase)}</mark>`);
+const km = /^([\s\S]*?)\*\*([^*]+?):\s*(break it, and pull it apart\.)\*\*\s*([\s\S]*)$/.exec(p5p[2] ?? '');
+const kBefore = km ? inline(km[1].trim()) : inline(p5p[2] ?? '');
+const kLead = km ? km[2] + ':' : '';
+const kKey = km ? km[3] : '';
+const kAfter = km ? inline(km[4].trim()) : '';
 const voiceShop = 'a cordial, welcoming and confident baker';
 const voiceHtml = inline(p5VoiceP[1] ?? '').replace(esc(voiceShop), `<mark class="pull">${esc(voiceShop)}</mark>`);
 
@@ -125,13 +128,9 @@ const p9 = ptxt(P['p9'] ?? []);
     <figure class="p1-slot"><Slot tag="1.1" a="3 / 4" tone="pink" /></figure>
     <div class="p1-side">
       <ul class="p1-roles">
-        {p1Roles.map((r) => <li><span class="d">{r.date}</span><span class="r">{r.text}</span></li>)}
+        {p1Roles.map((r) => <li><span class="d">{r.date}</span><span class="r" set:html={inline(r.text)} /></li>)}
       </ul>
     </div>
-    <blockquote class="p1-quote">
-      <p set:html={inline(p1Quote[0] ?? '')} />
-      <p set:html={inline(p1Quote[1] ?? '')} />
-    </blockquote>
     <p class="p1-foot" set:html={inline(p1Foot ?? '')} />
   </section>
 
@@ -193,7 +192,10 @@ const p9 = ptxt(P['p9'] ?? []);
       <div class="p3-bag">
         <div class="bagtext">
           <h4 class="h4i">{splitDash(bag.h).t}<span class="sub">{splitDash(bag.h).sub}</span></h4>
-          {ptxt(bag.body).map((t, i) => <p class={i === 2 ? 'big' : i === 4 ? 'plain' : i === 5 ? 'aside' : ''} set:html={inline(t)} />)}
+          <p class="b0" set:html={inline(ptxt(bag.body)[0] ?? '')} />
+          <p class="b1" set:html={inline(ptxt(bag.body)[1] ?? '')} />
+          <p class="b2" set:html={inline(ptxt(bag.body)[2] ?? '')} />
+          <p class="b3" set:html={inline(ptxt(bag.body)[3] ?? '')} />
         </div>
         <div class="bagpics">
           <Slot tag="3.5" a="1 / 1" tone="cream" class="b1" />
@@ -203,6 +205,11 @@ const p9 = ptxt(P['p9'] ?? []);
       </div>
     )}
   </section>
+
+  <!-- a short page of its own: the Marou line, set to the right -->
+  {bag && ptxt(bag.body)[4] && (
+    <section class="lux wrap"><p set:html={inline(ptxt(bag.body)[4])} /></section>
+  )}
 
   <!-- P4: brand's image, a wall of photos -->
   <section class="p4">
@@ -241,7 +248,9 @@ const p9 = ptxt(P['p9'] ?? []);
       <div class="owner"><p set:html={inline(p5p[0] ?? '')} /><p class="owner2" set:html={inline(p5p[1] ?? '')} /></div>
       <Slot tag="5.2" a="4 / 5" class="k1" />
       <div class="kt">
-        <p set:html={kitchenHtml} />
+        <p set:html={kBefore} />
+        {kKey && <p class="key"><span class="key-lead">{kLead}</span><span class="key-phrase">{kKey}</span></p>}
+        {kAfter && <p set:html={kAfter} />}
         <p class="shot" set:html={inline(p5p[3] ?? '')} />
       </div>
       <Slot tag="5.3" a="3 / 4" class="k2" tone="pink" />
@@ -250,7 +259,7 @@ const p9 = ptxt(P['p9'] ?? []);
 
     <div class="p5-signature">
       <div class="sig-in">
-        <p class="gs">{gSentence}</p>
+        <p class="gs" set:html={gSentence} />
         {gQuotes.map((q, i) => <p class={`gq gq${i + 1}`}>{q}</p>)}
       </div>
     </div>
@@ -316,7 +325,7 @@ const p9 = ptxt(P['p9'] ?? []);
 
     {lead && <p class="p6-lead wrap">{lead}</p>}
 
-    <div class="gia wrap">
+    <div class="gia-band"><div class="gia wrap">
       <Slot tag="6.4" a="4 / 3" class="g1" tone="cream" />
       <Slot tag="6.5" a="3 / 4" class="g2" tone="pink" />
       <div class="gt">
@@ -324,6 +333,7 @@ const p9 = ptxt(P['p9'] ?? []);
         <p class="gsub">{giaHead.sub}</p>
         <ul class="gl">{giaItems.map((t) => <li set:html={inline(t)} />)}</ul>
       </div>
+    </div>
     </div>
   </section>
 
@@ -386,7 +396,7 @@ const p9 = ptxt(P['p9'] ?? []);
   .back:hover { background: var(--ink); color: var(--paper); }
   .k { font-family: var(--sans); font-weight: 600; font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; }
   .wrap { width: min(100% - 2 * var(--pad), 88rem); margin-inline: auto; }
-  strong { font-weight: 600; }
+  .c2 :global(strong) { font-weight: 700; }
 
   /* ---------- P1 ---------- */
   .p1 { margin-top: -2.75rem; background: var(--cream); padding: 6.5rem var(--pad) clamp(3rem, 6vw, 5rem); display: grid; gap: 1.75rem; position: relative; }
@@ -399,7 +409,8 @@ const p9 = ptxt(P['p9'] ?? []);
   .p1-lead :global(strong) { font-weight: 600; }
   .p1-roles { margin-top: 1.4rem; display: grid; gap: .9rem; }
   .p1-roles .d { display: block; font-size: .72rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--plum); }
-  .p1-roles .r { display: block; font-size: 1rem; line-height: 1.4; }
+  .p1-roles .r { display: block; font-size: 1.05rem; line-height: 1.4; }
+  .p1-roles .r :global(strong), .p1-roles .r :global(.sp) { color: var(--plum); }
   .p1-quote { margin: 0; font-family: var(--display); font-style: italic; font-size: clamp(1.4rem, 2.6vw, 2.3rem); line-height: 1.22; display: grid; gap: .8rem; max-width: 28ch; color: var(--plum); }
   .p1-quote :global(strong) { font-weight: 600; }
   .p1-foot { font-size: .98rem; line-height: 1.55; max-width: 26rem; border-top: 1px solid var(--ink); padding-top: .9rem; }
@@ -410,8 +421,7 @@ const p9 = ptxt(P['p9'] ?? []);
     .p1-giant { grid-column: 1 / 10; grid-row: 2; align-self: start; margin-top: clamp(1.5rem, 5vw, 5rem); font-size: clamp(8rem, 17vw, 17rem); }
     .p1-slot { grid-column: 9 / 13; grid-row: 1 / 4; width: 100%; margin: 0; z-index: 1; }
     .p1-side { grid-column: 1 / 5; grid-row: 3; margin-top: clamp(2rem, 4vw, 4rem); }
-    .p1-quote { grid-column: 5 / 9; grid-row: 3; margin-top: clamp(2rem, 4vw, 4rem); }
-    .p1-foot { grid-column: 9 / 13; grid-row: 4; margin-top: 2rem; }
+    .p1-foot { grid-column: 5 / 9; grid-row: 3; margin-top: clamp(2rem, 4vw, 4rem); }
   }
 
   /* ---------- P2 ---------- */
@@ -458,6 +468,14 @@ const p9 = ptxt(P['p9'] ?? []);
   .s2 { background: var(--cream); padding: 1.4rem; }
   .p3-bag { display: grid; gap: 2.5rem; }
   .bagtext { display: grid; gap: 1rem; align-content: start; max-width: 34rem; }
+  .bagtext { max-width: 40rem; }
+  .bagtext .b0 { max-width: 34rem; }
+  /* the bag story steps in and out: the quote is big, the next lines move to the right, the last one is the biggest */
+  .bagtext .b1 { font-family: var(--display); font-weight: 300; font-size: clamp(1.9rem, 3.4vw, 3.2rem); line-height: 1.08; letter-spacing: -.02em; color: var(--plum); margin-top: .6rem; }
+  .bagtext .b2 { padding-left: clamp(1.5rem, 6vw, 5rem); max-width: 28rem; }
+  .bagtext .b3 { padding-left: clamp(3rem, 12vw, 10rem); font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(2rem, 3.8vw, 3.6rem); line-height: 1; letter-spacing: -.02em; color: var(--pink); }
+  .lux { padding: clamp(5rem, 11vw, 9rem) 0; display: grid; justify-items: end; }
+  .lux p { max-width: 20em; text-align: right; font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.4vw, 3rem); line-height: 1.15; letter-spacing: -.02em; }
   .bagtext .plain { font-family: var(--display); font-style: italic; font-size: clamp(1.4rem, 2.2vw, 2rem); }
   .bagtext .aside { font-size: .98rem; color: var(--ink-soft); }
   .bagtext .big { font-family: var(--display); font-size: clamp(1.4rem, 2.1vw, 1.9rem); line-height: 1.25; color: var(--plum); }
@@ -515,13 +533,19 @@ const p9 = ptxt(P['p9'] ?? []);
 
   
   .p5-kitchen { padding: var(--section) 0 0; display: grid; gap: 1.5rem; }
-  .owner { font-family: var(--display); font-size: clamp(1.7rem, 3.6vw, 3.2rem); line-height: 1.15; max-width: 22ch; letter-spacing: -.01em; }
+  .owner { font-family: var(--display); font-size: clamp(1.3rem, 2.5vw, 2.2rem); line-height: 1.2; max-width: 26ch; letter-spacing: -.01em; }
   .owner2 { margin-top: .8rem; }
   .lib-text p + p { margin-top: 1rem; }
   .reg-l { margin-top: 1rem; display: grid; gap: .5rem; font-family: var(--display); font-size: clamp(1.2rem, 1.8vw, 1.6rem); line-height: 1.25; max-width: 24em; }
   .reg-l li { position: relative; padding-left: 1.3rem; } .reg-l li::before { content: ''; position: absolute; left: 0; top: .62em; width: .7rem; height: 1px; background: var(--ink); }
-  .p6-lead { margin-top: clamp(3rem, 6vw, 5rem); font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(1.8rem, 3.8vw, 3.4rem); line-height: 1.1; letter-spacing: -.02em; color: var(--plum); max-width: none; }
+  /* a hand-drawn style arrow leads the eye from the Mochi block down to this line */
+  .p6-lead::before { content: ''; position: absolute; left: -1.5rem; top: calc(-1 * clamp(2.5rem, 6vw, 5rem)); height: calc(clamp(2.5rem, 6vw, 5rem) + .55em); width: 1.3rem; border-left: 2px solid #7FB342; border-bottom: 2px solid #7FB342; border-bottom-left-radius: 1rem; }
+  .p6-lead::after { content: ''; position: absolute; left: -.5rem; top: calc(.55em - 5px); width: 11px; height: 11px; border-top: 2px solid #7FB342; border-right: 2px solid #7FB342; transform: rotate(45deg); }
+  .p6-lead { position: relative; margin-top: clamp(3rem, 6vw, 5rem); font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(1.8rem, 3.8vw, 3.4rem); line-height: 1.1; letter-spacing: -.02em; color: var(--plum); max-width: none; }
   .kt { display: grid; gap: 1.2rem; max-width: 34rem; font-size: 1.05rem; }
+  .key { display: grid; gap: .15em; margin: .6rem 0; }
+  .key-lead { font-family: var(--display); font-weight: 400; font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.1; }
+  .key-phrase { font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(2.8rem, 6.4vw, 6rem); line-height: .94; letter-spacing: -.035em; color: var(--pink); padding-left: clamp(0rem, 2vw, 2rem); }
   .kt :global(.pull), .vsecond :global(.pull) { background: linear-gradient(transparent 58%, var(--lime) 58% 92%, transparent 92%); color: inherit; padding: 0 .1em; font-weight: 600; }
   .shot { font-family: var(--display); font-style: italic; font-size: clamp(1.6rem, 2.6vw, 2.4rem); line-height: 1.15; color: var(--pink); }
   :global(.k1), :global(.k2), :global(.k3) { max-width: 26rem; }
@@ -537,6 +561,7 @@ const p9 = ptxt(P['p9'] ?? []);
   .p5-signature { background: var(--blush); margin-top: var(--section); padding: clamp(5rem, 12vw, 10rem) var(--pad); overflow: hidden; }
   .sig-in { max-width: 70rem; margin: 0 auto; font-family: var(--display); font-weight: 300; }
   .gs { font-size: clamp(1.4rem, 2.6vw, 2.3rem); max-width: 22em; }
+  .gs :global(.ul) { text-decoration: none; background: linear-gradient(transparent 58%, var(--lime) 58% 92%, transparent 92%); padding: 0 .08em; font-weight: 600; }
   .gq { font-style: italic; font-size: clamp(3rem, 9.4vw, 9rem); line-height: .94; letter-spacing: -.035em; margin-top: .25em; }
   .gq1 { color: var(--pink); }
   .gq2 { color: var(--plum); padding-left: 1.4em; }
@@ -586,13 +611,17 @@ const p9 = ptxt(P['p9'] ?? []);
   .mo-y { font-family: var(--display); font-weight: 300; font-size: clamp(4rem, 11vw, 10rem); line-height: .8; color: var(--pink); letter-spacing: -.04em; }
   .mo-t { font-family: var(--display); font-style: italic; font-weight: 400; font-size: clamp(1.6rem, 3vw, 2.6rem); line-height: 1.1; margin-top: .5rem; }
   .mo-p { display: grid; gap: 1rem; max-width: 40rem; }
-  .phones { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; align-items: start; }
-  .phones :global(.slot:nth-child(2)) { margin-top: 1.6rem; } .phones :global(.slot:nth-child(3)) { margin-top: 3.2rem; }
+  /* one main video, two secondary ones */
+  .phones { display: grid; grid-template-columns: 1.8fr 1fr; gap: .8rem; align-items: start; }
+  .phones :global(.slot:nth-child(1)) { grid-row: 1 / 3; }
+  .phones :global(.slot:nth-child(2)), .phones :global(.slot:nth-child(3)) { width: 78%; }
+  .phones :global(.slot:nth-child(3)) { justify-self: end; }
   .results { background: var(--cream); padding: 1.6rem; align-self: end; }
   .results .rl { color: var(--plum); margin-bottom: .8rem; }
   .results ul { display: grid; gap: .9rem; font-family: var(--display); font-size: clamp(1.25rem, 1.8vw, 1.6rem); line-height: 1.25; }
   .results li::before { content: '→ '; color: var(--pink); }
-  .gia { padding-bottom: var(--section); display: grid; gap: 1.5rem; }
+  .gia-band { background: var(--blush); margin-top: clamp(3rem, 6vw, 5rem); padding: clamp(3rem, 7vw, 6rem) 0; }
+  .gia { display: grid; gap: 1.5rem; }
   .gh { font-size: clamp(2.2rem, 4.6vw, 4.2rem); line-height: .98; letter-spacing: -.025em; font-weight: 400; }
   .gsub { font-family: var(--display); font-style: italic; font-size: clamp(1.3rem, 2.2vw, 1.9rem); color: var(--pink); margin-top: .4rem; }
   .gl { margin: 1.4rem 0; display: grid; gap: .5rem; }
