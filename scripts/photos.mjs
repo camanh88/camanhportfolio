@@ -3,6 +3,7 @@
 const C = '*Photo/Cover & Introduction'; // Cam Anh prefixes her folders with "*"
 const G = '*Photo/04/Gifting'; // Off the menu
 const F = '*Photo/04/Florist in me'; // The florist in me
+const L = '*Photo/02'; // Lam Yên chapter
 const P1 = '*Photo/01'; // chapter 01, organised by Cam Anh as Page 1 .. Page 6 + PHOTOSHOOT albums
 export const photos = {
   // Cover: Cam Anh's own collage (6000x3375), shown whole at 16:9, no cropping
@@ -78,6 +79,17 @@ export const photos = {
   'f-box': ['*Photo/04/Florist in me/1M2A9403-3.JPG', 'A pale green Lam Yên gift box tilted open on a box, with orange ranunculus, a persimmon and a dried branch, against a soft green backdrop.', { crop: { aspect: 0.8, y: 0.6 } }],
   'f-lily-cut': ['*Photo/04/Florist in me/8.png', 'Pink lilies and chrysanthemums in a grey-and-white marbled glass vase, with a soft shadow.', { alpha: true }],
   'f-woman': ['*Photo/04/Florist in me/5.png', 'A woman in a pink shirt, seen from behind, arranging flowers in front of a pale pink paper backdrop.', { alpha: true }],
+  // ---- Lam Yên chapter (*Photo/02), pages 1-3 ----
+  'ly-1-1': [`${L}/1.1.jpg`, 'Cam Anh in a pink shirt and apron photographing her reflection with a camera, between shelves of green gift boxes and sprigs of dried flowers.', { crop: { aspect: 0.75, x: 0.52 } }],
+  'ly-2-1': [`${L}/2.1.jpeg`, 'The Lam Yên brand illustration: the golden script name “Lam Yên” on a pale green ground, with pink and blue birds, rice stalks, white blossom and a low sun.'],
+  'ly-3-1': [`${L}/3.1.jpg`, 'Rows of green gift boxes with gold seals stacked on a shop display tray.'],
+  'ly-3-2': [`${L}/3.2.jpg`, 'A cracked-top mooncake on a dark wood tray beside a new green-and-pink gift box covered in hand-drawn illustrations of village life.'],
+  'ly-3-3': [`${L}/3.3.jpg`, 'An elaborate pink box of pastel-wrapped mooncakes lettered “Cốm Mùa Trăng”, next to a styled photo of the box on a table against a green wall.'],
+  'ly-3-4': [`${L}/3.4.jpg`, 'A stack of simple orange and red wrapped mooncake boxes carried in both arms outside the shop, beside a red box printed with a mid-autumn illustration.'],
+  'ly-bag-1': [`${L}/Signature bag/Sig bag 1.png`, 'The signature paper bag, front: a pale green-to-cream gradient with a soft quatrefoil pattern and the golden “Lam Yên” logo.', { crop: { aspect: 0.75, y: 0.7 } }],
+  'ly-bag-2': [`${L}/Signature bag/Sig bag 2.1.png`, 'The signature paper bag, back: a pink gradient with a gold rice-stalk ornament and the shop details in small cream letters.'],
+  'ly-bag-3': [`${L}/Signature bag/Sigbag 2.2.png`, 'The signature paper bag in pink with the golden “Lam Yên” logo on the quatrefoil pattern.'],
+  'ly-bg': [`${L}/Signature bag/Background page.png`, '', { max: 1600 }],
   // ---- Why Marou: Cam Anh's own photo, taken from her Word note (low resolution: 327x440) ----
   'w-bike': ['site/tmp-img/word-bike.png', 'Cam Anh in a black coat and glasses standing beside an orange motorbike on a mountain road, green hills behind her under a grey sky.', { max: 640 }],
 };

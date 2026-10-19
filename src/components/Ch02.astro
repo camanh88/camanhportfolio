@@ -1,5 +1,6 @@
 ---
 import Slot from './Slot.astro';
+import Photo from './Photo.astro';
 import { ch02, ui, splitDate, type Block, pages } from '../lib/data';
 import { inline, leadSplit, esc, slug, textOf } from '../lib/md';
 
@@ -125,7 +126,7 @@ const p9 = ptxt(P['p9'] ?? []);
       <p class="p1-hint">{ch02.hint}</p>
     </header>
     <h3 class="p1-giant">{p1Name}</h3>
-    <figure class="p1-slot"><Slot tag="1.1" a="3 / 4" tone="pink" /></figure>
+    <figure class="p1-slot"><Photo id="ly-1-1" sizes="(min-width: 900px) 30vw, 80vw" loading="eager" /></figure>
     <div class="p1-side">
       <ul class="p1-roles">
         {p1Roles.map((r) => <li><span class="d">{r.date}</span><span class="r" set:html={inline(r.text)} /></li>)}
@@ -139,7 +140,7 @@ const p9 = ptxt(P['p9'] ?? []);
     <div class="p2-about">
       <button type="button" class="sp sp-photo" data-sp={slug(p2About)} data-side="left" aria-haspopup="dialog">
         <span class="k">{p2About}</span>
-        <Slot tag="2.1" a="1 / 1" tone="cream" />
+        <Photo id="ly-2-1" sizes="(min-width: 900px) 40vw, 90vw" />
         <span class="sp-more" aria-hidden="true">→</span>
       </button>
     </div>
@@ -171,9 +172,9 @@ const p9 = ptxt(P['p9'] ?? []);
         </ul>
       </div>
       <div class="p3-ba">
-        <Slot tag="3.1" a="3 / 2" tone="cream" />
+        <Photo id="ly-3-1" sizes="(min-width: 900px) 55vw, 90vw" />
         <span class="arrow" aria-hidden="true">↓</span>
-        <Slot tag="3.2" a="3 / 2" tone="pink" />
+        <Photo id="ly-3-2" sizes="(min-width: 900px) 55vw, 90vw" />
       </div>
       <p class="p3-renewed" set:html={inline(p3PackP[1] ?? '')} />
     </div>
@@ -182,12 +183,16 @@ const p9 = ptxt(P['p9'] ?? []);
       <div class="p3-wrap">
         <h4 class="h4i">{splitDash(wrap.h).t}<span class="sub">{splitDash(wrap.h).sub}</span></h4>
         <div class="stages">
-          <div class="stage s1"><span class="no label">1</span><p set:html={inline(ptxt(wrap.body)[0] ?? '')} /><Slot tag="3.3" a="4 / 3" /></div>
-          <div class="stage s2"><span class="no label">2</span><p set:html={inline(ptxt(wrap.body)[1] ?? '')} /><Slot tag="3.4" a="4 / 3" tone="lime" /></div>
+          <div class="stage s1"><span class="no label">1</span><p set:html={inline(ptxt(wrap.body)[0] ?? '')} /><Photo id="ly-3-3" sizes="(min-width: 900px) 45vw, 90vw" /></div>
+          <div class="stage s2"><span class="no label">2</span><p set:html={inline(ptxt(wrap.body)[1] ?? '')} /><Photo id="ly-3-4" sizes="(min-width: 900px) 40vw, 85vw" /></div>
         </div>
       </div>
     )}
 
+  </section>
+
+  <!-- the signature-bag page: the background picture runs behind the whole page (bag story + the Marou line) -->
+  <section class="bagpage">
     {bag && (
       <div class="p3-bag">
         <div class="bagtext">
@@ -198,18 +203,18 @@ const p9 = ptxt(P['p9'] ?? []);
           <p class="b3" set:html={inline(ptxt(bag.body)[3] ?? '')} />
         </div>
         <div class="bagpics">
-          <Slot tag="3.5" a="1 / 1" tone="cream" class="b1" />
-          <Slot tag="3.6" a="3 / 4" tone="pink" class="b2" />
-          <Slot tag="3.7" a="1 / 1" tone="lime" class="b3" />
+          <Photo id="ly-bag-2" class="b1" sizes="(min-width: 900px) 24vw, 45vw" />
+          <Photo id="ly-bag-1" class="b2" sizes="(min-width: 900px) 24vw, 45vw" />
+          <Photo id="ly-bag-3" class="b3" sizes="(min-width: 900px) 24vw, 45vw" />
         </div>
       </div>
     )}
-  </section>
 
   <!-- a short page of its own: the Marou line, set to the right -->
   {bag && ptxt(bag.body)[4] && (
-    <section class="lux wrap"><p set:html={inline(ptxt(bag.body)[4])} /></section>
+    <div class="lux wrap"><p set:html={inline(ptxt(bag.body)[4])} /></div>
   )}
+  </section>
 
   <!-- P4: brand's image, a wall of photos -->
   <section class="p4">
@@ -465,8 +470,12 @@ const p9 = ptxt(P['p9'] ?? []);
   .stages { display: grid; gap: 2.5rem; margin-top: 2rem; }
   .stage { display: grid; gap: 1rem; position: relative; }
   .stage .no { color: var(--pink); }
+  .stage :global(img) { width: 100%; }
   .s2 { background: var(--cream); padding: 1.4rem; }
-  .p3-bag { display: grid; gap: 2.5rem; }
+  .bagpage { position: relative; background: #eef3c4 url('/img/ly-bg-960.webp') center / cover no-repeat; padding: var(--section) var(--pad) 0; }
+  @media (min-width: 1000px) { .bagpage { background-image: url('/img/ly-bg-1498.webp'); } }
+  .p3-bag { display: grid; gap: 2.5rem; max-width: 88rem; margin-inline: auto; }
+  .bagpics :global(img), .p3-ba :global(img), .stage :global(img), .p1-slot :global(img), .sp-photo :global(img) { display: block; width: 100%; height: auto; }
   .bagtext { display: grid; gap: 1rem; align-content: start; max-width: 34rem; }
   .bagtext { max-width: 40rem; }
   .bagtext .b0 { max-width: 34rem; }
