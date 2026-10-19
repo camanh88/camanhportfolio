@@ -130,9 +130,19 @@ const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
           });
           return out;
         }
-        function persist() { st.html = area.innerHTML; st.text = area.innerText; save(); }
+        // a copy of the note goes to site/review-note.md (dev server only), so Claude can read it
+        var pushTimer = 0;
+        function push() {
+          clearTimeout(pushTimer);
+          pushTimer = setTimeout(function () {
+            var md = toMarkdown(area).replace(/\n{3,}/g, '\n\n').trim();
+            try { fetch('/__review-note', { method: 'POST', body: JSON.stringify({ page: location.pathname, text: md }), keepalive: true }).catch(function () {}); } catch (e) {}
+          }, 500);
+        }
+        function persist() { st.html = area.innerHTML; st.text = area.innerText; save(); push(); }
         area.innerHTML = clean(st.html || esc(st.text || ''));
         setOpen(!!st.open);
+        push();
         try { document.execCommand('styleWithCSS', false, false); } catch (e) {}
 
         area.addEventListener('input', persist);
