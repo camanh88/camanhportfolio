@@ -26,6 +26,14 @@ button { font: inherit; color: inherit; }
 .sp { appearance: none; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; text-align: inherit; line-height: inherit; letter-spacing: inherit;
   text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: .24em; }
 .sp:hover { text-decoration-style: solid; color: var(--accent); }
+.xl-pending { text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: .24em; cursor: default; }
+/* {{tip: words | message}}: a small message on hover / focus (and on tap), with a small "i" so the reader knows it is there */
+.tip { position: relative; display: inline; }
+.tip-btn { appearance: none; background: none; border: 0; padding: 0; margin: 0; font: inherit; letter-spacing: inherit; color: inherit; text-align: inherit; cursor: help; text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: .24em; }
+.tip-i { display: inline-grid; place-items: center; width: 1.05em; height: 1.05em; margin-left: .3em; border: 1px solid currentColor; border-radius: 50%; font-family: var(--display); font-style: italic; font-weight: 600; font-size: .5em; line-height: 1; vertical-align: .75em; text-decoration: none; }
+.tip-box { position: absolute; left: 0; top: calc(100% + .55rem); z-index: 25; width: max-content; max-width: min(22rem, 78vw); padding: .75rem .95rem; background: var(--ink); color: #fff; border-radius: 2px; font: 400 .92rem/1.45 var(--sans); letter-spacing: 0; text-transform: none; font-style: normal; text-align: left; box-shadow: 0 0 0 1px rgb(255 255 255 / .22), 0 .6rem 1.4rem rgb(20 19 18 / .25); opacity: 0; visibility: hidden; transform: translateY(-4px); transition: opacity .25s var(--ease), transform .25s var(--ease), visibility .25s; pointer-events: none; }
+.tip:hover .tip-box, .tip-btn:focus-visible + .tip-box, .tip.open .tip-box { opacity: 1; visibility: visible; transform: none; }
+@media (prefers-reduced-motion: reduce) { .tip-box { transition: none; } }
 .sp-arrow { font-size: .62em; margin-left: .15em; vertical-align: .55em; display: inline-block; text-decoration: none; }
 .ul { text-decoration: underline; text-decoration-thickness: .08em; text-underline-offset: .22em; text-decoration-color: var(--pink); }
 .xl { color: inherit; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .24em; }

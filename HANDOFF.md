@@ -3,6 +3,8 @@
 Viết ngày 20/10/2026, cuối phiên làm việc dài. Đọc file này cùng `CLAUDE.md` (luật làm việc, vẫn đúng) và `site/DESIGN.md` (một số con số ở đó đã cũ; **code thắng**, sửa file khi chạm tới).
 Bản sao có trong git: `site/HANDOFF.md` (thư mục `site/` là repo git duy nhất; `content/`, `*Photo/`, `*Design Style/`, file Word nằm ngoài git).
 
+> **Cập nhật 21/10/2026 (phiên sau HANDOFF):** đã làm xong ghi chú **LAM YEN R3** (nội dung `content/ch02-becoming-whole-in-fb.md`, ảnh trong `*Photo/02`, `src/components/Ch02.astro`; chi tiết ở `DESIGN.md` §14). Mục "LAM YEN R3" ở §3 bên dưới **đã xong**; ô ảnh Lam Yên 4.1–9.1 (trừ video reel) đã có ảnh. Còn mở: cú pháp mới `{{tip:…}}` / `{{link:…}}`, link video nằm trong các dòng `BUILD NOTE: LINKS …`, câu hỏi chờ Cam Anh (dòng chú thích nhỏ dưới mục 03 của "What changed" chưa có chữ; cách trình bày các tên món Việt/Anh).
+
 ---
 
 ## 1. Mục tiêu hiện tại của trang web

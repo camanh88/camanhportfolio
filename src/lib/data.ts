@@ -137,7 +137,15 @@ export const sidePageBody = (name: string) => sidePages.find((p) => p.slug === s
 
 // ---- Chapter 02: Becoming whole in F&B (Lam Yên), nine pages P1..P9 ----
 export const ch02 = (() => {
-  const bs = visible(blocks(readContent('ch02-becoming-whole-in-fb.md')));
+  const all = blocks(readContent('ch02-becoming-whole-in-fb.md'));
+  const bs = visible(all);
+  // video addresses live in BUILD NOTE lines: "BUILD NOTE: LINKS <name> (...): url url ..."
+  const links: Record<string, string[]> = {};
+  for (const b of all) {
+    if (b.t !== 'note') continue;
+    const m = /^BUILD NOTE: LINKS (\w+)\b[^:]*:\s*(.*)$/.exec(b.text);
+    if (m) links[m[1]] = [...m[2].matchAll(/https?:\/\/\S+/g)].map((x) => x[0]);
+  }
   const h1 = (bs.find((b) => b.t === 'h1') as { text: string }).text;
   const [num, ...t] = h1.split('·');
   const pages: Record<string, Block[]> = {};
@@ -146,7 +154,7 @@ export const ch02 = (() => {
     if (b.t === 'h2') { key = b.text.trim().toLowerCase(); pages[key] = []; continue; }
     (pages[key] ??= []).push(b);
   }
-  return { num: num.trim(), title: t.join('·').trim(), hint: ((pages['top'] ?? []).find((b) => b.t === 'p') as { text: string }).text, pages };
+  return { num: num.trim(), title: t.join('·').trim(), hint: ((pages['top'] ?? []).find((b) => b.t === 'p') as { text: string }).text, pages, links };
 })();
 export type { Block };
 

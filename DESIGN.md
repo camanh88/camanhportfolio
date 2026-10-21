@@ -282,3 +282,17 @@ Hosting: plain static `dist/` for Hostinger **Business** (`DEPLOY.md`: manual up
 7. **Photos to clear for permission before going public:** artists' works and people in Studio Visit images, the villa and apartment, the Marou-style product references (none are used), gift/Lam Yên packaging shots.
 8. **Housekeeping**: delete unused `content/ch01-short-version.md` and `ch02-it-started-with-culture.md`; remove legacy colour aliases once no component uses them; `scripts/video.mjs` and `Believe`'s reuse of existing photos are placeholders for Cam Anh's own images.
 9. **Before launch:** test at 768 px, run Lighthouse, check Vietnamese diacritics in headings, fill Contact, then follow `DEPLOY.md` (ask which GitHub repo layout she wants).
+
+---
+
+## 14. Lam Yên chapter, round 3 (21 Oct 2026): what changed and the new building blocks
+
+Source: Cam Anh's note "LAM YEN R3" and the layouts she drew (`*Photo/02/Layout/`). Photos from `*Photo/02/Photo/<page>`; the old slots 1.1 to 9.1 are now photos, except 5.5 to 5.9 and 6.1 to 6.3 (links to videos, see below).
+
+- **New inline marks (`src/lib/md.ts`)**: `{{tip: words | message}}` = small message on hover, focus or tap, with a small "i" (used for "Cốm Đặc Sản" in the 2026 panel); `{{link: words}}` = a link whose address is still missing (dotted underline and arrow like a sidepath, not clickable; used for "Mei Chan", the sentence ends with the placeholder `[link]`); nested bullets (an indented `  - item` belongs to the item above, `Block.subs`).
+- **Video addresses** live in `BUILD NOTE: LINKS <name>: url url …` lines of `content/ch02-becoming-whole-in-fb.md` (`ch02.links` in `data.ts`): `reels` (5 tiles of page 5), `season` (the two cards of page 6, the card title is the link), `mochi` (3 tiles). Tiles show a hatched slot with a play button and an arrow; the picture comes later.
+- **Page 4**: full-page wall (three rows, columns as fr from her screenshot, rows keep a fixed aspect ratio) around the cream card. **Page 5**: the real mooncake (`Break.png`, white knocked out) splits in two; kitchen photo column = percentage collage (298 × 853 frame) with the looping video `lyv-pull-*.mp4` (`node scripts/video-ly.mjs`). **Page 6**: "The challenge" has a thin red hand-drawn ring (SVG, drawn on scroll); the Tết paragraph is grey and sits under the heading; the green arrow is placed by script from "Summer, our quiet season" to "We have led the way…"; four Gia photos in a stepped collage (709 × 820 frame). **Page 7**: each panel cover (`ly-7-1..3`) opens a native `<dialog>` gallery (`.gal`): 7.1 justified rows, 7.2 two columns (caption = the old "Store Opening" side page), 7.3 rows + a horizontally scrolling strip. **Page 8**: six lines with their own styles (01 big plum, 02 plain, 03 italic pink, 04 and 05 indented small sans, 06 italic with the Mei Chan link). **Page 9**: new text, photo `9..jpg`.
+- **Bag page background** now comes from the PDF (`node scripts/ly-bag-bg.mjs`, renders `LAMYEN-túi-NHỎ & VỪA.pdf` large with macOS Quick Look, keeps the pattern above the logo and fades it to cream `#FDF9E1`).
+- **Changed on purpose**: "About Lam Yen" panel is plum (was pink); only the "Full Stack Marketer" title is plum (the other job titles are bold ink); the line "I worked directly with…" sits under the photo; "So I said…" is italic pink; the luxury / Marou line is a small italic note.
+- Backups of the previous content: `content/ch02-becoming-whole-in-fb.BEFORE-oct21.md`, `content/side-pages.BEFORE-oct21.md`.
+

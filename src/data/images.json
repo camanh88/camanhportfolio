@@ -719,14 +719,511 @@
    1600
   ]
  },
- "ly-bg": {
-  "alt": "",
-  "width": 1498,
-  "height": 1486,
+ "ly-seasonal-1": {
+  "alt": "A dark green seasonal paper bag: a golden moon, ribbons of pale cloud, blue swallows and a four-lobed window onto green rice terraces, with the golden “Lam Yên” logo.",
+  "width": 960,
+  "height": 757,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-seasonal-2": {
+  "alt": "The back of a pink seasonal paper bag: a rice plant in a golden vase, golden petals and swallows, inside a lace-like quatrefoil border.",
+  "width": 960,
+  "height": 782,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-4-1": {
+  "alt": "Three halves of a green-cốm mooncake stacked on a pale green stand, the middle one showing a golden egg yolk, against leaves and a pale green cloth.",
+  "width": 1200,
+  "height": 1680,
   "widths": [
    480,
    960,
-   1498
+   1200
+  ]
+ },
+ "ly-4-2": {
+  "alt": "A street vendor in a conical hat crouching between two shoulder-pole baskets of greens, with a woman in a yellow áo dài standing by a wrought-iron gate.",
+  "width": 1600,
+  "height": 1067,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "ly-4-3": {
+  "alt": "A plate of glossy green sticky-rice cakes on a dark wooden table, with a pale green cloth and a bowl behind.",
+  "width": 1200,
+  "height": 800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-4-4": {
+  "alt": "A pile of baked mooncakes with golden crusts on a pale plate, one cut open to show a green filling and an orange egg yolk.",
+  "width": 1600,
+  "height": 1067,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "ly-4-5": {
+  "alt": "A hand holding a pale plate of green-wrapped cốm cakes, with a small Lam Yên box leaning behind them.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-4-6": {
+  "alt": "A baked mooncake and a half on a pale plate over a pale green cloth, in front of dark leaves and a wooden rail.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-4-7": {
+  "alt": "A mooncake cut in half and stacked on a gold-rimmed plate, with a small ceramic jug and a green leaf behind.",
+  "width": 1200,
+  "height": 1500,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-4-8": {
+  "alt": "A gloved finger pressing a soft white snow-skin mooncake, among others in brown paper cups.",
+  "width": 1365,
+  "height": 2048,
+  "widths": [
+   480,
+   960,
+   1365
+  ]
+ },
+ "ly-4-9": {
+  "alt": "Glossy pale-green cốm filling in a clear plastic tray, lifted with wooden chopsticks.",
+  "width": 1600,
+  "height": 2400,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "ly-5-baker": {
+  "alt": "A baker in a black T-shirt smiling as she works at a table in front of tall racks in the Lam Yên kitchen.",
+  "width": 960,
+  "height": 1440,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-5-racks": {
+  "alt": "Rows of freshly baked mooncakes on the shelves of a baking rack.",
+  "width": 960,
+  "height": 1200,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-5-balls": {
+  "alt": "Rounds of green cốm filling lined up on a dark tray.",
+  "width": 1200,
+  "height": 800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-5-break": {
+  "alt": "A baked mooncake seen from above: a flower-shaped golden crust pressed with a round pattern in the middle.",
+  "width": 942,
+  "height": 952,
+  "widths": [
+   480,
+   942
+  ]
+ },
+ "ly-5-pull": {
+  "alt": "Two gloved hands pulling a baked mooncake apart, bright green filling stretching between the halves, with a tray of mooncakes behind.",
+  "width": 1200,
+  "height": 1600,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-5-still": {
+  "alt": "Two mooncakes, one on a small stand, on a red wooden table with a pale green cloth and leafy branches in front of dark foliage.",
+  "width": 1200,
+  "height": 1500,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-6-room": {
+  "alt": "A quiet dining room with carved wooden chairs and a long table of flowers, beside a window over a lake.",
+  "width": 1200,
+  "height": 1600,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-6-box": {
+  "alt": "A hand arranging a lotus leaf and flowers over a dark wooden tray of small cakes, with printed cards beside it.",
+  "width": 1200,
+  "height": 1600,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-6-phone": {
+  "alt": "A guest photographing a wooden tray of mooncakes with her phone, among lotus leaves and flowers.",
+  "width": 1200,
+  "height": 714,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-6-card": {
+  "alt": "A printed invitation card lying on a dark wooden table between dried lotus leaves.",
+  "width": 1200,
+  "height": 1600,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-7-1": {
+  "alt": "A woman in a yellow áo dài carrying a shoulder pole with a basket of green gift boxes, seen in profile in a doorway.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-7-2": {
+  "alt": "Customers queuing outside the green shop at 57 Phố Huế under red lanterns, motorbikes parked in front.",
+  "width": 828,
+  "height": 1264,
+  "widths": [
+   480,
+   828
+  ]
+ },
+ "ly-7-3": {
+  "alt": "White lotus buds in a dark blue vase on a small table, with Cốm Đặc Sản gift boxes and a mooncake on a stand beside it, against a dusty-pink wall.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-71-a": {
+  "alt": "A conical hat used as a tray, holding a green Cốm Mùa Trăng box, with a woman in a yellow áo dài behind it.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-71-b": {
+  "alt": "A woman in a yellow áo dài sitting by a basket of leaves, lifting out a Cốm Mùa Trăng box.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-71-c": {
+  "alt": "An open pink box of pastel mooncake boxes under a printed lid lettered “Cốm Mùa Trăng”.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-71-d": {
+  "alt": "The Cốm Mùa Trăng box, covered in illustrated village scenes, lying on a cream cloth on a wooden table.",
+  "width": 1200,
+  "height": 1200,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-71-e": {
+  "alt": "A shoulder-pole basket heaped with green and pink gift boxes, carried by a woman in yellow.",
+  "width": 1200,
+  "height": 800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-71-f": {
+  "alt": "A woman in yellow sitting on the pavement between two baskets of leaves, one arm raised.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-71-g": {
+  "alt": "A hand sliding a small box into an open gift box with an illustrated lid and rows of pastel boxes.",
+  "width": 1200,
+  "height": 1200,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-72-a": {
+  "alt": "The white “Lam Yên” sign on the green shop front, under strings of red flags.",
+  "width": 1200,
+  "height": 1600,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-72-b": {
+  "alt": "A woman holding up a framed photo of mooncakes on a rack against a pale wall.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-72-c": {
+  "alt": "Inside the shop: flowers in the foreground and a screen showing cốm cakes.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-72-d": {
+  "alt": "Pale green paper bags lined up on a counter beside the shop window.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-72-e": {
+  "alt": "A line of customers along the street below red flags and lanterns outside the Lam Yên shop.",
+  "width": 1200,
+  "height": 900,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-72-f": {
+  "alt": "Woven baskets of festival lanterns and toys on a counter under a green shelf.",
+  "width": 1103,
+  "height": 1103,
+  "widths": [
+   480,
+   960,
+   1103
+  ]
+ },
+ "ly-72-g": {
+  "alt": "A shop assistant in a pink shirt arranging flowers on a wooden counter in the green shop.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-72-h": {
+  "alt": "Plants and flowers in the shop window, with a framed photo of baked mooncakes.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-73-a": {
+  "alt": "An open box of Cốm Đặc Sản beside a closed one and a mooncake on a small stand, next to a vase of white lotus buds, against a dusty-pink wall.",
+  "width": 1200,
+  "height": 800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-73-b": {
+  "alt": "Close-up of the Cốm Đặc Sản box: a phoenix with outspread pastel wings among clouds.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-73-c": {
+  "alt": "Close-up of the title “Cốm Đặc Sản” on the yellow lid of the box.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-73-d": {
+  "alt": "The Cốm Đặc Sản box standing on a dark carved stand against a dusty-pink wall.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-73-e": {
+  "alt": "The Cốm Đặc Sản box lying at an angle on a dark wooden table, white lotus buds above it.",
+  "width": 1200,
+  "height": 1800,
+  "widths": [
+   480,
+   960,
+   1200
+  ]
+ },
+ "ly-73s-1": {
+  "alt": "The crew gathered around a set with a yellow painted backdrop and a softbox light.",
+  "width": 960,
+  "height": 1700,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-73s-2": {
+  "alt": "A tablet on a stand showing a mooncake picture, in a courtyard garden under a tree.",
+  "width": 960,
+  "height": 1707,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-73s-3": {
+  "alt": "A tablet on a stand beneath a honeycomb softbox, showing a golden picture.",
+  "width": 960,
+  "height": 1700,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-73s-4": {
+  "alt": "A cameraman beside a set of stacked gift boxes in front of a painted phoenix backdrop.",
+  "width": 960,
+  "height": 1704,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-73s-5": {
+  "alt": "A film camera on a rig in a courtyard, facing a table of gift boxes and a woman sitting behind it.",
+  "width": 960,
+  "height": 1704,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-73s-6": {
+  "alt": "A laptop on a tray showing photos, a printed contact sheet beside it, and a camera operator behind.",
+  "width": 960,
+  "height": 535,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-73s-7": {
+  "alt": "The photoshoot team working on a lotus pond, with a camera, a reflector and an umbrella.",
+  "width": 960,
+  "height": 540,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-9-1": {
+  "alt": "A woman in a green dress and a conical hat, seen from behind on a busy Hanoi street, carrying a green gift box; the street is in black and white.",
+  "width": 1200,
+  "height": 2133,
+  "widths": [
+   480,
+   960,
+   1200
   ]
  },
  "w-bike": {

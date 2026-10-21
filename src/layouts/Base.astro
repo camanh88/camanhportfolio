@@ -149,6 +149,14 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
   // clicking the dimmed area (outside the sheet)
   dlg.addEventListener('click', (e) => { if (!(e.target as HTMLElement).closest('.sp-sheet')) close(); });
 
+  // Small messages ({{tip: …}}): hover and keyboard focus are handled in CSS; a tap toggles, a tap elsewhere or Esc closes
+  document.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest('.tip');
+    document.querySelectorAll('.tip.open').forEach((x) => { if (x !== t) x.classList.remove('open'); });
+    if (t && (e.target as HTMLElement).closest('.tip-btn')) t.classList.toggle('open');
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.tip.open').forEach((x) => x.classList.remove('open')); });
+
   // Reveal on scroll
   const io = new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));

@@ -1,14 +1,14 @@
 // Reads the markdown in ../content and turns it into blocks and inline HTML.
 // No copy lives here: this only recognises structure and the small markup conventions from CLAUDE.md:
 //   [text](https://...) (external link, opens in a new tab, shown with an arrow)
-//   BUILD NOTE: ...  (never rendered)   {{Name}} (sidepath)   {{vi: ...}} (handwritten note)   [text] (placeholder)   ++text++ (underline)
+//   BUILD NOTE: ...  (never rendered)   {{Name}} (sidepath)   {{tip: words | message}} (small message on hover)   {{link: words}} (link whose address is still missing)   {{vi: ...}} (handwritten note)   [text] (placeholder)   ++text++ (underline)
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 export type Block =
   | { t: 'h1' | 'h2' | 'h3' | 'h4'; text: string }
   | { t: 'p'; text: string }
-  | { t: 'ul'; items: string[] }
+  | { t: 'ul'; items: string[]; subs?: string[][] }
   | { t: 'table'; rows: string[][] }
   | { t: 'note'; text: string };
 
@@ -24,12 +24,13 @@ export function blocks(md: string): Block[] {
   const lines = md.replace(/\r/g, '').split('\n');
   let para: string[] = [];
   let list: string[] | null = null;
+  let subs: string[][] | null = null;
   let table: string[][] | null = null;
   const flush = () => {
     if (para.length) out.push({ t: 'p', text: para.join('\n') });
-    if (list) out.push({ t: 'ul', items: list });
+    if (list) out.push({ t: 'ul', items: list, ...(subs && subs.some((x) => x.length) ? { subs } : {}) });
     if (table) out.push({ t: 'table', rows: table });
-    para = []; list = null; table = null;
+    para = []; list = null; subs = null; table = null;
   };
   for (const raw of lines) {
     const line = raw.trimEnd();
@@ -44,7 +45,10 @@ export function blocks(md: string): Block[] {
     }
     if (/^\s*[-*]\s+/.test(line)) {
       if (para.length || table) flush();
-      (list ??= []).push(line.replace(/^\s*[-*]\s+/, ''));
+      const text = line.replace(/^\s*[-*]\s+/, '');
+      if (/^\s{2,}[-*]\s+/.test(line) && list?.length) { (subs ??= [])[list.length - 1] ??= []; subs[list.length - 1].push(text); continue; } // an indented bullet belongs to the item above
+      (list ??= []).push(text);
+      (subs ??= [])[list.length - 1] ??= [];
       continue;
     }
     if (line.startsWith('|')) {
@@ -76,10 +80,21 @@ export interface InlineOpts {
   accent?: string[];
 }
 
-const TOKEN = /\{\{vi:\s*([^}]+?)\}\}|\{\{([^}]+?)\}\}|\[([^\]]+?)\]\((https?:\/\/[^)\s]+)\)|\[([^\]]+?)\]|\*\*([^*]+?)\*\*|\+\+([^+]+?)\+\+|(?<![A-Za-z0-9])_([^_\s][^_]*?)_(?![A-Za-z0-9])/g;
+const TOKEN = /\{\{vi:\s*([^}]+?)\}\}|\{\{tip:\s*([^|}]+?)\s*\|\s*([^}]+?)\}\}|\{\{link:\s*([^}]+?)\}\}|\{\{([^}]+?)\}\}|\[([^\]]+?)\]\((https?:\/\/[^)\s]+)\)|\[([^\]]+?)\]|\*\*([^*]+?)\*\*|\+\+([^+]+?)\+\+|(?<![A-Za-z0-9])_([^_\s][^_]*?)_(?![A-Za-z0-9])/g;
 
 export function sidepathButton(name: string) {
   return `<button type="button" class="sp" data-sp="${slug(name)}" aria-haspopup="dialog">${esc(name)}<span class="sp-arrow" aria-hidden="true">↗</span></button>`;
+}
+
+// a small message that appears when the reader hovers or focuses the words (and toggles on tap): {{tip: words | message}}
+let tipId = 0;
+export function tipButton(label: string, message: string) {
+  const id = `tip-${++tipId}`;
+  return `<span class="tip"><button type="button" class="tip-btn" aria-describedby="${id}">${esc(label)}<span class="tip-i" aria-hidden="true">i</span></button><span class="tip-box" role="tooltip" id="${id}">${esc(message)}</span></span>`;
+}
+// a link whose address is not known yet: shown like a sidepath (dotted underline and arrow), not clickable: {{link: words}}
+export function pendingLink(text: string) {
+  return `<span class="xl-pending">${esc(text)}<span class="sp-arrow" aria-hidden="true">↗</span></span>`;
 }
 
 // the words "opens in a new tab" come from content/ui.md (key "new tab"), read once
@@ -106,12 +121,14 @@ export function inline(text: string, opts: InlineOpts = {}): string {
   for (const m of text.matchAll(TOKEN)) {
     html += plain(text.slice(last, m.index), opts);
     if (m[1] !== undefined) html += `<span class="hand-note" lang="vi">${esc(m[1])}</span>`;
-    else if (m[2] !== undefined) html += sidepathButton(m[2].trim());
-    else if (m[3] !== undefined) html += externalLink(m[3], m[4]);
-    else if (m[5] !== undefined) html += `<span class="ph">[${esc(m[5])}]</span>`;
-    else if (m[6] !== undefined) html += `<strong>${inline(m[6], opts)}</strong>`;
-    else if (m[7] !== undefined) html += `<u class="ul">${inline(m[7], opts)}</u>`;
-    else if (m[8] !== undefined) html += `<em>${inline(m[8], opts)}</em>`;
+    else if (m[2] !== undefined) html += tipButton(m[2].trim(), m[3].trim());
+    else if (m[4] !== undefined) html += pendingLink(m[4].trim());
+    else if (m[5] !== undefined) html += sidepathButton(m[5].trim());
+    else if (m[6] !== undefined) html += externalLink(m[6], m[7]);
+    else if (m[8] !== undefined) html += `<span class="ph">[${esc(m[8])}]</span>`;
+    else if (m[9] !== undefined) html += `<strong>${inline(m[9], opts)}</strong>`;
+    else if (m[10] !== undefined) html += `<u class="ul">${inline(m[10], opts)}</u>`;
+    else if (m[11] !== undefined) html += `<em>${inline(m[11], opts)}</em>`;
     last = (m.index ?? 0) + m[0].length;
   }
   html += plain(text.slice(last), opts);
@@ -120,7 +137,7 @@ export function inline(text: string, opts: InlineOpts = {}): string {
 
 /** Plain text of an inline string (markup removed), used for aria-labels and matching. */
 export function textOf(text: string): string {
-  return text.replace(/\[([^\]]+?)\]\(https?:\/\/[^)\s]+\)/g, '$1').replace(/\{\{vi:\s*([^}]+?)\}\}/g, '$1').replace(/\{\{([^}]+?)\}\}/g, '$1').replace(/\*\*([^*]+?)\*\*/g, '$1').replace(/\+\+([^+]+?)\+\+/g, '$1');
+  return text.replace(/\[([^\]]+?)\]\(https?:\/\/[^)\s]+\)/g, '$1').replace(/\{\{vi:\s*([^}]+?)\}\}/g, '$1').replace(/\{\{tip:\s*([^|}]+?)\s*\|[^}]*\}\}/g, '$1').replace(/\{\{link:\s*([^}]+?)\}\}/g, '$1').replace(/\{\{([^}]+?)\}\}/g, '$1').replace(/\*\*([^*]+?)\*\*/g, '$1').replace(/\+\+([^+]+?)\+\+/g, '$1');
 }
 
 /** Splits "**Lead.** rest" into lead + rest (lead keeps its punctuation). */
