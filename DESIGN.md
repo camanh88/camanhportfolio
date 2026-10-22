@@ -296,3 +296,16 @@ Source: Cam Anh's note "LAM YEN R3" and the layouts she drew (`*Photo/02/Layout/
 - **Changed on purpose**: "About Lam Yen" panel is plum (was pink); only the "Full Stack Marketer" title is plum (the other job titles are bold ink); the line "I worked directly with…" sits under the photo; "So I said…" is italic pink; the luxury / Marou line is a small italic note.
 - Backups of the previous content: `content/ch02-becoming-whole-in-fb.BEFORE-oct21.md`, `content/side-pages.BEFORE-oct21.md`.
 
+---
+
+## 15. Different kitchens round 1 (22 Oct 2026) and the next-page links
+
+Source: note "DIFFERENT KITCHEN R1" and `*Photo/03` (folders Golden gate, L..., M..., Mono feedback, Chỉnh sửa, each with Cam Anh's layout picture).
+
+- **Golden Gate**: three numbered lines, then two "learned" lines (small sans, arrow); the old G1/G2 slots became a collage of her five documents (percent positions from her layout, `.gg-collage`, sticky on desktop). `gg-proposal` is cropped to hide the white margin of the screenshot (`crop` in `photos.mjs`). `IMG_0027.PNG` (a phone screenshot of the Instagram page) is in the folder but not in her layout: unused.
+- **Lam Yên & 123**: photos `k-l1`, `k-l2` (4:3 crop of portrait originals).
+- **Mono, 01 On social**: scattered collage of 13 photos on cream (`socTiles`, positions in pixels of her layout; two-column wall on phones); each photo opens in a large viewer (`#mono-lb`, arrows and arrow keys). The Before → After pair (M2/M3) and `[Gallery link]` stay below, still empty. **03 Summer Brunch launch**: the nine guest opinion cards in a stepped, tilted row that scrolls sideways (`.fb`, skewY(-9deg), `--i` steps), each opens large. **Conclusion**: the two old phrases on the left, the sentence "And it showed me…" on the right (pink italic).
+- **Next-page link** (`Base.astro`, `.pg-next`): at the foot of every page, above the footer: Home → In the making → Off the menu → Why Marou → Home. Labels and sub texts come from `content/nav.md`, the word "Next" from `ui.md` (`next page`).
+- **Lam Yên (from the "Chỉnh sửa" folder)**: photo 2 of page 3 is replaced (`ly-3-2`, 4:5 crop of the pink boxes); the last page (P9) now sits on a blurred, darkened photo (`ly-p9-bg`) with the text left and the street photo right, no big quotation mark.
+- Backup: `content/ch03-different-kitchens.BEFORE-oct22.md`.
+

@@ -40,8 +40,13 @@ import '../styles/base.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ReviewNote from '../components/ReviewNote.astro';
-import { cover, sidePages, ui } from '../lib/data';
+import { cover, sidePages, ui, nav, pages } from '../lib/data';
 import { inline, textOf } from '../lib/md';
+// the foot of every page points to the next page (the last one leads back to the start)
+const order = [['home', pages.home], ['making', pages.making], ['menu', pages.menu], ['marou', pages.marou]] as const;
+const at = order.findIndex(([k]) => k === Astro.props.current);
+const nextKey = at < 0 ? null : order[(at + 1) % order.length];
+const nextNav = nextKey ? nav[nextKey[0]] : null;
 const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${cover.hero} ${cover.label}`;
 ---
 <!doctype html>
@@ -59,6 +64,13 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
     <a class="skip" href="#main">{ui.skip}</a>
     <Header current={Astro.props.current} />
     <div id="main"><slot /></div>
+    {nextKey && nextNav && (
+      <a class="pg-next" href={nextKey[1]}>
+        <span class="label">{ui['next page']}</span>
+        <span class="pn-name">{nextNav.label}<span class="pn-arrow" aria-hidden="true">→</span></span>
+        {nextNav.sub && <span class="pn-sub">{nextNav.sub}</span>}
+      </a>
+    )}
     <Footer />
     <ReviewNote />
 
@@ -85,6 +97,15 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
 </html>
 
 <style is:global>
+  .pg-next { display: grid; gap: .5rem; padding: clamp(3rem, 7vw, 6rem) var(--gutter); border-top: 1px solid var(--ink); background: #fff; color: var(--ink); text-decoration: none; transition: background .4s var(--ease), color .4s var(--ease); }
+  .pg-next .label { color: var(--ink-soft); }
+  .pn-name { font-family: var(--display); font-weight: 300; font-size: clamp(2.6rem, 9vw, 8rem); line-height: .92; letter-spacing: -.04em; }
+  .pn-arrow { display: inline-block; margin-left: .25em; color: var(--pink); transition: transform .4s var(--ease); }
+  .pn-sub { font-family: var(--display); font-style: italic; font-size: clamp(1.2rem, 2vw, 1.7rem); color: var(--ink-soft); }
+  .pg-next:hover { background: var(--plum); color: #fff; }
+  .pg-next:hover .label, .pg-next:hover .pn-sub { color: rgb(255 255 255 / .75); }
+  .pg-next:hover .pn-arrow { transform: translateX(.3em); color: var(--lime); }
+  @media (prefers-reduced-motion: reduce) { .pg-next, .pn-arrow { transition: none; } }
   .sp-dialog { border: 0; padding: 0; margin: 0; background: transparent; color: var(--ink); max-width: none; max-height: none; width: 100%; height: 100%; overflow: hidden; }
   .sp-dialog::backdrop { background: rgb(20 19 18 / 0); transition: background .4s var(--ease); }
   .sp-dialog.is-open::backdrop { background: rgb(20 19 18 / .45); }
