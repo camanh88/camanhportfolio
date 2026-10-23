@@ -130,7 +130,7 @@ export const ch01 = (() => {
     mission: groups[0], part: groups[1],
     highlights: ps('highlights').map((p) => leadSplit(p)),
     closing: ps('closing'),
-    catalogueUrl: /https?:\/\/\S+issuu\S+/.exec(note)?.[0].replace(/[.,;)]+$/, '') ?? '',
+    catalogueUrl: /https?:\/\/\S*issuu\S*/.exec(note)?.[0].replace(/[.,;)]+$/, '') ?? '',
   };
 })();
 export const sidePageBody = (name: string) => sidePages.find((p) => p.slug === slug(name))?.body ?? [];

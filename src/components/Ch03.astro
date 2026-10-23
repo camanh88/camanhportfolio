@@ -48,6 +48,7 @@ const heartHtml = inline(heart).replace('service', '<em class="svc">service</em>
 const cafeParts = (mItems[1]?.rest ?? '').split(/,\s+/);
 // Mono, 01 On social: a scattered collage of 13 photos, laid out like Cam Anh's drawing (pixels of her layout: x, y, width, height)
 const SOC = { x: 97, y: 123, w: 1229, h: 1043 };
+const socFocus: Record<string, string> = { 'mono-9': '38% 50%', 'mono-13': '50% 76%' };   // where each photo is held inside its tile
 const socTiles: [string, number[]][] = [
   ['mono-1', [426, 123, 249, 352]], ['mono-2', [693, 207, 180, 268]], ['mono-3', [890, 331, 145, 144]], ['mono-4', [150, 353, 257, 321]],
   ['mono-5', [422, 503, 185, 277]], ['mono-6', [627, 489, 241, 362]], ['mono-7', [888, 489, 217, 217]], ['mono-8', [97, 685, 208, 227]],
@@ -173,26 +174,13 @@ const index = [
         <div class="soc-text gt"><p class="gk">01</p><h4>{mItems[0]?.lead.replace(/:$/, '')}</h4><p set:html={inline(mItems[0]?.rest ?? '')} /></div>
         <div class="soc-collage" role="group" aria-label={mItems[0]?.lead.replace(/:$/, '')}>
           {socTiles.map(([id, b], i) => (
-            <button type="button" class="mp" data-group="soc" data-n={i} style={box(b)} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 22vw, 45vw" /></button>
+            <button type="button" class="mp" data-lb-group="soc" style={box(b)} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 22vw, 45vw" style={socFocus[id] ? `object-position:${socFocus[id]}` : undefined} /></button>
           ))}
           <div class="soc-text soc-in gt" style={socText} aria-hidden="true"><p class="gk">01</p><h4>{mItems[0]?.lead.replace(/:$/, '')}</h4><p set:html={inline(mItems[0]?.rest ?? '')} /></div>
         </div>
       </div>
       <div class="soc-ba wrap">
-        <div class="ba-wrap">
-          {galleryUrl
-            ? <a class="ba ba-link" href={galleryUrl} target="_blank" rel="noopener noreferrer" aria-label={`${textOf(gallery)} (${ui['new tab']})`}>
-                <figure><Slot tag="M2" a="4 / 5" tone="pink" /><figcaption class="label">{ui.before}</figcaption></figure>
-                <span class="ba-arrow" aria-hidden="true">→</span>
-                <figure><Slot tag="M3" a="4 / 5" tone="blush" /><figcaption class="label">{ui.after}</figcaption></figure>
-              </a>
-            : <div class="ba">
-                <figure><Slot tag="M2" a="4 / 5" tone="pink" /><figcaption class="label">{ui.before}</figcaption></figure>
-                <span class="ba-arrow" aria-hidden="true">→</span>
-                <figure><Slot tag="M3" a="4 / 5" tone="blush" /><figcaption class="label">{ui.after}</figcaption></figure>
-              </div>}
-          <p class="ba-cap" set:html={inline(gallery)} />
-        </div>
+        <p class="ba-cap" set:html={inline(gallery)} />
       </div>
     </div>
     <div class="g-cafe">
@@ -213,9 +201,9 @@ const index = [
     <div class="m-group g-brunch wrap">
       <div class="gt"><p class="gk">03</p><h4>{mItems[2]?.lead.replace(/:$/, '')}</h4><p set:html={inline(mItems[2]?.rest ?? '')} /></div>
     </div>
-    <div class="fb" role="region" tabindex="0" aria-label={mItems[2]?.lead.replace(/:$/, '')}>
-      <ul class="fb-track">
-        {fbIds.map((id, i) => <li style={`--i:${i}`}><button type="button" class="mp" data-group="fb" data-n={i} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 15rem, 11rem" /></button></li>)}
+    <div class="fb">
+      <ul class="fb-fan" role="group" aria-label={mItems[2]?.lead.replace(/:$/, '')}>
+        {fbIds.map((id, i) => <li style={`--i:${i}; --m:${(i - (fbIds.length - 1) / 2).toFixed(2)}`}><button type="button" class="mp" data-lb-group="fb" aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 17rem, 12rem" /></button></li>)}
       </ul>
     </div>
 
@@ -228,12 +216,6 @@ const index = [
     </div>
   </section>
 
-  <dialog class="lb" id="mono-lb" aria-label={ui['open album']}>
-    <button type="button" class="lb-x" aria-label={ui.close}><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" /></svg></button>
-    <button type="button" class="lb-p" aria-label={ui['previous photo']}>←</button>
-    <img class="lb-img" alt="" />
-    <button type="button" class="lb-n" aria-label={ui['next photo']}>→</button>
-  </dialog>
 </article>
 
 <style>
@@ -285,6 +267,7 @@ const index = [
   .gg .num { color: var(--plum); }
   .gg-camp { margin-top: 1.4rem; font-family: var(--display); font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: 1.15; }
   .gg-camp :global(.xl:hover) { color: var(--plum); }
+  .gg-camp :global(.xl) { display: block; width: fit-content; white-space: nowrap; }   /* "Sakura Yakiniku": on its own line, never broken */
   .gg-list { display: grid; gap: 1.2rem; }
   .gg-list li { display: grid; grid-template-columns: 2.6rem 1fr; padding-top: 1rem; border-top: 1px solid var(--ink); font-family: var(--display); font-size: clamp(1.3rem, 2vw, 1.8rem); line-height: 1.22; }
   .gg-list .n { font-family: var(--sans); font-size: .72rem; font-weight: 600; letter-spacing: .1em; padding-top: .5em; }
@@ -300,7 +283,7 @@ const index = [
   @media (min-width: 900px) {
     .gg { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; row-gap: 3rem; align-items: start; min-height: 100svh; }
     .gg-main { grid-column: 1 / 6; grid-row: 1; }
-    .gg-collage { grid-column: 6 / 13; grid-row: 1 / 4; margin-left: clamp(0rem, 2vw, 2rem); align-self: start; position: sticky; top: 6rem; }
+    .gg-collage { grid-column: 6 / 13; grid-row: 1 / 4; margin-left: clamp(0rem, 2vw, 2rem); align-self: start; }
     .gg-list { grid-column: 1 / 6; grid-row: 2; align-self: start; }
     .gg-learn { grid-column: 1 / 6; grid-row: 3; align-self: start; }
     .gg-close { grid-column: 4 / 13; grid-row: 4; }
@@ -311,7 +294,7 @@ const index = [
   .ly .num { color: var(--pink); }
   .amp { font-family: var(--display); font-style: italic; color: var(--pink); }
   .halves { display: grid; gap: 3rem; }
-  .lph { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 42%; }
+  .half :global(.lph) { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 42%; }
   .half { display: grid; gap: 1rem; align-content: start; position: relative; }
   .hn { font-family: var(--display); font-weight: 600; font-size: clamp(1.7rem, 2.8vw, 2.6rem); line-height: 1.05; }
   .half p { max-width: 28rem; }
@@ -370,13 +353,18 @@ const index = [
   @media (max-width: 899px) { .soc-collage .mp { width: 100% !important; height: auto !important; } .soc-collage .mp :global(img) { width: 100%; height: auto; } }
   .soc-ba { padding-bottom: clamp(3rem, 6vw, 6rem); }
   @media (prefers-reduced-motion: reduce) { .mp :global(img) { transition: none; } .mp:hover :global(img) { transform: none; } }
-  /* the guest opinion cards: a stepped, tilted row that scrolls sideways (like the reference she drew) */
-  .fb { overflow-x: auto; padding: clamp(7rem, 14vw, 12rem) 0 clamp(6rem, 11vw, 10rem); scrollbar-width: thin; scrollbar-color: var(--blush) transparent; }
-  .fb-track { display: flex; align-items: flex-end; gap: clamp(1rem, 2.6vw, 2.2rem); width: max-content; padding: 0 var(--pad); }
-  .fb-track li { flex: 0 0 auto; width: clamp(9.5rem, 19vw, 15rem); transform: translateY(calc(var(--i) * -1.5rem)) skewY(-9deg); }
-  .fb-track .mp { margin: 0; }
-  .fb-track .mp :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
-  .fb:focus-visible { outline: 2px solid var(--lime); outline-offset: -4px; }
+  /* the guest opinion cards: a file of cards laid in a row, each one slightly over the one before, a little fanned; a gallery, not a showcase:
+     every card opens in the viewer. Overlap and size are worked out from the width, so the whole row always fits the page. */
+  .fb { --n: 9; --ov: .5; padding: clamp(4rem, 9vw, 8rem) var(--pad) clamp(8rem, 14vw, 13rem); overflow: hidden; }
+  .fb-fan { --w: calc(100% / (1 + (var(--n) - 1) * (1 - var(--ov)))); display: flex; justify-content: center; align-items: center; width: min(100%, 90rem); margin-inline: auto; }
+  .fb-fan li { flex: 0 0 var(--w); margin-left: calc(var(--w) * -1 * var(--ov)); position: relative; z-index: var(--i); transform: rotate(calc(var(--m) * 1.3deg)) translateY(calc(var(--m) * var(--m) * .35rem)); transition: transform .5s var(--ease); }
+  .fb-fan li:first-child { margin-left: 0; }
+  .fb-fan li:hover, .fb-fan li:focus-within { z-index: 20; transform: rotate(0) translateY(-1.2rem) scale(1.06); }
+  .fb-fan .mp { margin: 0; box-shadow: 0 .5rem 1.4rem rgb(0 0 0 / .35); }
+  .fb-fan .mp :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
+  /* phones: the same fan, but wider than the screen, so the row scrolls sideways */
+  @media (max-width: 899px) { .fb { overflow-x: auto; padding-inline: 0; } .fb-fan { width: max-content; padding: 0 var(--pad); --w: 9rem; } .fb-fan li { flex-basis: 9rem; } }
+  @media (prefers-reduced-motion: reduce) { .fb-fan li { transition: none; } }
   .m-social .ba .label { color: var(--ink-soft); }
   .m-social .ba-cap :global(.xl) { color: var(--plum); }
   .m-social :global(.ph) { background: var(--ph-bg); color: var(--ph-ink); box-shadow: inset 0 0 0 1px rgb(138 75 42 / .25); }
@@ -408,16 +396,7 @@ const index = [
   .c-mid { font-family: var(--display); font-weight: 300; font-size: clamp(1.9rem, 4vw, 3.8rem); line-height: 1.1; letter-spacing: -.025em; max-width: 16em; }
   .c-mid :global(strong) { font-weight: 300; font-style: italic; }
   .c-first { font-family: var(--display); font-weight: 300; font-size: clamp(1.45rem, 2.4vw, 2.2rem); line-height: 1.2; letter-spacing: -.01em; max-width: 18em; text-align: left; }
-  .c-end { font-family: var(--display); font-weight: 300; font-style: italic; font-size: clamp(2rem, 3.8vw, 3.6rem); line-height: 1.08; letter-spacing: -.025em; max-width: 14em; color: var(--pink); }
-  /* the large picture viewer */
-  .lb { border: 0; padding: 0; margin: 0; width: 100%; height: 100%; max-width: none; max-height: none; background: rgb(20 8 24 / .94); color: #fff; }
-  .lb[open] { display: grid; grid-template-columns: 4rem 1fr 4rem; align-items: center; justify-items: center; }
-  .lb::backdrop { background: rgb(20 8 24 / .9); }
-  .lb-img { grid-column: 2; max-width: 100%; max-height: 92svh; width: auto; height: auto; object-fit: contain; }
-  .lb-p, .lb-n, .lb-x { appearance: none; border: 0; background: transparent; color: inherit; cursor: pointer; display: grid; place-items: center; width: 3rem; height: 3rem; font-size: 1.8rem; line-height: 1; }
-  .lb-p { grid-column: 1; } .lb-n { grid-column: 3; }
-  .lb-x { position: absolute; right: .8rem; top: .8rem; z-index: 2; }
-  .lb-p:hover, .lb-n:hover, .lb-x:hover { color: var(--lime); }
+  .c-end { font-family: var(--display); font-weight: 300; font-style: italic; font-size: clamp(1.4rem, 2.3vw, 2.2rem); line-height: 1.18; letter-spacing: -.015em; max-width: 18em; color: var(--pink); }
   @media (min-width: 900px) {
     .m-intro { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; }
     .mi-main { grid-column: 1 / 9; } .mi-sub { grid-column: 7 / 13; margin-top: .4rem; }
@@ -443,28 +422,3 @@ const index = [
   }
 </style>
 
-<script>
-  // Mono photos and guest opinion cards open large (native <dialog>: Esc closes); arrows and the arrow keys move through the same group
-  const lb = document.getElementById('mono-lb') as HTMLDialogElement | null;
-  if (lb) {
-    const img = lb.querySelector<HTMLImageElement>('.lb-img')!;
-    let group: HTMLButtonElement[] = [], at = 0, opener: HTMLElement | null = null;
-    const show = (i: number) => {
-      at = (i + group.length) % group.length;
-      const src = group[at].querySelector('img')!;
-      img.src = src.currentSrc || src.src; img.alt = src.alt;
-    };
-    const close = () => { lb.close(); document.documentElement.classList.remove('sp-open'); opener?.focus(); };
-    document.querySelectorAll<HTMLButtonElement>('#ch-02-kitchens .mp').forEach((b) => b.addEventListener('click', () => {
-      group = [...document.querySelectorAll<HTMLButtonElement>(`#ch-02-kitchens .mp[data-group="${b.dataset.group}"]`)];
-      opener = b; show(group.indexOf(b));
-      lb.showModal(); document.documentElement.classList.add('sp-open');
-    }));
-    lb.querySelector('.lb-p')!.addEventListener('click', () => show(at - 1));
-    lb.querySelector('.lb-n')!.addEventListener('click', () => show(at + 1));
-    lb.querySelector('.lb-x')!.addEventListener('click', close);
-    lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
-    lb.addEventListener('cancel', (e) => { e.preventDefault(); close(); });
-    lb.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') show(at - 1); if (e.key === 'ArrowRight') show(at + 1); });
-  }
-</script>

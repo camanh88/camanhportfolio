@@ -80,7 +80,7 @@ export interface InlineOpts {
   accent?: string[];
 }
 
-const TOKEN = /\{\{vi:\s*([^}]+?)\}\}|\{\{tip:\s*([^|}]+?)\s*\|\s*([^}]+?)\}\}|\{\{link:\s*([^}]+?)\}\}|\{\{([^}]+?)\}\}|\[([^\]]+?)\]\((https?:\/\/[^)\s]+)\)|\[([^\]]+?)\]|\*\*([^*]+?)\*\*|\+\+([^+]+?)\+\+|(?<![A-Za-z0-9])_([^_\s][^_]*?)_(?![A-Za-z0-9])/g;
+const TOKEN = /\{\{vi:\s*([^}]+?)\}\}|\{\{tip:\s*([^|}]+?)\s*\|\s*([^}]+?)\}\}|\{\{pic:\s*([^|}]+?)\s*\|\s*([^}]+?)\}\}|\{\{link:\s*([^}]+?)\}\}|\{\{([^}]+?)\}\}|\[([^\]]+?)\]\((https?:\/\/[^)\s]+)\)|\[([^\]]+?)\]|\*\*([^*]+?)\*\*|\+\+([^+]+?)\+\+|(?<![A-Za-z0-9])_([^_\s][^_]*?)_(?![A-Za-z0-9])/g;
 
 export function sidepathButton(name: string) {
   return `<button type="button" class="sp" data-sp="${slug(name)}" aria-haspopup="dialog">${esc(name)}<span class="sp-arrow" aria-hidden="true">↗</span></button>`;
@@ -91,6 +91,10 @@ let tipId = 0;
 export function tipButton(label: string, message: string) {
   const id = `tip-${++tipId}`;
   return `<span class="tip"><button type="button" class="tip-btn" aria-describedby="${id}">${esc(label)}<span class="tip-i" aria-hidden="true">i</span></button><span class="tip-box" role="tooltip" id="${id}">${esc(message)}</span></span>`;
+}
+// words that show a picture next to the pointer on hover / focus (and on tap): {{pic: words | image id}}; the picture comes from scripts/photos.mjs (ids start with "pic-")
+export function picButton(label: string, id: string) {
+  return `<button type="button" class="pic-btn" data-pic="${esc(id)}" aria-haspopup="true">${esc(label)}</button>`;
 }
 // a link whose address is not known yet: shown like a sidepath (dotted underline and arrow), not clickable: {{link: words}}
 export function pendingLink(text: string) {
@@ -104,8 +108,14 @@ export function externalLink(text: string, url: string) {
   return `<a class="xl" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(text)}<span class="xl-arrow" aria-hidden="true">↗</span><span class="sr-only"> (${esc(newTabLabel())})</span></a>`;
 }
 
+// REVIEW AID (dev server and PUBLIC_REVIEW builds only, never in the public build): marks the product names (cốm, mochi, bánh …) so Cam Anh can decide
+// whether each stays Vietnamese or is translated. The list of every place is also written to DISH-NAMES.md by scripts/dish-names.mjs.
+export const DISH_RE = /(?<![\p{L}])(Snow Skin Mooncakes?|Cốm Moon ?Cakes?|Cốm Mùa Trăng|Cốm Trăng Tròn|Cốm Đặc Sản|Cốm Milk Tea|Bánh Nướng Cốm Xào|Mochi Cốm|Cốm Mochi|Bánh Dẻo|Bánh Nướng|Mochi|Cốm)(?![\p{L}])/giu;
+const reviewMarks = (): boolean => { try { return !!(import.meta.env?.DEV || import.meta.env?.PUBLIC_REVIEW || process.env.PUBLIC_REVIEW); } catch { return false; } };
+
 function plain(text: string, opts: InlineOpts): string {
   let html = esc(text);
+  if (reviewMarks()) html = html.replace(DISH_RE, '<mark class="dish" title="Product name: keep it Vietnamese or translate it?">$1</mark>');
   for (const term of opts.link ?? []) {
     html = html.split(esc(term)).join(sidepathButton(term));
   }
@@ -122,13 +132,14 @@ export function inline(text: string, opts: InlineOpts = {}): string {
     html += plain(text.slice(last, m.index), opts);
     if (m[1] !== undefined) html += `<span class="hand-note" lang="vi">${esc(m[1])}</span>`;
     else if (m[2] !== undefined) html += tipButton(m[2].trim(), m[3].trim());
-    else if (m[4] !== undefined) html += pendingLink(m[4].trim());
-    else if (m[5] !== undefined) html += sidepathButton(m[5].trim());
-    else if (m[6] !== undefined) html += externalLink(m[6], m[7]);
-    else if (m[8] !== undefined) html += `<span class="ph">[${esc(m[8])}]</span>`;
-    else if (m[9] !== undefined) html += `<strong>${inline(m[9], opts)}</strong>`;
-    else if (m[10] !== undefined) html += `<u class="ul">${inline(m[10], opts)}</u>`;
-    else if (m[11] !== undefined) html += `<em>${inline(m[11], opts)}</em>`;
+    else if (m[4] !== undefined) html += picButton(m[4].trim(), m[5].trim());
+    else if (m[6] !== undefined) html += pendingLink(m[6].trim());
+    else if (m[7] !== undefined) html += sidepathButton(m[7].trim());
+    else if (m[8] !== undefined) html += externalLink(m[8], m[9]);
+    else if (m[10] !== undefined) html += `<span class="ph">[${esc(m[10])}]</span>`;
+    else if (m[11] !== undefined) html += `<strong>${inline(m[11], opts)}</strong>`;
+    else if (m[12] !== undefined) html += `<u class="ul">${inline(m[12], opts)}</u>`;
+    else if (m[13] !== undefined) html += `<em>${inline(m[13], opts)}</em>`;
     last = (m.index ?? 0) + m[0].length;
   }
   html += plain(text.slice(last), opts);
@@ -137,7 +148,7 @@ export function inline(text: string, opts: InlineOpts = {}): string {
 
 /** Plain text of an inline string (markup removed), used for aria-labels and matching. */
 export function textOf(text: string): string {
-  return text.replace(/\[([^\]]+?)\]\(https?:\/\/[^)\s]+\)/g, '$1').replace(/\{\{vi:\s*([^}]+?)\}\}/g, '$1').replace(/\{\{tip:\s*([^|}]+?)\s*\|[^}]*\}\}/g, '$1').replace(/\{\{link:\s*([^}]+?)\}\}/g, '$1').replace(/\{\{([^}]+?)\}\}/g, '$1').replace(/\*\*([^*]+?)\*\*/g, '$1').replace(/\+\+([^+]+?)\+\+/g, '$1');
+  return text.replace(/\[([^\]]+?)\]\(https?:\/\/[^)\s]+\)/g, '$1').replace(/\{\{vi:\s*([^}]+?)\}\}/g, '$1').replace(/\{\{tip:\s*([^|}]+?)\s*\|[^}]*\}\}/g, '$1').replace(/\{\{pic:\s*([^|}]+?)\s*\|[^}]*\}\}/g, '$1').replace(/\{\{link:\s*([^}]+?)\}\}/g, '$1').replace(/\{\{([^}]+?)\}\}/g, '$1').replace(/\*\*([^*]+?)\*\*/g, '$1').replace(/\+\+([^+]+?)\+\+/g, '$1');
 }
 
 /** Splits "**Lead.** rest" into lead + rest (lead keeps its punctuation). */

@@ -5,7 +5,13 @@ import { imageMeta } from '../lib/data';
 
 // A tight cloud of pictures around the line: a few bigger ones, some medium, many tiny.
 // The pictures are existing photos for now; swap the ids in `source` (any id from scripts/photos.mjs) when new ones arrive.
-const source = ['know-1', 'know-2-1', 'know-2-2', 'know-3', 'know-4', 'skill-1', 'skill-2', 'skill-3', 'skill-4'];
+// Mostly food (Lam Yên, Mono, the kitchen), with people now and then (the gifting photos, the Lam Yên shoot, her own portraits).
+const source = [
+  'mono-1', 'ly-4-1', 'g-team', 'mono-12', 'ly-4-4', 'ly-7-1', 'mono-7', 'ly-5-pull', 'g-hug', 'ly-4-9',
+  'mono-4', 'ly-4-3', 'know-2-1', 'mono-9', 'ly-4-8', 'mono-2', 'ly-71-b', 'mono-6', 'ly-5-balls', 'skill-2',
+  'mono-11', 'ly-4-7', 'g-parcel', 'mono-8', 'ly-4-5', 'mono-3', 'ly-5-racks', 'g-choc', 'mono-10', 'ly-4-6',
+  'mono-5', 'ly-73-d', 'know-3', 'mono-13', 'ly-5-still', 'g-book', 'ly-4-2', 'skill-4', 'mono-1',
+].filter((id) => imageMeta[id]);
 const tiers = [
   { n: 5, w: [0.95, 1.25], r: [0.5, 0.78], speed: 150 },   // bigger
   { n: 13, w: [0.5, 0.7], r: [0.35, 1.0], speed: 100 },    // medium

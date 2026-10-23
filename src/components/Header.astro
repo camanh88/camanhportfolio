@@ -11,7 +11,10 @@ const items = [
 ---
 <header class="hd" data-hd>
   <div class="hd-in">
-    <a class="name" href={pages.home}>{nav.name.label}</a>
+    <div class="id">
+      <a class="name" href={pages.home}>{nav.name.label}</a>
+      {nav.role && <span class="role">{nav.role.label}</span>}
+    </div>
     <nav class="nav" aria-label={ui['chapter nav']}>
       <ul>
         {items.map((i) => (
@@ -45,7 +48,9 @@ const items = [
   .hd { position: sticky; top: 0; z-index: 60; background: #fff; border-bottom: 1px solid var(--hair); transition: transform .45s var(--ease); }
   .hd.away { transform: translateY(-101%); }
   .hd-in { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: .85rem var(--gutter) .55rem; min-height: 3.6rem; }
-  .name { font-family: var(--display); font-weight: 400; font-size: clamp(1.7rem, 3vw, 2.6rem); line-height: 1; letter-spacing: -.02em; text-decoration: none; justify-self: center; grid-column: 2; grid-row: 1; }
+  .id { grid-column: 2; grid-row: 1; justify-self: center; display: grid; justify-items: center; gap: .3rem; }
+  .name { font-family: var(--display); font-weight: 400; font-size: clamp(1.7rem, 3vw, 2.6rem); line-height: 1; letter-spacing: -.02em; text-decoration: none; }
+  .role { font-family: var(--sans); font-weight: 500; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); line-height: 1; }
   .nav { grid-column: 1 / -1; grid-row: 2; justify-self: center; margin-top: .7rem; position: relative; }
   .nav ul { display: flex; gap: clamp(1.5rem, 5vw, 4.5rem); }
   .nav li { position: relative; }
@@ -65,7 +70,7 @@ const items = [
 
   @media (max-width: 800px) {
     .hd-in { grid-template-columns: 1fr auto; min-height: 3.6rem; padding: .5rem var(--gutter); }
-    .name { grid-column: 1; justify-self: start; }
+    .id { grid-column: 1; justify-self: start; justify-items: start; }
     .nav, .contact { display: none; }
     .burger { display: grid; gap: 6px; width: 3rem; height: 3rem; place-content: center; background: transparent; border: 0; cursor: pointer; grid-column: 2; }
     .burger span { display: block; width: 24px; height: 1.5px; background: var(--ink); }

@@ -21,7 +21,7 @@ export const photos = {
   'skill-4': [`${C}/Core Skills/1M2A6891.jpg`, 'Cam Anh in a pink shirt and dark apron arranging flowers at a shop counter, with green shelves of gift boxes behind her.'],
   // ---- Chapter 01: It started with culture (pages as Cam Anh arranged them in *Photo/01) ----
   'p1': [`${P1}/Page 1.HEIC`, 'The silhouette of Cam Anh from behind, one hand at her ear, against a wall of thick vertical stripes of colourful paint.', { crop: { aspect: 1, x: 0.55 } }],
-  'p2-big': [`${P1}/Page 2/2.webp`, 'A dark-wood Indochine villa sitting room with carved screens, a framed painting and a daybed.'],
+  'p2-big': ['Accul - ẢNH ĐỔI.jpg', 'A dark-wood Indochine villa sitting room in warm light: a daybed with plum, red and gold cushions under a framed landscape and a carved gilded lintel, tall painted vases and hanging scrolls on both sides, a leather-bound chest in front.', { max: 2000 }],
   'p2-1': [`${P1}/Page 2/2.1.webp`, 'The Indochine House catalogue standing on a round table in front of a soft abstract painting.', { crop: { aspect: 0.6 } }],
   'p2-2': [`${P1}/Page 2/2.2.JPG`, 'A hand turning the pages of the open catalogue, with plant leaves in the foreground.', { crop: { aspect: 0.6, x: 0.35 } }],
   'p2-3': [`${P1}/Page 2/2.3.webp`, 'A framed painting of figures hanging on a sunlit gallery wall, a plant in the foreground.', { crop: { aspect: 0.6, x: 0.5 } }],
@@ -82,7 +82,7 @@ export const photos = {
   // ---- Lam Yên chapter (*Photo/02), pages 1-3 ----
   'ly-1-1': [`${L}/1.1.jpg`, 'Cam Anh in a pink shirt and apron photographing her reflection with a camera, between shelves of green gift boxes and sprigs of dried flowers.', { crop: { aspect: 0.75, x: 0.52 } }],
   'ly-2-1': [`${L}/2.1.jpeg`, 'The Lam Yên brand illustration: the golden script name “Lam Yên” on a pale green ground, with pink and blue birds, rice stalks, white blossom and a low sun.'],
-  'ly-3-1': [`${L}/3.1.jpg`, 'Rows of green gift boxes with gold seals stacked on a shop display tray.'],
+  'ly-3-1': [`${L}/3.1.jpg`, 'Rows of green gift boxes with gold seals stacked on a shop display tray.', { crop: { aspect: 0.82, x: 0.45 }, max: 1200 }],
   'ly-3-2': ['*Photo/03/Chỉnh sửa/Thay thế ảnh 2 (Renewed the whole...).jpg', 'Stacks of pink gift boxes lettered “Bánh Nướng Lam Yên”, with green and pink boxes piled up behind them.', { crop: { aspect: 0.8, y: 0.55 }, max: 1200 }],
   'ly-3-3': [`${L}/3.3.jpg`, 'An elaborate pink box of pastel-wrapped mooncakes lettered “Cốm Mùa Trăng”, next to a styled photo of the box on a table against a green wall.'],
   'ly-3-4': [`${L}/3.4.jpg`, 'A stack of simple orange and red wrapped mooncake boxes carried in both arms outside the shop, beside a red box printed with a mid-autumn illustration.'],
@@ -176,6 +176,9 @@ export const photos = {
   'mono-fb-7': ['*Photo/03/Mono feedback/IMG_5252.JPG', 'A hand holding up a Mono Coffee Lab guest opinion card, filled in by hand, in the café (card 7 of 9).', { max: 1200 }],
   'mono-fb-8': ['*Photo/03/Mono feedback/IMG_5253.JPG', 'A hand holding up a Mono Coffee Lab guest opinion card, filled in by hand, in the café (card 8 of 9).', { max: 1200 }],
   'mono-fb-9': ['*Photo/03/Mono feedback/IMG_5254.JPG', 'A hand holding up a Mono Coffee Lab guest opinion card, filled in by hand, in the café (card 9 of 9).', { max: 1200 }],
+  'pic-illustration': ['this illustration.jpg', 'The Lam Yên illustration: the golden script name “Lam Yên” on a pale green-to-pink ground, with a woven basket pouring green rice, a pagoda tower, two farmers carrying a pole, a lotus and rice stalks.', { max: 960 }],
+  'ly-seasonal-front-pink': ['site/scripts/derived/ly-seasonal-front-pink.png', 'The front of the pink seasonal paper bag: a plain pink panel with a lace-like quatrefoil border and the golden “Lam Yên” logo.', { max: 960 }],
+  'ly-seasonal-front-green': ['site/scripts/derived/ly-seasonal-front-green.png', 'The front of the dark green seasonal paper bag: a plain green panel with a faint pattern band and the golden “Lam Yên” logo.', { max: 960 }],
   // page 9
   'ly-9-1': [`${L}/Photo/9..jpg`, 'A woman in a green dress and a conical hat, seen from behind on a busy Hanoi street, carrying a green gift box; the street is in black and white.', { max: 1200 }],
   // ---- Why Marou: Cam Anh's own photo, taken from her Word note (low resolution: 327x440) ----

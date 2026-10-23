@@ -110,13 +110,14 @@
   ]
  },
  "p2-big": {
-  "alt": "A dark-wood Indochine villa sitting room with carved screens, a framed painting and a daybed.",
-  "width": 1500,
-  "height": 1000,
+  "alt": "A dark-wood Indochine villa sitting room in warm light: a daybed with plum, red and gold cushions under a framed landscape and a carved gilded lintel, tall painted vases and hanging scrolls on both sides, a leather-bound chest in front.",
+  "width": 2000,
+  "height": 1333,
   "widths": [
    480,
    960,
-   1500
+   1600,
+   2000
   ]
  },
  "p2-1": {
@@ -651,12 +652,12 @@
  },
  "ly-3-1": {
   "alt": "Rows of green gift boxes with gold seals stacked on a shop display tray.",
-  "width": 1600,
-  "height": 1067,
+  "width": 1200,
+  "height": 1463,
   "widths": [
    480,
    960,
-   1600
+   1200
   ]
  },
  "ly-3-2": {
@@ -1511,6 +1512,33 @@
    480,
    960,
    1200
+  ]
+ },
+ "pic-illustration": {
+  "alt": "The Lam Yên illustration: the golden script name “Lam Yên” on a pale green-to-pink ground, with a woven basket pouring green rice, a pagoda tower, two farmers carrying a pole, a lotus and rice stalks.",
+  "width": 960,
+  "height": 960,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-seasonal-front-pink": {
+  "alt": "The front of the pink seasonal paper bag: a plain pink panel with a lace-like quatrefoil border and the golden “Lam Yên” logo.",
+  "width": 960,
+  "height": 779,
+  "widths": [
+   480,
+   960
+  ]
+ },
+ "ly-seasonal-front-green": {
+  "alt": "The front of the dark green seasonal paper bag: a plain green panel with a faint pattern band and the golden “Lam Yên” logo.",
+  "width": 960,
+  "height": 749,
+  "widths": [
+   480,
+   960
   ]
  },
  "ly-9-1": {

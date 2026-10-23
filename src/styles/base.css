@@ -26,6 +26,9 @@ button { font: inherit; color: inherit; }
 .sp { appearance: none; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; text-align: inherit; line-height: inherit; letter-spacing: inherit;
   text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: .24em; }
 .sp:hover { text-decoration-style: solid; color: var(--accent); }
+.pic-btn { appearance: none; background: none; border: 0; padding: 0; margin: 0; font: inherit; letter-spacing: inherit; color: inherit; text-align: inherit; cursor: help; text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: .24em; }
+.pic-btn:hover, .pic-btn:focus-visible { text-decoration-style: solid; color: var(--accent); }
+.dish { background: rgb(232 140 40 / .2); color: inherit; box-shadow: 0 0 0 1px rgb(232 140 40 / .55); border-radius: 2px; padding: 0 .08em; }
 .xl-pending { text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: .24em; cursor: default; }
 /* {{tip: words | message}}: a small message on hover / focus (and on tap), with a small "i" so the reader knows it is there */
 .tip { position: relative; display: inline; }

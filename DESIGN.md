@@ -309,3 +309,18 @@ Source: note "DIFFERENT KITCHEN R1" and `*Photo/03` (folders Golden gate, L..., 
 - **Lam Yên (from the "Chỉnh sửa" folder)**: photo 2 of page 3 is replaced (`ly-3-2`, 4:5 crop of the pink boxes); the last page (P9) now sits on a blurred, darkened photo (`ly-p9-bg`) with the text left and the street photo right, no big quotation mark.
 - Backup: `content/ch03-different-kitchens.BEFORE-oct22.md`.
 
+---
+
+## 16. Overview round 1 (23 Oct 2026, note "TONG QUAN R1")
+
+- **Shared picture viewer** (`Base.astro`, `#lb`): any element with `data-lb-group="name"` opens the photos of that group in order, over a light, blurred wash of the page (not black), with arrows, arrow keys and a slide transition. Used by the Ch01 album galleries, Lam Yên page 4 (Brand's image) and Mono (the 13 photos and the 9 guest cards).
+- **`{{pic: words | id}}`** (`md.ts`): a picture appears next to the pointer (mouse), or under a tap; ids start with `pic-` and are listed in `photos.mjs` (first one: `pic-illustration` = "this illustration.jpg", square like the bag pictures).
+- **Product-name marks** (`DISH_RE` in `md.ts`): in the dev server and in `PUBLIC_REVIEW` builds the names (cốm, mochi, bánh …) are highlighted in orange; never in the public build. `node scripts/dish-names.mjs` writes `DISH-NAMES.md` (every place). Open question for Cam Anh: Vietnamese or English for each.
+- **Header**: "Marketing Applicant" under "Cam Anh" (`nav.md`, key `role`). **Next-page link**: small, at the right, no hover colour change. **Core skills** background is green (`--green: #2F5D3A`).
+- **Home**: greeting "Hi Marou, I'm Cam Anh."; the "I believe" cloud uses mostly food photos with some people (`source` in `Believe.astro`). The cover photo is NOT changed yet (no new file received).
+- **Chapter 01**: bold role line; marks in the story and in "Two living spaces" (bold, underline, bold-italic-underline); ACCULTURATION cover = `Accul - ẢNH ĐỔI.jpg`; mission lines bigger and bold; living-spaces text moved down and the vertical photo's white border thinner (.22rem); album galleries = two columns on full width (villa on cream, apartment on white); catalogue link fixed (the address was not found before: regex in `data.ts`) and the title turns plum on hover; the closing lines turn up one by one as the page is scrolled (`[data-close]`).
+- **Lam Yên**: "Make it a gift worth owning" in one column (photos side by side, arrow →); the signature-bag page follows her layout (plum panel with the three bags, pairs of seasonal bags, front over back; fronts are cut from the PDFs by `scripts/ly-bag-faces.mjs` into `scripts/derived/`); new video `1023.mov` (`scripts/video-ly.mjs`); links only on "Cốm Milk Tea" and "Snow Skin Mooncake (Bánh Dẻo)"; Gia Restaurant opens its website; Mid-Autumn bold words; What changed: 01 italic, 03 upright, no link on Mei Chan; last page photo brighter and sharp.
+- **Different kitchens**: Sakura Yakiniku on its own line; collage no longer sticky (it could cover the closing line); L photos landscape (the class was not reaching the image: use `:global` for classes passed to `<Photo>`); Mono: no Before/After, two tiles re-centred, the guest cards are a fanned, overlapping row, the closing sentence is smaller.
+- **Why Marou**: the statement and the three values turn up one after another (sticky scenes on wide screens, per-item on phones); the dotted road in the story is drawn downwards while scrolling; the vision text appears only after scrolling further.
+- Backups: `content/*.BEFORE-oct23.md`.
+

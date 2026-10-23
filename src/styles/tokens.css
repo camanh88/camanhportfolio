@@ -9,6 +9,7 @@
   --cream: #FCEFDB;
   --lime: #BDCC30;
   --plum: #61216A;
+  --green: #2F5D3A;
   --dark: #2B1030;        /* plum, darkened: photo shade and deep blocks */
   --accent: var(--plum);
   /* older names used by components built earlier, now pointing at the new scheme */
