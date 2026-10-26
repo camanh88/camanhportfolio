@@ -109,6 +109,17 @@
    1600
   ]
  },
+ "p2-big": {
+  "alt": "A dark-wood Indochine villa sitting room in warm light: a daybed with plum, red and gold cushions under a framed landscape and a carved gilded lintel, tall painted vases and hanging scrolls on both sides, a leather-bound chest in front.",
+  "width": 2000,
+  "height": 1333,
+  "widths": [
+   480,
+   960,
+   1600,
+   2000
+  ]
+ },
  "p2-1": {
   "alt": "The Indochine House catalogue standing on a round table in front of a soft abstract painting.",
   "width": 642,

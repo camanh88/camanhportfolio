@@ -51,6 +51,7 @@ const columns = (ids: string[]) => {
       <p class="p2-label label">{ui['label campaign']}</p>
     </figure>
     <div class="p2-dark">
+      <Photo id="p2-big" class="p2-bgblur" alt="" sizes="100vw" />
       <div class="p2-title">
         <h3 id="acc-title">{ch01.accTitle}</h3>
         <p class="p2-sub">{ch01.accSub}</p>
@@ -207,10 +208,12 @@ const columns = (ids: string[]) => {
   }
 
   /* PAGE 2: Layout 2 */
+  .p2-dark > :global(.p2-bgblur) { position: absolute; inset: -3rem; width: calc(100% + 6rem); height: calc(100% + 6rem); max-width: none; object-fit: cover; filter: blur(26px) brightness(.5) saturate(1.1); z-index: -1; }
   .p2-big { position: relative; }
   .p2-big :global(img) { aspect-ratio: 4 / 3; object-fit: cover; }
   .p2-label { position: absolute; left: var(--pad); top: var(--pad); color: #fff; text-shadow: 0 1px 8px rgb(0 0 0 / .5); }
-  .p2-dark { background: var(--dark); color: #fff; padding: clamp(3rem, 6vw, 6rem) var(--pad); display: grid; gap: 3rem; }
+  /* the big photo again, blurred and darkened, behind the title and the mission (Cam Anh, Oct 26) */
+  .p2-dark { position: relative; overflow: hidden; isolation: isolate; background: var(--dark); color: #fff; padding: clamp(3rem, 6vw, 6rem) var(--pad); display: grid; gap: 3rem; }
   .p2-title h3 { font-size: clamp(2.2rem, 11vw, 8rem); overflow-wrap: normal; line-height: .92; letter-spacing: -.02em; font-weight: 300; }
   .p2-sub { font-family: var(--display); font-style: italic; font-size: clamp(1.3rem, 2.2vw, 1.9rem); margin-top: 1rem; color: var(--blush); }
   .p2-def { margin-top: 2rem; font-size: .9rem; line-height: 1.55; max-width: 24rem; color: rgb(255 255 255 / .85); border-top: 1px solid rgb(255 255 255 / .4); padding-top: .9rem; }

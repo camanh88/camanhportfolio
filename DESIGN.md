@@ -335,3 +335,15 @@ Source: note "DIFFERENT KITCHEN R1" and `*Photo/03` (folders Golden gate, L..., 
 - **Different kitchens**: L3 and M1 photos placed (M1 is the full-bleed Mono hero, number 03 moved up so it does not touch the title); "[Gallery link]" removed; **03 Summer Brunch launch** = one main photo on the left (opens large) and the nine guest cards huddled on the right (phones: photo, then the cards in a sideways-scrolling row).
 - **Why Marou**: "I do!" pink on the same line; the three value cards hold photo collages in her proportions (`collages` in `WhyMarou.astro`, percent boxes; the width is limited by the screen height so the three cards fit one screen); the story is text on the left and the W4 photo on the right with the dotted road over both; the vision is set over the cacao photo (W5): lead sentence top-left, "as the best chocolate in Asia," right, "and as the sweetest way…" bottom-left, each turning up as scrolled (phones: stacked).
 - Backups: `content/*.BEFORE-oct26.md`.
+
+---
+
+## 18. Overview round 3 (26 Oct 2026, note "TONG QUAN R3")
+
+- **Get to know me**: every job title is bold (700), the brand name is plain (`contents.md`).
+- **Side panels**: every photo is a button (`.sp-zoom`, group `sp-<name>`) that opens the shared blurred viewer. `BUILD NOTE: IMAGES AFTER a b` puts photo n after paragraph n (About Lam Yen: bold **Lam Yên**, photo 1, paragraph 2 with its last phrase underlined, photo 2).
+- **ACCULTURATION block**: the big photo again, blurred and darkened, behind the title and the mission (`.p2-bgblur`). NOTE: `scripts/optimize-images.mjs` now also looks for the decomposed (NFD) spelling of a file name; without it "Accul - ẢNH ĐỔI.jpg" was silently dropped when the images were rebuilt in round 2.
+- **Lam Yên**: "Make it a gift worth owning" is three steps (headline / THE PACKAGING with its three things and a rule under it / photos with "Renewed the whole packaging…"); reels show pictures 1 to 5 in order with their own links; Tết 2025 is back to the first layout and the two small videos have swapped links; "Gia Restaurant" is on one line; the Mei Chan line has no link on the name but a separate "link" at the end; the last page's three paragraphs turn up one after another (timed, 2.2 s apart, after the page is reached).
+- **Different kitchens**: "That's where I started thinking beyond marketing." is a square-bracket placeholder (to be rewritten).
+- **Why Marou**: the story section is white; "as the best chocolate in Asia," is bigger and moved left of the right edge.
+- Backups: `content/*.BEFORE-oct26.md` (taken at the start of round 2).

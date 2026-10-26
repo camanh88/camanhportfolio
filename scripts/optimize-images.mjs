@@ -13,7 +13,8 @@ mkdirSync(OUT, { recursive: true });
 const manifest = {};
 
 for (const [id, [rel, alt, opts = {}]] of Object.entries(photos)) {
-  const src = path.join(PROJECT, rel);
+  let src = path.join(PROJECT, rel);
+  if (!existsSync(src)) src = path.join(PROJECT, rel.normalize('NFD'));   // macOS keeps some Vietnamese file names in decomposed form
   if (!existsSync(src)) { console.warn('missing', rel); continue; }
   let img = sharp(readable(src)).rotate();
   if (opts.trim) img = sharp(await img.trim({ background: '#000000', threshold: 24 }).toBuffer()); // black screenshot bars

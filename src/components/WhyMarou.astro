@@ -249,7 +249,7 @@ const vTail = vm ? inline(vm[3]) : '';
   }
 
   /* ---------- W3 ---------- */
-  .story { position: relative; background: var(--blush); padding: var(--section) 0; overflow: hidden; }
+  .story { position: relative; background: #fff; padding: var(--section) 0; overflow: hidden; }
   .wind { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .wind > path { fill: none; stroke: var(--plum); stroke-width: 3; stroke-dasharray: 3 14; stroke-linecap: round; opacity: .55; vector-effect: non-scaling-stroke; }
   .story-in { position: relative; display: grid; gap: 2.5rem; align-items: center; }
@@ -287,14 +287,14 @@ const vTail = vm ? inline(vm[3]) : '';
   .vis-lead { display: block; font-size: clamp(1.6rem, 6.2vw, 2.3rem); line-height: 1.28; max-width: 24em; }
   .vis2 :global(.deg) { font-style: italic; font-size: 1.15em; line-height: .8; color: var(--lime); padding: 0 .06em; }
   .vis2 .ac { display: block; font-style: italic; font-weight: 400; color: #fff; }
-  .vis2 .ac1 { color: var(--lime); font-size: clamp(1.35rem, 5vw, 1.9rem); padding-left: min(3.5rem, 18vw); }
+  .vis2 .ac1 { color: var(--lime); font-size: clamp(1.6rem, 6.4vw, 2.4rem); padding-left: min(3.5rem, 18vw); }
   .vis2 .ac2 { font-size: clamp(1.8rem, 7.4vw, 2.7rem); line-height: 1.15; max-width: 14em; margin-top: -.5rem; }
   @media (min-width: 900px) {
     .vision { aspect-ratio: 1550 / 1150; min-height: 0; max-height: 135svh; display: block; }
     .vis-in { display: block; position: static; padding: 0; width: 100%; max-width: none; margin: 0; }
     .vis2 .ac, .vis-lead { position: absolute; z-index: 2; }
     .vis-lead { left: 12.6%; top: 9.5%; width: 72%; max-width: none; font-size: clamp(1.7rem, 2.65vw, 3.4rem); line-height: 1.4; }
-    .vis2 .ac1 { left: 63.5%; top: 59.5%; padding: 0; font-size: clamp(1.4rem, 2.35vw, 3rem); white-space: nowrap; }
+    .vis2 .ac1 { left: 58%; top: 57%; padding: 0; font-size: clamp(1.8rem, 3.3vw, 4.2rem); white-space: nowrap; }
     .vis2 .ac2 { left: 6.4%; top: 82.6%; width: 66%; max-width: none; margin: 0; font-size: clamp(1.8rem, 3.3vw, 4.2rem); line-height: 1.12; }
   }
   .vis-lead[data-late] { transition-delay: 0s; } .ac1[data-late] { transition-delay: .1s; } .ac2[data-late] { transition-delay: .2s; }
