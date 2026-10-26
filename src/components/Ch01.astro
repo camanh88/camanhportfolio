@@ -286,6 +286,7 @@ const columns = (ids: string[]) => {
   .p5-row { display: grid; gap: 1.5rem; padding: 2rem var(--pad) 3rem; }
   .p5-title { font-size: clamp(2.6rem, 5vw, 5rem); line-height: .96; letter-spacing: -.025em; font-weight: 400; max-width: 8ch; }
   .p5-text p { margin-top: 1.25rem; max-width: 24rem; }
+  .p5-text :global(strong) { font-weight: 700; }   /* the three bold phrases read clearly bold (Oct 26) */
   .inset { width: 70%; justify-self: end; }
   .inset :global(img) { aspect-ratio: 2 / 3; object-fit: cover; }
   @media (min-width: 900px) {

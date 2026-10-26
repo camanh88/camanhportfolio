@@ -4,10 +4,11 @@ const C = '*Photo/Cover & Introduction'; // Cam Anh prefixes her folders with "*
 const G = '*Photo/04/Gifting'; // Off the menu
 const F = '*Photo/04/Florist in me'; // The florist in me
 const L = '*Photo/02'; // Lam Yên chapter
+const R2 = 'TONG QUAN R2'; // Cam Anh's round-2 folder
 const P1 = '*Photo/01'; // chapter 01, organised by Cam Anh as Page 1 .. Page 6 + PHOTOSHOOT albums
 export const photos = {
   // Cover: Cam Anh's own collage (6000x3375), shown whole at 16:9, no cropping
-  'cover-1': [`${C}/COVER.jpg`, 'A collage: Cam Anh in a blue shirt stands between red temple pillars with gold tops, in front of a wall of thick vertical stripes of colourful paint, on a green woven mat, against a red-to-green gradient.', { hero: true }],
+  'cover-1': [`${R2}/COVER final.jpg`, 'A collage on white: Cam Anh in a blue shirt stands between red temple pillars with gold tops, in front of a wall of thick vertical stripes of colourful paint, on a green woven mat.', { hero: true }],
   // Get to know me: one photo per timeline entry, cropped to the proportions Cam Anh laid out
   'know-1': [`${C}/Get to know me/1.heic`, 'Cam Anh in profile, hair in a clip, looking closely at a mirror-polished silver sculpture in a pale gallery.', { crop: { aspect: 1.5 } }],
   'know-2-1': [`${C}/Get to know me/2.1.jpg`, 'Cam Anh in a pink shirt and apron photographing her reflection with a camera, between shelves of green gift boxes and dried flowers.', { crop: { aspect: 0.625, x: 0.43 } }],
@@ -183,4 +184,31 @@ export const photos = {
   'ly-9-1': [`${L}/Photo/9..jpg`, 'A woman in a green dress and a conical hat, seen from behind on a busy Hanoi street, carrying a green gift box; the street is in black and white.', { max: 1200 }],
   // ---- Why Marou: Cam Anh's own photo, taken from her Word note (low resolution: 327x440) ----
   'w-bike': ['site/tmp-img/word-bike.png', 'Cam Anh in a black coat and glasses standing beside an orange motorbike on a mountain road, green hills behind her under a grey sky.', { max: 640 }],
+
+  // ---- Round TONG QUAN R2 ----
+  'side-indochine': [`${R2}/sidenote. indochinehouse.jpg`, 'A dark gallery room at Indochine House: a glowing amber lacquer painting on a teal wall above a long counter with two painted lidded vases, white flowers and whisky bottles, a blurred figure in white walking past, large abstract paintings on both sides.', { max: 1200 }],
+  'side-ly-1': [`${R2}/Sidenote1. LY.jpg`, 'A baked Lam Yên mooncake with the brand name written on top, beside a half mooncake showing green cốm and a golden egg yolk, on a fan-shaped green plate on a dark wooden table.', { max: 1200, crop: { aspect: 1.5, y: 0.6 } }],
+  'side-ly-2': [`${R2}/Sidenote2. LY.jpg`, 'A small heap of young green rice (cốm) on a taro leaf, with bundles of grass beside it on a paved street.', { max: 1200 }],
+  'side-123': [`${R2}/sidenote.123.jpg`, 'A board for Nhà hàng 123, “30 năm Kết Nối Thế Hệ”: old photos of the narrow dining room and shopfronts, plates of noodles, greens and grilled chicken with rice, and a blue panel with two cartoon characters eating noodles.', { max: 1600 }],
+  'side-mono': [`${R2}/Mono Cover SIDENOTE.jpg`, 'The Mono Coffee Lab cover: the logo between two short texts, with ink drawings of three people baking and pouring coffee, on a cream ground.', { max: 1600 }],
+  'ly-reel-1': [`${R2}/selling content 1.png`, 'A video still: two hands pull a baked mooncake apart, bright green filling stretching between the halves, with the Lam Yên logo above and the words “dẻo quánh”.', { max: 960 }],
+  'ly-reel-2': [`${R2}/selling content 2.png`, 'A video still: a gloved hand holds a baked mooncake with green filling showing, green gift boxes and a basket behind it.', { max: 960 }],
+  'ly-reel-3': [`${R2}/selling content 3.png`, 'A video still: hands pull a mooncake apart over a speckled plate, with a tray of stamped mooncakes below and the Lam Yên logo.', { max: 960 }],
+  'ly-reel-4': [`${R2}/selling content 4.png`, 'A video still: a tray of yellow-green cốm rounds, with the Lam Yên logo and the words “những món ngon sáng tạo nào?”.', { max: 960 }],
+  'ly-reel-5': [`${R2}/selling content 5.png`, 'A video still: a brush with a green and yellow handle glazing rows of golden mini mooncakes, a steel mould behind.', { max: 960 }],
+  'ly-mochi-1': [`${R2}/Mochi 1.png`, 'A video still: a gloved hand pulling a long stretch of white mochi dough out of a steel bowl, with the Lam Yên logo above and the words “Đành lòng tôi xin trả lời rằng”.', { max: 960 }],
+  'ly-mochi-2': [`${R2}/Mochi 2.png`, 'A video still: a hand holding a fresh white mochi dusted with gold flakes above two more on a wooden board with a banana leaf, with the words “Mochi tươi mà dễ được tận”.', { max: 960 }],
+  'ly-mochi-3': [`${R2}/Mochi 3.png`, 'A video still: rows of green cốm mochi on a dark tray, with the words “dẻo thơm”.', { max: 960 }],
+  'k-l3': [`${R2}/L3.png`, 'A still from the 123 Restaurant TikTok: a plate of grilled ribs and rice with the cartoon logo girl and a bowl of noodles, and the words “30 năm không đổi”.', { max: 960 }],
+  'mono-hero': [`${R2}/M1.jpg`, 'Inside Mono Coffee Lab at night: a barista in a striped apron leans over the counter, a small girl drawing behind it, shelves of coffee bags and a glowing arch in the wall.', { max: 1600 }],
+  'mono-brunch': [`${R2}/Ảnh thêm 03 Summer Brunch launch.jpg`, 'Seen from above, six team members in a café courtyard lean over a wooden table of brunch plates, one of them filming the dishes on a phone.', { max: 1600 }],
+  'w1-a': [`${R2}/W1/484387717_1039650551519545_7090228925732454808_n.jpg`, 'Bakers in green uniforms and hairnets packing stacks of orange-and-red chocolate bars into white boxes at a long wooden table.', { max: 1600 }],
+  'w1-b': [`${R2}/W1/IMG_7801 copy.heic`, 'A parcel wrapped in kraft paper with a wide cream satin ribbon and an illustrated card.', { max: 1600 }],
+  'w1-c': [`${R2}/W1/536526591_17902819758239314_7393842382358610209_n.jpg`, 'A hand holding a stack of red Lam Yên gift boxes with cream edges, in front of a shop window.', { max: 1600 }],
+  'w2-a': [`${R2}/W2/753733563_1437407331743863_9196938523612368725_n.jpg`, 'A hand above a metal mould filled with rows of small round chocolates, in warm, hazy light.', { max: 1600 }],
+  'w2-b': [`${R2}/W2/1M2A8323 2 copy.jpg`, 'Stretchy green cốm filling lifted from a glass tray against a dark background.', { max: 1600 }],
+  'w3-a': [`${R2}/W3/484868359_1038001258351141_24912972660899606_n.jpg`, 'A white jeep crossing a long suspension bridge over a river valley, green hills behind.', { max: 1600 }],
+  'w3-b': [`${R2}/W3/IMG_1559.jpg`, 'Cam Anh in a black jacket and sunglasses standing beside an orange motorbike on a mountain road, green hills behind.', { max: 1600 }],
+  'w4': [`${R2}/W4/W4.JPG`, 'The profile of Cam Anh’s face and shoulder in silhouette against a low golden sun over the sea.', { max: 1600 }],
+  'w5': [`${R2}/W5/484868486_1038019281682672_8032432515327404928_n.jpg`, 'A heap of cacao pods, yellow, green and red, on a rough sack against a dark cracked wall.', { max: 1600 }],
 };

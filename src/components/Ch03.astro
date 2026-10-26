@@ -40,9 +40,7 @@ const briefAt = Math.max(2, mP.findIndex((t) => /^the brief:/i.test(t)));
 const intro = mP.slice(2, briefAt);                            // two paragraphs after the heart line: main, then secondary
 const brief = mP[briefAt] ?? '';
 const mItems = (lists(mono.blocks)[0] ?? []).map(leadSplit);
-const gallery = mP[briefAt + 1] ?? '';                                   // "[Gallery link]" until Cam Anh gives the address
-const galleryUrl = urlIn(gallery);
-const mClose = mP.slice(briefAt + 2);                                    // the closing paragraphs: two phrases (left) and the new conclusion (right)
+const mClose = mP.slice(briefAt + 1);                                    // the closing paragraphs: two phrases (left) and the new conclusion (right)
 const heartHtml = inline(heart).replace('service', '<em class="svc">service</em>');
 // "In the café": three short points, one per comma-separated part
 const cafeParts = (mItems[1]?.rest ?? '').split(/,\s+/);
@@ -132,8 +130,8 @@ const index = [
         <p set:html={inline(t123a)} />
         {t123b && <p set:html={inline(t123b)} />}
         {tiktok
-          ? <a class="vid vid-link" href={tiktok} target="_blank" rel="noopener noreferrer" aria-label={`${t123b} (${ui['new tab']})`}><Slot tag="L3" a="9 / 16" kind="video" tone="pink" /><span class="vid-go" aria-hidden="true">↗</span></a>
-          : <div class="vid"><Slot tag="L3" a="9 / 16" kind="video" tone="pink" /></div>}
+          ? <a class="vid vid-link" href={tiktok} target="_blank" rel="noopener noreferrer" aria-label={`${t123b} (${ui['new tab']})`}><Photo id="k-l3" sizes="(min-width: 900px) 12rem, 46vw" /><span class="vid-go" aria-hidden="true">↗</span></a>
+          : <div class="vid"><Photo id="k-l3" sizes="(min-width: 900px) 12rem, 46vw" /></div>}
       </article>
     </div>
     <p class="ly-close" set:html={inline(lyP[1] ?? '')} />
@@ -142,7 +140,7 @@ const index = [
   <!-- 03 MONO COFFEE LAB: the one to show off -->
   <section id="k-mono" class="mono" aria-labelledby="mono-title">
     <div class="m-hero">
-      <Slot tag="M1" a="16 / 9" kind="video" tone="plum" class="m-herobg" />
+      <Photo id="mono-hero" class="m-herobg" sizes="100vw" loading="eager" />
       <div class="m-herotext">
         <p class="num" aria-hidden="true">03</p>
         <h3 id="mono-title" class="m-name" set:html={sidepathButton(monoName)} />
@@ -179,9 +177,6 @@ const index = [
           <div class="soc-text soc-in gt" style={socText} aria-hidden="true"><p class="gk">01</p><h4>{mItems[0]?.lead.replace(/:$/, '')}</h4><p set:html={inline(mItems[0]?.rest ?? '')} /></div>
         </div>
       </div>
-      <div class="soc-ba wrap">
-        <p class="ba-cap" set:html={inline(gallery)} />
-      </div>
     </div>
     <div class="g-cafe">
       <div class="cafe-in wrap">
@@ -201,10 +196,13 @@ const index = [
     <div class="m-group g-brunch wrap">
       <div class="gt"><p class="gk">03</p><h4>{mItems[2]?.lead.replace(/:$/, '')}</h4><p set:html={inline(mItems[2]?.rest ?? '')} /></div>
     </div>
-    <div class="fb">
-      <ul class="fb-fan" role="group" aria-label={mItems[2]?.lead.replace(/:$/, '')}>
-        {fbIds.map((id, i) => <li style={`--i:${i}; --m:${(i - (fbIds.length - 1) / 2).toFixed(2)}`}><button type="button" class="mp" data-lb-group="fb" aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 17rem, 12rem" /></button></li>)}
-      </ul>
+    <div class="fb wrap">
+      <figure class="fb-main"><button type="button" class="mp" data-lb-group="brunch" aria-haspopup="dialog" aria-label={ui['open album']}><Photo id="mono-brunch" sizes="(min-width: 900px) 34rem, 90vw" /></button></figure>
+      <div class="fb-cards">
+        <ul class="fb-fan" role="group" aria-label={mItems[2]?.lead.replace(/:$/, '')}>
+          {fbIds.map((id, i) => <li style={`--i:${i}; --m:${(i - (fbIds.length - 1) / 2).toFixed(2)}`}><button type="button" class="mp" data-lb-group="fb" aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 12rem, 9rem" /></button></li>)}
+        </ul>
+      </div>
     </div>
 
     <div class="m-close">
@@ -319,11 +317,11 @@ const index = [
   /* ---------- 03 Mono ---------- */
   .mono { background: var(--dark); color: var(--cream); }
   .m-hero { position: relative; min-height: 100svh; display: grid; align-items: end; }
-  .m-hero :global(.m-herobg) { position: absolute; inset: 0; height: 100%; aspect-ratio: auto !important; }
-  .m-hero :global(.m-herobg)::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 35%, rgb(20 8 24 / .85)); }
+  .m-hero :global(.m-herobg) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 52%; }
+  .m-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 35%, rgb(20 8 24 / .85)); pointer-events: none; }
   .m-herotext { position: relative; z-index: 1; padding: var(--pad); padding-top: 8rem; display: grid; }
   .m-herotext .num { color: var(--lime); margin-bottom: 1rem; }
-  @media (min-width: 900px) { .m-herotext .num { position: absolute; right: var(--pad); top: 5.5rem; margin: 0; } }
+  @media (min-width: 900px) { .m-herotext .num { position: absolute; right: var(--pad); top: 1rem; margin: 0; } }
   .m-name { font-size: clamp(3.4rem, 13vw, 13rem); line-height: .84; letter-spacing: -.05em; font-weight: 300; color: #fff; max-width: 6.5em; }
   .m-herotext .role { color: #fff; }
   .m-heart { padding: clamp(5rem, 11vw, 10rem) var(--pad); }
@@ -355,15 +353,21 @@ const index = [
   @media (prefers-reduced-motion: reduce) { .mp :global(img) { transition: none; } .mp:hover :global(img) { transform: none; } }
   /* the guest opinion cards: a file of cards laid in a row, each one slightly over the one before, a little fanned; a gallery, not a showcase:
      every card opens in the viewer. Overlap and size are worked out from the width, so the whole row always fits the page. */
-  .fb { --n: 9; --ov: .5; padding: clamp(4rem, 9vw, 8rem) var(--pad) clamp(8rem, 14vw, 13rem); overflow: hidden; }
-  .fb-fan { --w: calc(100% / (1 + (var(--n) - 1) * (1 - var(--ov)))); display: flex; justify-content: center; align-items: center; width: min(100%, 90rem); margin-inline: auto; }
-  .fb-fan li { flex: 0 0 var(--w); margin-left: calc(var(--w) * -1 * var(--ov)); position: relative; z-index: var(--i); transform: rotate(calc(var(--m) * 1.3deg)) translateY(calc(var(--m) * var(--m) * .35rem)); transition: transform .5s var(--ease); }
+  /* 03 Summer Brunch launch: one main photo, and the guest cards huddled on the other side (Cam Anh, Oct 26) */
+  .fb { --n: 9; --ov: .5; padding-block: clamp(2rem, 4vw, 4rem) clamp(8rem, 14vw, 13rem); display: grid; gap: 2.5rem; align-items: center; }
+  .fb-main { margin: 0; width: min(100%, 30rem); }
+  .fb-main .mp { margin: 0; box-shadow: 0 .6rem 1.8rem rgb(0 0 0 / .3); }
+  .fb-main .mp :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
+  .fb-cards { padding: 1.6rem 0; }
+  .fb-fan { --w: calc(100% / (1 + (var(--n) - 1) * (1 - var(--ov)))); display: flex; justify-content: center; align-items: center; width: 100%; }
+  .fb-fan li { flex: 0 0 var(--w); margin-left: calc(var(--w) * -1 * var(--ov)); position: relative; z-index: var(--i); transform: rotate(calc(var(--m) * 1.8deg)) translateY(calc(var(--m) * var(--m) * .3rem)); transition: transform .5s var(--ease); }
   .fb-fan li:first-child { margin-left: 0; }
-  .fb-fan li:hover, .fb-fan li:focus-within { z-index: 20; transform: rotate(0) translateY(-1.2rem) scale(1.06); }
+  .fb-fan li:hover, .fb-fan li:focus-within { z-index: 20; transform: rotate(0) translateY(-1.2rem) scale(1.08); }
   .fb-fan .mp { margin: 0; box-shadow: 0 .5rem 1.4rem rgb(0 0 0 / .35); }
   .fb-fan .mp :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
-  /* phones: the same fan, but wider than the screen, so the row scrolls sideways */
-  @media (max-width: 899px) { .fb { overflow-x: auto; padding-inline: 0; } .fb-fan { width: max-content; padding: 0 var(--pad); --w: 9rem; } .fb-fan li { flex-basis: 9rem; } }
+  /* phones: the main photo, then the same cards in a row wider than the screen, so the row scrolls sideways */
+  @media (max-width: 899px) { .fb-cards { overflow-x: auto; margin-inline: calc(-1 * var(--pad)); padding-inline: var(--pad); } .fb-fan { width: max-content; --w: 9rem; } .fb-fan li { flex-basis: 9rem; } }
+  @media (min-width: 900px) { .fb { grid-template-columns: 4.2fr 7.8fr; column-gap: clamp(2rem, 4vw, 5rem); } }
   @media (prefers-reduced-motion: reduce) { .fb-fan li { transition: none; } }
   .m-social .ba .label { color: var(--ink-soft); }
   .m-social .ba-cap :global(.xl) { color: var(--plum); }

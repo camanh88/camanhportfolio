@@ -324,3 +324,14 @@ Source: note "DIFFERENT KITCHEN R1" and `*Photo/03` (folders Golden gate, L..., 
 - **Why Marou**: the statement and the three values turn up one after another (sticky scenes on wide screens, per-item on phones); the dotted road in the story is drawn downwards while scrolling; the vision text appears only after scrolling further.
 - Backups: `content/*.BEFORE-oct23.md`.
 
+
+---
+
+## 17. Overview round 2 (26 Oct 2026, note "TONG QUAN R2", folder `TONG QUAN R2/`)
+
+- **Home**: the cover is her new `COVER final.jpg` (white ground, no red-to-green gradient behind it; the page is white, so it sits flush). The gradient layer that used to sit under the collage is gone with the old file.
+- **Side panels** (`side-pages.md`, `data.ts` `sidePages`, `Base.astro`): a heading written `## [Name](url)` makes the panel title a link (dotted underline avoided, small arrow); `BUILD NOTE: IMAGES id id …` puts cover photos in the panel (the first on top, the next ones before the second, third paragraph …; `loading="eager"`). New panels: Indochine House (cover + her text + link), Full Stack Marketer (two lines, bold, bolder inside panels), About Lam Yen (sidenote 1 cut to a landscape, sidenote 2 under the first paragraph), 123 Restaurant (cover + text + link), Mono Coffee Lab (cover).
+- **Lam Yên, "Make it a gift worth owning"**: runs the full width from the left under its headline; from 1100 px the packaging text is on the left and the before → after photos on the right. The three parts get a **coloured tab** (`.part`): THE PACKAGING (pink), BRAND'S IMAGE (plum), BRAND'S VOICE (lime); the second BRAND'S IMAGE, on the "show it" page, is an outlined reminder tab with a small ↺. "Let's play with pattern…" is a true semi-bold italic (Cormorant 600 italic added), about a fifth lighter than before. The Marou line sits on the left and slides in when scrolled to. Reels: her screenshots, order 3-2-1-4-5 (links go with the pictures); Mochi: main video and two small ones (screenshots), main 19 rem wide.
+- **Different kitchens**: L3 and M1 photos placed (M1 is the full-bleed Mono hero, number 03 moved up so it does not touch the title); "[Gallery link]" removed; **03 Summer Brunch launch** = one main photo on the left (opens large) and the nine guest cards huddled on the right (phones: photo, then the cards in a sideways-scrolling row).
+- **Why Marou**: "I do!" pink on the same line; the three value cards hold photo collages in her proportions (`collages` in `WhyMarou.astro`, percent boxes; the width is limited by the screen height so the three cards fit one screen); the story is text on the left and the W4 photo on the right with the dotted road over both; the vision is set over the cacao photo (W5): lead sentence top-left, "as the best chocolate in Asia," right, "and as the sweetest way…" bottom-left, each turning up as scrolled (phones: stacked).
+- Backups: `content/*.BEFORE-oct26.md`.

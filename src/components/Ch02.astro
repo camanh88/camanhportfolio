@@ -69,6 +69,8 @@ const kBefore = km ? inline(km[1].trim()) : inline(p5p[2] ?? '');
 const kLead = km ? km[2] + ':' : '';
 const kKey = km ? km[3] : '';
 const kAfter = km ? inline(km[4].trim()) : '';
+// the five reels, left to right (Cam Anh, Oct 26: reel 3 and reel 1 swap places); each link goes with its picture
+const reelOrder = [3, 2, 1, 4, 5];
 const voiceShop = 'a cordial, welcoming and confident baker';
 const voiceHtml = inline(p5VoiceP[1] ?? '').replace(esc(voiceShop), `<mark class="pull">${esc(voiceShop)}</mark>`);
 
@@ -184,7 +186,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
     <div class="p3-pack">
       <div class="p3-packtext">
-        <h4 class="k">{p3PackH}</h4>
+        <h4 class="k part part-1">{p3PackH}</h4>
         <p class="p3-want">{p3PackP[0]}</p>
         <ul class="pillars">
           {p3Pillars.map((p, i) => <li class={`pl pl${i + 1}`}><h5>{p.lead}</h5><p set:html={inline(p.rest)} /></li>)}
@@ -240,7 +242,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
   <!-- a short page of its own: the Marou line, set to the right -->
   {bag && ptxt(bag.body)[5] && (
-    <div class="lux wrap"><p set:html={inline(ptxt(bag.body)[5])} /></div>
+    <div class="lux wrap"><p class="reveal" set:html={inline(ptxt(bag.body)[5])} /></div>
   )}
   </section>
 
@@ -250,7 +252,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       <div class="wr r1">
         <figure class="a"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-1" sizes="(min-width: 900px) 28vw, 90vw" /></button></figure>
         <div class="p4-text">
-          <p class="k">{p4Head.label}</p>
+          <p class="k part part-2">{p4Head.label}</p>
           <h3 class="p4-title">{p4Head.title}</h3>
           <ul class="p4-items">
             {p4Items.map((t, i) => <li class={`i${i + 1}`}><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span set:html={inline(t)} /></li>)}
@@ -312,9 +314,9 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     <div class="p5-library wrap">
       <div class="lib-text"><p set:html={inline(p5p[5] ?? '')} /><p set:html={inline(p5p[6] ?? '')} /><p set:html={inline(p5p[7] ?? '')} /></div>
       <div class="reels">
-        {[1, 2, 3, 4, 5].map((n) => (
-          <a class={`reel r${n}`} href={L.reels?.[n - 1] ?? '#'} target="_blank" rel="noopener noreferrer" aria-label={`${ui.reel} ${n} (${ui['new tab']})`}>
-            <Slot a="9 / 16" kind="video" tone={n % 2 ? 'blush' : 'cream'} />
+        {reelOrder.map((n, i) => (
+          <a class={`reel r${i + 1}`} href={L.reels?.[n - 1] ?? '#'} target="_blank" rel="noopener noreferrer" aria-label={`${ui.reel} ${i + 1} (${ui['new tab']})`}>
+            <Photo id={`ly-reel-${n}`} sizes="(min-width: 900px) 14vw, 20vw" />
             <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></span>
             <span class="out" aria-hidden="true">↗</span>
           </a>
@@ -324,7 +326,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
     <div class="p5-two wrap">
       <div class="reg">
-        <p class="k">{p5Image.label}</p>
+        <p class="k part part-2 again"><span class="ret" aria-hidden="true">↺</span>{p5Image.label}</p>
         <h4 class="reg-t">{p5Image.title}</h4>
         <p class="reg-p" set:html={inline(p5ImageP)} />
         <ul class="reg-l">{p5ImageItems.map((t) => <li set:html={inline(t)} />)}</ul>
@@ -336,7 +338,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     <div class="p5-voice">
       <div class="voice-in wrap">
         <div class="vt">
-          <p class="k">{p5Voice.label}</p>
+          <p class="k part part-3">{p5Voice.label}</p>
           <h4 class="vh">{p5Voice.title}</h4>
           <p set:html={inline(p5VoiceP[0] ?? '')} />
           <p class="vsecond" set:html={voiceHtml} />
@@ -364,9 +366,9 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         {mochiRest.map((t) => <p set:html={withRing(inline(t))} />)}
       </div>
       <div class="phones">
-        {[['pink', 0], ['cream', 1], ['lime', 2]].map(([tone, k]) => (
-          <a class="reel" href={L.mochi?.[k as number] ?? '#'} target="_blank" rel="noopener noreferrer" aria-label={`${ui.reel} ${(k as number) + 1} (${ui['new tab']})`}>
-            <Slot a="9 / 16" kind="video" tone={tone as 'pink'} />
+        {[0, 1, 2].map((k) => (
+          <a class="reel" href={L.mochi?.[k] ?? '#'} target="_blank" rel="noopener noreferrer" aria-label={`${ui.reel} ${k + 1} (${ui['new tab']})`}>
+            <Photo id={`ly-mochi-${k + 1}`} sizes="(min-width: 900px) 20vw, 50vw" />
             <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></span>
             <span class="out" aria-hidden="true">↗</span>
           </a>
@@ -479,6 +481,11 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .back:hover { background: var(--ink); color: var(--paper); }
   .k { font-family: var(--sans); font-weight: 600; font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; }
   .wrap { width: min(100% - 2 * var(--pad), 88rem); margin-inline: auto; }
+  /* the three parts of the work, each marked with a coloured tab like the index tabs of a binder */
+  .part { --c: var(--pink); --on: #fff; display: inline-flex; align-items: center; gap: .55em; width: fit-content; padding: .55rem 1rem .5rem; background: var(--c); color: var(--on); border-radius: .45rem .45rem 0 0; font-size: .78rem; }
+  .part-1 { --c: var(--pink); } .part-2 { --c: var(--plum); } .part-3 { --c: var(--lime); --on: var(--ink); }
+  .part.again { background: transparent; color: var(--c); box-shadow: inset 0 0 0 1.5px var(--c); }
+  .part .ret { font-size: 1.1em; line-height: 1; letter-spacing: 0; }
   .c2 :global(strong) { font-weight: 700; }
 
   /* ---------- P1 ---------- */
@@ -533,14 +540,18 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .p3-head { display: flex; align-items: baseline; gap: clamp(1rem, 3vw, 3rem); border-top: 1px solid var(--ink); padding-top: 1.2rem; }
   .p3-num { font-family: var(--display); font-weight: 300; font-size: clamp(5rem, 14vw, 12rem); line-height: .75; color: var(--pink); }
   .p3-title { font-size: clamp(2.2rem, 6.2vw, 6rem); line-height: .98; letter-spacing: -.03em; font-weight: 400; max-width: 11ch; }
-  .p3-head, .p3-pack { width: 100%; max-width: 62rem; margin-inline: auto; }
+  /* the whole part runs the full width of the page and starts at the left edge, under its headline (Cam Anh, Oct 26) */
+  .p3-head, .p3-pack { width: 100%; }
   .p3-pack { display: grid; gap: clamp(2rem, 4vw, 3rem); }
+  .p3-packtext { display: grid; gap: .2rem; justify-items: start; }
+  .p3-packtext > * { max-width: 100%; }
+  .pillars { width: 100%; }
   .p3-want { font-family: var(--display); font-size: clamp(1.4rem, 2.2vw, 1.9rem); margin: .8rem 0 1.5rem; font-style: italic; }
   .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(.6rem, 1.6vw, 1.2rem); }
   .pl { border-top: 6px solid var(--c, var(--pink)); padding-top: .9rem; }
   .pl1 { --c: var(--pink); } .pl2 { --c: var(--plum); } .pl3 { --c: var(--lime); }
   .pl h5 { font-family: var(--display); font-weight: 600; font-size: clamp(1.1rem, 2.2vw, 1.5rem); line-height: 1.05; margin-bottom: .3rem; }
-  .p3-ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: clamp(.8rem, 2.4vw, 2rem); justify-items: center; align-items: center; width: min(100%, 48rem); margin-inline: auto; }
+  .p3-ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: clamp(.8rem, 2.4vw, 2rem); justify-items: center; align-items: center; width: min(100%, 56rem); }
   .p3-ba :global(.slot) { width: 100%; }
   .arrow { font-size: clamp(2.4rem, 4vw, 3.6rem); line-height: 1; color: var(--pink); }
   .p3-renewed { font-family: var(--display); font-size: clamp(1.15rem, 1.75vw, 1.5rem); line-height: 1.35; max-width: 38ch; }
@@ -561,13 +572,15 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .bagtext { max-width: 40rem; }
   .bagtext .b0 { max-width: 34rem; }
   /* the bag story steps in and out: the quote is big, the next lines move to the right, the last one is the biggest */
-  .bagtext .b1 :global(strong) { font-weight: 700; }
+  .bagtext .b1 :global(strong) { font-weight: 600; }   /* a true semi-bold italic: about a fifth lighter than the heavy bold it had (Oct 26) */
   .bagtext .b1 { font-family: var(--display); font-weight: 300; font-style: italic; font-size: clamp(1.9rem, 3.4vw, 3.2rem); line-height: 1.08; letter-spacing: -.02em; color: var(--pink); margin-top: .6rem; }
   .bagtext .b2 { padding-left: clamp(1.5rem, 6vw, 5rem); max-width: 28rem; }
   .bagtext .b3 { padding-left: clamp(3rem, 12vw, 10rem); font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(2rem, 3.8vw, 3.6rem); line-height: 1; letter-spacing: -.02em; color: var(--plum); }
   /* the Marou line: a quiet little note, set to the right */
-  .lux { padding: clamp(3.5rem, 8vw, 6rem) 0 clamp(3rem, 6vw, 5rem); display: grid; justify-items: end; }
-  .lux p { max-width: 30em; text-align: right; font-family: var(--display); font-style: italic; font-weight: 400; font-size: clamp(1.05rem, 1.45vw, 1.3rem); line-height: 1.4; color: var(--ink-soft); }
+  .lux { padding: clamp(3.5rem, 8vw, 6rem) 0 clamp(3rem, 6vw, 5rem); display: grid; justify-items: start; }
+  .lux p { max-width: 30em; text-align: left; font-family: var(--display); font-style: italic; font-weight: 400; font-size: clamp(1.05rem, 1.45vw, 1.3rem); line-height: 1.4; color: var(--ink-soft); }
+  /* it slips in from the left when the page scrolls to it */
+  :global(.js) .lux p.reveal:not(.in) { transform: translateX(-2.4rem); }
   .bagright { display: grid; gap: clamp(2rem, 4vw, 3.5rem); align-content: start; }
   /* the signature bags sit on a plum panel; the seasonal bags below are pairs, front over back (Cam Anh's layout, Oct 23) */
   .bagpanel { position: relative; background: var(--plum); aspect-ratio: 909 / 521; }
@@ -584,6 +597,12 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .bagtext .plain { font-family: var(--display); font-style: italic; font-size: clamp(1.4rem, 2.2vw, 2rem); }
   .bagtext .aside { font-size: .98rem; color: var(--ink-soft); }
   .bagtext .big { font-family: var(--display); font-size: clamp(1.4rem, 2.1vw, 1.9rem); line-height: 1.25; color: var(--plum); }
+  @media (min-width: 1100px) {
+    .p3-pack { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(2.5rem, 6vw, 7rem); align-items: start; }
+    .p3-packtext { grid-column: 1; grid-row: 1; }
+    .p3-ba { grid-column: 2; grid-row: 1 / 3; width: 100%; align-self: center; }
+    .p3-renewed { grid-column: 1; grid-row: 2; }
+  }
   @media (min-width: 900px) {
     .stages { grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 6rem); }
     .s2 { margin-top: 5rem; }
@@ -684,6 +703,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .reels { display: grid; grid-template-columns: repeat(5, 1fr); gap: .5rem; align-items: start; }
   /* a reel tile is a link to the video (opens in a new tab): the picture will come later */
   .reel { position: relative; display: block; color: inherit; text-decoration: none; }
+  .reel :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: cover; }
   .reel .play { position: absolute; left: 50%; top: 50%; width: clamp(2.2rem, 4vw, 3.2rem); height: clamp(2.2rem, 4vw, 3.2rem); transform: translate(-50%, -50%); display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: #fff; transition: background .3s; }
   .reel .out { position: absolute; right: .45rem; top: .3rem; font-size: 1.05rem; line-height: 1; }
   .reel:hover .play, .reel:focus-visible .play { background: var(--pink); }
@@ -739,6 +759,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .phones { display: grid; grid-template-columns: 1.8fr 1fr; gap: .8rem; align-items: start; }
   .phones .reel:nth-child(1) { grid-row: 1 / 3; }
   .phones .reel:nth-child(2), .phones .reel:nth-child(3) { width: 78%; }
+  @media (min-width: 900px) { .phones .reel:nth-child(2), .phones .reel:nth-child(3) { width: 100%; } .phones .reel:nth-child(3) { justify-self: start; } }
   .phones .reel:nth-child(3) { justify-self: end; }
   .results { background: var(--cream); padding: 1.6rem; align-self: end; }
   .results .rl { color: var(--plum); margin-bottom: .8rem; }
@@ -764,7 +785,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     .sc2 { margin-top: 3rem; }
     .mochi { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; align-items: start; }
     .mo-head { grid-column: 1 / 6; grid-row: 1; } .mo-intro { grid-column: 1 / 6; grid-row: 2; } .mo-p { grid-column: 7 / 13; grid-row: 1 / 3; }
-    .phones { grid-column: 1 / 9; grid-row: 3; margin-top: 2rem; } .results { grid-column: 9 / 13; grid-row: 3; margin-top: 2rem; }
+    .phones { grid-column: 1 / 9; grid-row: 3; margin-top: 2rem; grid-template-columns: minmax(0, 19rem) minmax(0, 9.2rem); column-gap: 1.2rem; justify-content: start; } .results { grid-column: 9 / 13; grid-row: 3; margin-top: 2rem; }
     .gia { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; align-items: center; }
     .gpics { grid-column: 1 / 8; } .gt { grid-column: 9 / 13; }
   }

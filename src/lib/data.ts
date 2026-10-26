@@ -82,15 +82,24 @@ export const intro = (() => {
 })();
 
 // ---- Side pages (sidepath panel) ----
-export interface SidePage { name: string; slug: string; body: string[]; wantsPhoto: boolean }
+export interface SidePage { name: string; slug: string; body: string[]; wantsPhoto: boolean; url: string; images: string[] }
 export const sidePages: SidePage[] = (() => {
   const out: SidePage[] = [];
   let cur: SidePage | null = null;
   for (const b of blocks(readContent('side-pages.md'))) {
-    if (b.t === 'h2') { cur = { name: b.text, slug: slug(b.text), body: [], wantsPhoto: false }; out.push(cur); }
+    if (b.t === 'h2') {
+      const m = /^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/.exec(b.text);   // a heading can be a link: the panel title then opens that address
+      cur = { name: m ? m[1] : b.text, slug: slug(m ? m[1] : b.text), body: [], wantsPhoto: false, url: m ? m[2] : '', images: [] };
+      out.push(cur);
+    }
     else if (cur && b.t === 'p') cur.body.push(b.text);
-    else if (cur && b.t === 'note' && /photo/i.test(b.text)) cur.wantsPhoto = true;
+    else if (cur && b.t === 'note') {
+      const im = /^BUILD NOTE: IMAGES\s+(.*)$/.exec(b.text);     // cover photos of a panel (image ids, in order)
+      if (im) cur.images = im[1].trim().split(/\s+/);
+      else if (/photo/i.test(b.text)) cur.wantsPhoto = true;
+    }
   }
+  for (const p of out) if (p.images.length) p.wantsPhoto = false;
   return out;
 })();
 

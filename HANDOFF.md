@@ -108,3 +108,8 @@ Việc đang làm: **đưa ảnh/video thật vào các ô trống** theo từng
 4. Chạy **kiểm tra 390 / 768 / 1440** cho toàn bộ trang (đặc biệt các mục "chưa kiểm tra"), sửa lỗi tràn ngang và chỗ ô trống.
 5. Khi Cam Anh nói xong chỉnh nội dung: **nhắc việc nhạc** (3 câu hỏi ở mục 3); rồi gỡ sticky note (cách gỡ ở mục 2); chạy Lighthouse; cập nhật `DESIGN.md` và `PLACEHOLDERS.md`; viết `DEPLOY.md` (đã có bản nháp: tải `dist/` lên Hostinger Business `public_html` hoặc Git deploy; repo phải chứa cả `content/` và `site/` vì build đọc `../content`) và **hỏi Cam Anh dùng gói Hostinger nào** và muốn bố cục repo ra sao. **Không push/deploy tới khi cô ấy nói.**
 6. Lệnh hay dùng: `cd "/Users/nguyencamanh/Documents/PORT 26/site" && npm run dev` (http://localhost:4321) · `npx astro build --outDir "$TMPDIR/x"` (thử build không ghi đè `dist/`) · `node scripts/placeholders.mjs` · `node scripts/contact.mjs "<thư mục>" <out.jpg>` (bảng xem trước ảnh) · `git tag` để xem các điểm khôi phục.
+
+
+## Addendum 26/10 — TONG QUAN R2 đã làm
+
+Đã làm xong note "TONG QUAN R2" (cover mới, side panel Indochine House / Full Stack Marketer / About Lam Yen / 123 / Mono có ảnh + link, tab 3 phần ở Lam Yên, ảnh reel & mochi, L3, M1, Summer Brunch, collage W1–W3, layout W4 và W5). Chi tiết ở `DESIGN.md` mục 17. Còn chờ Cam Anh trả lời: câu 06 "U.S. Embassy in Vietnam" có đúng không (trước là Vietnamese Embassy in the US); link của "Mei Chan" gắn vào tên; thứ tự reel 3-2-1-4-5; ảnh slot M6–M8 vẫn trống.

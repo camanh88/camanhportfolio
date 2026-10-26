@@ -11,6 +11,9 @@ import '@fontsource/cormorant-garamond/vietnamese-400.css';
 import '@fontsource/cormorant-garamond/latin-400-italic.css';
 import '@fontsource/cormorant-garamond/latin-ext-400-italic.css';
 import '@fontsource/cormorant-garamond/vietnamese-400-italic.css';
+import '@fontsource/cormorant-garamond/latin-600-italic.css';
+import '@fontsource/cormorant-garamond/latin-ext-600-italic.css';
+import '@fontsource/cormorant-garamond/vietnamese-600-italic.css';
 import '@fontsource/cormorant-garamond/latin-600.css';
 import '@fontsource/cormorant-garamond/latin-ext-600.css';
 import '@fontsource/cormorant-garamond/vietnamese-600.css';
@@ -39,6 +42,7 @@ import '../styles/tokens.css';
 import '../styles/base.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Photo from '../components/Photo.astro';
 import ReviewNote from '../components/ReviewNote.astro';
 import { cover, sidePages, ui, nav, pages, imageMeta } from '../lib/data';
 import { inline, textOf } from '../lib/md';
@@ -105,9 +109,17 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
 
     {sidePages.map((p) => (
       <template id={`sp-tpl-${p.slug}`}>
-        <h2 class="sp-title" id="sp-title">{p.name}</h2>
+        {p.url
+          ? <h2 class="sp-title" id="sp-title"><a class="xl sp-title-link" href={p.url} target="_blank" rel="noopener noreferrer">{p.name}<span class="xl-arrow" aria-hidden="true">↗</span><span class="sr-only"> ({ui['new tab']})</span></a></h2>
+          : <h2 class="sp-title" id="sp-title">{p.name}</h2>}
+        {p.images[0] && <figure class="sp-fig"><Photo id={p.images[0]} sizes="(min-width: 760px) 32rem, 92vw" loading="eager" /></figure>}
         {p.wantsPhoto && <div class="sp-slot" aria-hidden="true"></div>}
-        {p.body.map((t) => <p set:html={inline(t)} />)}
+        {p.body.map((t, i) => (
+          <>
+            {i > 0 && p.images[i] && <figure class="sp-fig"><Photo id={p.images[i]} sizes="(min-width: 760px) 32rem, 92vw" loading="eager" /></figure>}
+            <p set:html={inline(t)} />
+          </>
+        ))}
       </template>
     ))}
   </body>
@@ -153,6 +165,12 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
   .sp-content { padding: 1.75rem 1.5rem 3rem; overflow-y: auto; overscroll-behavior: contain; outline: none; }
   .sp-title { font-family: var(--display); font-weight: 300; font-size: clamp(2.2rem, 7vw, 3.2rem); line-height: 1.02; letter-spacing: -.02em; margin-bottom: 1.25rem; }
   .sp-content p { margin-bottom: 1rem; max-width: 34rem; }
+  .sp-content strong { font-weight: 700; }
+  .sp-fig { margin: 0 0 1.4rem; }
+  .sp-fig :global(img) { display: block; width: 100%; height: auto; }
+  .sp-title-link { text-decoration: none; color: inherit; }
+  .sp-title-link:hover { color: var(--pink); }
+  .sp-title-link :global(.xl-arrow) { font-size: .32em; vertical-align: 1.2em; margin-left: .15em; }
   .sp-slot { aspect-ratio: 4 / 3; margin-bottom: 1.5rem; background: var(--paper-2); }
   @media (min-width: 760px) {
     .sp-sheet { inset: 0 0 0 auto; width: min(32rem, 92vw); max-height: none; transform: translateX(100%); }
