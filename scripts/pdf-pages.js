@@ -1,3 +1,5 @@
+// Renders every page of a PDF to PNG with macOS PDFKit (used for the Brunch catalogue).
+// Usage: osascript -l JavaScript scripts/pdf-pages.js "<file.pdf>" <out folder> <width> [page number]
 ObjC.import('PDFKit'); ObjC.import('AppKit'); ObjC.import('Foundation');
 function run(argv) {
   const url = $.NSURL.fileURLWithPath(argv[0]);
