@@ -44,6 +44,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Photo from '../components/Photo.astro';
 import ReviewNote from '../components/ReviewNote.astro';
+import Music from '../components/Music.astro';
 import { cover, sidePages, ui, nav, pages, imageMeta } from '../lib/data';
 import { inline, textOf } from '../lib/md';
 // the foot of every page points to the next page (the last one leads back to the start)
@@ -83,6 +84,7 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
       </div>
     )}
     <Footer />
+    <Music />
     <ReviewNote />
 
     <dialog id="sp" class="sp-dialog" aria-labelledby="sp-title" data-soon={ui['coming soon']}>

@@ -391,3 +391,9 @@ Source: note "DIFFERENT KITCHEN R1" and `*Photo/03` (folders Golden gate, L..., 
 The whole section is the menu spread itself: `R6/Screenshot 2026-10-27 at 14.35.28.png` (id `cafe-spread`, full-bleed, `object-position: 50% 80%`, a dark left half and a warmer, dimmer right half, a soft glow behind the book). On wide screens everything sits in her positions, as percentages of a 1604 x 940 stage: heading and the three lines (no dashes) on the photo, the clipboard menu photo and the pile of white menu pages across the seam, the lime arrow, the Brunch cover on the brown page with "Mono Brunch Menu (Draft)" under it (opens the book), and the creative-process pile with its caption lower left on the photo. Phones: the same pieces stacked on the spread, darkened. The cream card is gone.
 
 - Tweaks (same day): background 30% darker (`filter: brightness(.7)` on the spread), the three lines have their dashes back and are set at the body size like the sub text of the other parts, the Creative Direction pile and caption are 15% smaller.
+
+---
+
+## 23. Background music (27 Oct 2026)
+
+`Music.astro` (in `Base.astro`, so on every main page): one track for the whole site, **off by default**. A round button, bottom-right just left of the review note, plays and pauses it (fade 1.8 s in, 0.9 s out). The audio is created only when the button is pressed (nothing is downloaded before). It loops, pauses while the tab is hidden, and the choice and the position are remembered in `localStorage` (`port26-music`) so that the next page carries on; if the browser still wants a click, it starts at the first click or key press. Labels "Play music" / "Pause music" are in `content/ui.md`. **The button only exists when the file `public/audio/music.mp3` (or `.m4a`) is present**; the file is not in the repo yet (needs Cam Anh's track and its licence). Tested with a temporary tone, which was removed.

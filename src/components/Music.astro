@@ -1,0 +1,73 @@
+---
+// Background music: one track for the whole site (Cam Anh, Oct 27). Off by default (browsers do not allow sound without a click).
+// Put the track at public/audio/music.mp3; until it is there, nothing is shown. The labels come from content/ui.md.
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import { ui } from '../lib/data';
+const file = ['music.mp3', 'music.m4a'].find((f) => existsSync(path.resolve(process.cwd(), 'public', 'audio', f)));
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+{file && (
+  <button type="button" class="mu" data-music data-src={`${base}audio/${file}`} data-play={ui['music play']} data-pause={ui['music pause']} aria-pressed="false" aria-label={ui['music play']} title={ui['music play']}>
+    <span class="mu-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    <svg class="mu-off" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 18V6l10-2v12M9 18a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm10-2a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+  </button>
+)}
+
+<style is:global>
+  .mu { position: fixed; z-index: 60; right: 4.5rem; bottom: 1rem; width: 2.75rem; height: 2.75rem; display: grid; place-items: center; padding: 0; cursor: pointer; border: 1px solid var(--ink); border-radius: 50%; background: var(--paper); color: var(--ink); transition: background .3s, color .3s, transform .3s var(--ease); }
+  .mu:hover, .mu:focus-visible { background: var(--ink); color: var(--paper); }
+  .mu .mu-bars { display: none; align-items: flex-end; gap: 2px; height: 1rem; }
+  .mu .mu-bars i { display: block; width: 3px; height: 30%; background: currentColor; border-radius: 1px; animation: mubar 1s ease-in-out infinite; }
+  .mu .mu-bars i:nth-child(2) { animation-delay: -.3s; } .mu .mu-bars i:nth-child(3) { animation-delay: -.6s; } .mu .mu-bars i:nth-child(4) { animation-delay: -.15s; }
+  @keyframes mubar { 0%, 100% { height: 25%; } 50% { height: 100%; } }
+  .mu[aria-pressed="true"] .mu-bars { display: flex; }
+  .mu[aria-pressed="true"] .mu-off { display: none; }
+  .sp-open .mu { display: none; }
+  @media (prefers-reduced-motion: reduce) { .mu .mu-bars i { animation: none; height: 70%; } }
+</style>
+
+<script>
+  // One <audio> that loads only when the button is pressed; fades in and out; pauses while the tab is hidden; remembers on/off and the position across the pages.
+  const btn = document.querySelector<HTMLButtonElement>('[data-music]');
+  if (btn) {
+    const KEY = 'port26-music';
+    let audio: HTMLAudioElement | null = null, wanted = false, fade = 0;
+    const read = (): { on: boolean; t: number } => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { return { on: false, t: 0 }; } };
+    const write = () => { try { localStorage.setItem(KEY, JSON.stringify({ on: wanted, t: audio?.currentTime ?? read().t ?? 0 })); } catch { /* storage may be blocked */ } };
+    const label = () => { const t = wanted ? btn.dataset.pause! : btn.dataset.play!; btn.setAttribute('aria-pressed', String(wanted)); btn.setAttribute('aria-label', t); btn.title = t; };
+    const ramp = (to: number, ms: number, done?: () => void) => {
+      if (!audio) return; cancelAnimationFrame(fade);
+      const a = audio, from = a.volume, t0 = performance.now();
+      const step = (now: number) => { const k = Math.min(1, (now - t0) / ms); a.volume = from + (to - from) * k; if (k < 1) fade = requestAnimationFrame(step); else done?.(); };
+      fade = requestAnimationFrame(step);
+    };
+    const ensure = () => {
+      if (audio) return audio;
+      audio = new Audio(btn.dataset.src); audio.loop = true; audio.preload = 'auto'; audio.volume = 0;
+      const t = read().t; if (t) audio.addEventListener('loadedmetadata', () => { try { audio!.currentTime = t % (audio!.duration || t + 1); } catch { /* ignore */ } }, { once: true });
+      return audio;
+    };
+    const start = () => ensure().play().then(() => { ramp(0.45, 1800); return true; }).catch(() => false);
+    const stop = () => ramp(0, 900, () => audio?.pause());
+    btn.addEventListener('click', async () => {
+      if (wanted) { wanted = false; stop(); } else { wanted = true; await start(); }
+      label(); write();
+    });
+    // the visitor turned it on on an earlier page: try to carry on; if the browser still wants a click, wait for the first one
+    if (read().on) {
+      wanted = true; label();
+      start().then((ok) => {
+        if (ok) return;
+        const resume = () => { if (wanted) start(); };
+        ['pointerdown', 'keydown', 'touchstart'].forEach((e) => addEventListener(e, resume, { once: true, passive: true }));
+      });
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (!audio) return;
+      if (document.hidden) { audio.pause(); write(); } else if (wanted) start();
+    });
+    addEventListener('pagehide', write);
+    setInterval(() => { if (audio && !audio.paused) write(); }, 4000);
+  }
+</script>
