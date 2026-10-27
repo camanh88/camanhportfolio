@@ -4,6 +4,7 @@ const C = '*Photo/Cover & Introduction'; // Cam Anh prefixes her folders with "*
 const G = '*Photo/04/Gifting'; // Off the menu
 const F = '*Photo/04/Florist in me'; // The florist in me
 const L = '*Photo/02'; // Lam Yên chapter
+const R4 = 'TONG QUAN R4 '; // Cam Anh's round-4 folder (the name ends with a space)
 const R2 = 'TONG QUAN R2'; // Cam Anh's round-2 folder
 const P1 = '*Photo/01'; // chapter 01, organised by Cam Anh as Page 1 .. Page 6 + PHOTOSHOOT albums
 export const photos = {
@@ -163,7 +164,7 @@ export const photos = {
   'mono-6': ['*Photo/03/M.../1M2A8046 copy.jpg', 'Two hands lifting a twisted glazed bun out of its paper wrapper above a tray of buns.', { max: 1200 }],
   'mono-7': ['*Photo/03/M.../1M2A9832 copy.jpg', 'Two cream-filled choux pastries topped with red berries on a brown-rimmed plate.', { max: 1200 }],
   'mono-8': ['*Photo/03/M.../1M2A9575 copy.jpg', 'A bowl of grilled fish on rice with edamame, corn, cucumber, tomato and a boiled egg, on a wooden table by a window.', { max: 1200 }],
-  'mono-9': ['*Photo/03/M.../1M2A8695 copy.JPG', 'A round focaccia with tomatoes and olives in a black pan on a wooden board, with small bowls of tomato salsa and green sauce.', { max: 1200 }],
+  'mono-9': [`${R4}/(01) Ảnh thay thế.jpg`, 'A slice of focaccia piled with roasted cherry tomatoes, black olive rings and white cheese, drizzled with balsamic glaze on a pale plate, a wooden tray behind.', { max: 1200 }],
   'mono-10': ['*Photo/03/M.../1M2A8039 copy.jpg', 'A tray of twisted glazed buns in paper cups, in dappled light.', { max: 1200 }],
   'mono-11': ['*Photo/03/M.../1M2A9803 copy.jpg', 'A slice of basque cheesecake topped with cream and a herb sprig, on a white plate.', { max: 1200 }],
   'mono-12': ['*Photo/03/M.../1M2A9819 copy.jpg', 'Two plates on a wooden table: a slice of burnt cheesecake with caramel drizzle in front and a green matcha slice behind.', { max: 1200 }],
@@ -211,4 +212,17 @@ export const photos = {
   'w3-b': [`${R2}/W3/IMG_1559.jpg`, 'Cam Anh in a black jacket and sunglasses standing beside an orange motorbike on a mountain road, green hills behind.', { max: 1600 }],
   'w4': [`${R2}/W4/W4.JPG`, 'The profile of Cam Anh’s face and shoulder in silhouette against a low golden sun over the sea.', { max: 1600 }],
   'w5': [`${R2}/W5/484868486_1038019281682672_8032432515327404928_n.jpg`, 'A heap of cacao pods, yellow, green and red, on a rough sack against a dark cracked wall.', { max: 1600 }],
+
+  // ---- Round TONG QUAN R4 ----
+  'mono-menu-photo': [`${R4}/1756946673859_261632638277001380_2068448480370764465_fc120119b23ce62bc49fbebd93293fd1.jpg`, 'A printed Mono Coffee Lab menu on a wooden clipboard: “home-lab brunch 8AM - 8PM” and a drawing of a cook in an apron and cap tossing a pan over flames, dishes along the right edge.', { max: 1600 }],
+  'mono-menu-cover': ['site/scripts/derived/brunch-cover.png', 'The cover of the Brunch menu: a dark brown page with a pale leaf-vein pattern across the top and the word “BRUNCH” in white brush letters near the foot.', { max: 1400 }],
+  'mono-menu-1': [`${R4}/Menu/1.jpg`, 'A menu spread, “home-lab brunch 8AM - 8PM”, with the cook drawing and photographed dishes: salads, fries, pasta, focaccia.', { max: 1600 }],
+  'mono-menu-2': [`${R4}/Menu/2.jpg`, 'A menu spread of brunch dishes: sourdough, sandwiches, poke bowls and pasta, with prices.', { max: 1600 }],
+  'mono-menu-3': [`${R4}/Menu/3.jpg`, 'A menu spread, “home-lab pastry”, with a drawing of a baker and photographed cakes, buns and croissants.', { max: 1600 }],
+  'mono-menu-4': [`${R4}/Menu/4.jpg`, 'A menu spread, “coffee bar”, with a drawing of a barista and photographed signature drinks, espresso and handbrew lists.', { max: 1600 }],
+  'mono-menu-5': [`${R4}/Menu/5.jpg`, 'A menu spread, “non-coffee”, with a drawing of a figure with matcha cups and photographed green drinks.', { max: 1600 }],
+  'cd-illustrator': [`${R4}/Creative Direction & Design Refinement/1756870650272_2068448480370764465_2068448480370764465_3dffaaaac1cd42d4b6727ec00cc4fc02.jpg`, 'A design screen in Adobe Illustrator showing small menu cards with food photos and their matching price cards, side by side.', { max: 1600 }],
+  'cd-figma': [`${R4}/Creative Direction & Design Refinement/1754456225417_2068448480370764465_2068448480370764465_5df402741808d2880693299d70f612c6.jpg`, 'Two menu pages on a dark Figma canvas: a photo of hands on a pasta machine with a handwritten title, and a cream page with a pasta list and a black line drawing of a hand; a comment panel beside them.', { max: 1600 }],
+  'cd-notes': [`${R4}/Creative Direction & Design Refinement/1757559124706_2068448480370764465_2068448480370764465_f4bf4b9308c52331ba0f9a78db3a55de.jpg`, 'A handwritten sketch of a menu layout in a notebook: boxes with small drawings and the names of cakes and dishes in green ink.', { max: 1200 }],
+  'cd-moodboard': [`${R4}/Creative Direction & Design Refinement/1753931835469_2068448480370764465_2068448480370764465_c66c59541f538e1dd3c339ed165702ed.jpg`, 'A Figma moodboard on a dark canvas covered in small photos of menus, booklets and printed cards in cream and green.', { max: 1600 }],
 };

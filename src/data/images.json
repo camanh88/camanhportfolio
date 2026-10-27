@@ -1375,9 +1375,9 @@
   ]
  },
  "mono-9": {
-  "alt": "A round focaccia with tomatoes and olives in a black pan on a wooden board, with small bowls of tomato salsa and green sauce.",
+  "alt": "A slice of focaccia piled with roasted cherry tomatoes, black olive rings and white cheese, drizzled with balsamic glaze on a pale plate, a wooden tray behind.",
   "width": 1200,
-  "height": 800,
+  "height": 1800,
   "widths": [
    480,
    960,
@@ -1798,6 +1798,115 @@
    480,
    960,
    1080
+  ]
+ },
+ "mono-menu-photo": {
+  "alt": "A printed Mono Coffee Lab menu on a wooden clipboard: “home-lab brunch 8AM - 8PM” and a drawing of a cook in an apron and cap tossing a pan over flames, dishes along the right edge.",
+  "width": 1600,
+  "height": 2133,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "mono-menu-cover": {
+  "alt": "The cover of the Brunch menu: a dark brown page with a pale leaf-vein pattern across the top and the word “BRUNCH” in white brush letters near the foot.",
+  "width": 1364,
+  "height": 2200,
+  "widths": [
+   480,
+   960,
+   1364
+  ]
+ },
+ "mono-menu-1": {
+  "alt": "A menu spread, “home-lab brunch 8AM - 8PM”, with the cook drawing and photographed dishes: salads, fries, pasta, focaccia.",
+  "width": 1600,
+  "height": 1132,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "mono-menu-2": {
+  "alt": "A menu spread of brunch dishes: sourdough, sandwiches, poke bowls and pasta, with prices.",
+  "width": 1600,
+  "height": 1132,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "mono-menu-3": {
+  "alt": "A menu spread, “home-lab pastry”, with a drawing of a baker and photographed cakes, buns and croissants.",
+  "width": 1600,
+  "height": 1132,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "mono-menu-4": {
+  "alt": "A menu spread, “coffee bar”, with a drawing of a barista and photographed signature drinks, espresso and handbrew lists.",
+  "width": 1600,
+  "height": 1132,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "mono-menu-5": {
+  "alt": "A menu spread, “non-coffee”, with a drawing of a figure with matcha cups and photographed green drinks.",
+  "width": 1600,
+  "height": 1132,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "cd-illustrator": {
+  "alt": "A design screen in Adobe Illustrator showing small menu cards with food photos and their matching price cards, side by side.",
+  "width": 1600,
+  "height": 900,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "cd-figma": {
+  "alt": "Two menu pages on a dark Figma canvas: a photo of hands on a pasta machine with a handwritten title, and a cream page with a pasta list and a black line drawing of a hand; a comment panel beside them.",
+  "width": 1048,
+  "height": 625,
+  "widths": [
+   480,
+   960,
+   1048
+  ]
+ },
+ "cd-notes": {
+  "alt": "A handwritten sketch of a menu layout in a notebook: boxes with small drawings and the names of cakes and dishes in green ink.",
+  "width": 946,
+  "height": 2048,
+  "widths": [
+   480,
+   946
+  ]
+ },
+ "cd-moodboard": {
+  "alt": "A Figma moodboard on a dark canvas covered in small photos of menus, booklets and printed cards in cream and green.",
+  "width": 1600,
+  "height": 900,
+  "widths": [
+   480,
+   960,
+   1600
   ]
  }
 }

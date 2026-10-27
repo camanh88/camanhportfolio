@@ -113,3 +113,8 @@ Việc đang làm: **đưa ảnh/video thật vào các ô trống** theo từng
 ## Addendum 26/10 — TONG QUAN R2 đã làm
 
 Đã làm xong note "TONG QUAN R2" (cover mới, side panel Indochine House / Full Stack Marketer / About Lam Yen / 123 / Mono có ảnh + link, tab 3 phần ở Lam Yên, ảnh reel & mochi, L3, M1, Summer Brunch, collage W1–W3, layout W4 và W5). Chi tiết ở `DESIGN.md` mục 17. Còn chờ Cam Anh trả lời: câu 06 "U.S. Embassy in Vietnam" có đúng không (trước là Vietnamese Embassy in the US); link của "Mei Chan" gắn vào tên; thứ tự reel 3-2-1-4-5; ảnh slot M6–M8 vẫn trống.
+
+
+## Addendum 27/10 — TONG QUAN R3 + R4 đã làm
+
+R3 và R4 xong (DESIGN.md mục 18 và 19). Còn chờ Cam Anh: thứ tự ảnh trong 2 gallery Two living spaces (mình dùng thứ tự ngày thêm file, khớp mẫu của bạn); catalogue "mở ra" hiện mở 5 trang menu (file .ai có 28 trang nhưng chỉ render được trang bìa); "Brucnh" trên bìa menu là lỗi chính tả trong file thiết kế của bạn; danh sách lỗi chính tả để báo (xem phần cuối báo cáo R4). Ghi nhớ: class `.rv` bị ReviewNote dùng, đừng đặt lại.

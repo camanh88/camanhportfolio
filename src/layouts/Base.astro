@@ -112,15 +112,16 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
         {p.url
           ? <h2 class="sp-title" id="sp-title"><a class="xl sp-title-link" href={p.url} target="_blank" rel="noopener noreferrer">{p.name}<span class="xl-arrow" aria-hidden="true">↗</span><span class="sr-only"> ({ui['new tab']})</span></a></h2>
           : <h2 class="sp-title" id="sp-title">{p.name}</h2>}
-        {!p.after && p.images[0] && <figure class="sp-fig"><button type="button" class="sp-zoom" data-lb-group={`sp-${p.slug}`} aria-label={ui.expand}><Photo id={p.images[0]} sizes="(min-width: 760px) 32rem, 92vw" loading="eager" /></button></figure>}
+        {!p.after && !p.end && p.images[0] && <figure class="sp-fig"><button type="button" class="sp-zoom" data-lb-group={`sp-${p.slug}`} aria-label={ui.expand}><Photo id={p.images[0]} sizes="(min-width: 760px) 32rem, 92vw" loading="eager" /></button></figure>}
         {p.wantsPhoto && <div class="sp-slot" aria-hidden="true"></div>}
         {p.body.map((t, i) => (
           <>
-            {!p.after && i > 0 && p.images[i] && <figure class="sp-fig"><button type="button" class="sp-zoom" data-lb-group={`sp-${p.slug}`} aria-label={ui.expand}><Photo id={p.images[i]} sizes="(min-width: 760px) 32rem, 92vw" loading="eager" /></button></figure>}
+            {!p.after && !p.end && i > 0 && p.images[i] && <figure class="sp-fig"><button type="button" class="sp-zoom" data-lb-group={`sp-${p.slug}`} aria-label={ui.expand}><Photo id={p.images[i]} sizes="(min-width: 760px) 32rem, 92vw" loading="eager" /></button></figure>}
             <p set:html={inline(t)} />
             {p.after && p.images[i] && <figure class="sp-fig"><button type="button" class="sp-zoom" data-lb-group={`sp-${p.slug}`} aria-label={ui.expand}><Photo id={p.images[i]} sizes="(min-width: 760px) 32rem, 92vw" loading="eager" /></button></figure>}
           </>
         ))}
+        {p.end && p.images.map((id) => <figure class="sp-fig"><button type="button" class="sp-zoom" data-lb-group={`sp-${p.slug}`} aria-label={ui.expand}><Photo id={id} sizes="(min-width: 760px) 32rem, 92vw" loading="eager" /></button></figure>)}
       </template>
     ))}
   </body>
@@ -167,12 +168,14 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
   .sp-title { font-family: var(--display); font-weight: 300; font-size: clamp(2.2rem, 7vw, 3.2rem); line-height: 1.02; letter-spacing: -.02em; margin-bottom: 1.25rem; }
   .sp-content p { margin-bottom: 1rem; max-width: 34rem; }
   .sp-content strong { font-weight: 700; }
+  .sp-back { appearance: none; border: 0; background: none; padding: 0; margin: 0 0 1.2rem; cursor: pointer; font-family: var(--sans); font-size: .85rem; letter-spacing: .04em; color: var(--ink-soft); }
+  .sp-back:hover { color: var(--pink); }
   .sp-fig { margin: 0 0 1.4rem; }
   .sp-zoom { appearance: none; border: 0; padding: 0; margin: 0; background: none; display: block; width: 100%; cursor: zoom-in; }
-  .sp-fig :global(img) { display: block; width: 100%; height: auto; }
+  .sp-fig img { display: block; width: 100%; height: auto; }
   .sp-title-link { text-decoration: none; color: inherit; }
   .sp-title-link:hover { color: var(--pink); }
-  .sp-title-link :global(.xl-arrow) { font-size: .32em; vertical-align: 1.2em; margin-left: .15em; }
+  .sp-title-link .xl-arrow { font-size: .32em; vertical-align: 1.2em; margin-left: .15em; }
   .sp-slot { aspect-ratio: 4 / 3; margin-bottom: 1.5rem; background: var(--paper-2); }
   @media (min-width: 760px) {
     .sp-sheet { inset: 0 0 0 auto; width: min(32rem, 92vw); max-height: none; transform: translateX(100%); }
@@ -189,22 +192,30 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
   const dlg = document.getElementById('sp') as HTMLDialogElement;
   const content = document.getElementById('sp-content')!;
   let opener: HTMLElement | null = null;
+  let prev: { slug: string; name: string } | null = null;   // the panel that is showing now
   const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function open(btn: HTMLElement) {
     const slug = btn.dataset.sp!;
     const tpl = document.getElementById(`sp-tpl-${slug}`) as HTMLTemplateElement | null;
-    dlg.classList.toggle('from-left', btn.dataset.side === 'left');
+    const inside = !!btn.closest('#sp-content');                    // opened from a link inside the panel (a next side note, or the way back)
+    const goingBack = btn.classList.contains('sp-back');
+    const from = inside && !goingBack ? prev : null;
+    if (!inside) dlg.classList.toggle('from-left', btn.dataset.side === 'left');
     content.replaceChildren();
-    if (tpl) content.append(tpl.content.cloneNode(true));
-    else {
-      const name = (btn.firstChild?.textContent ?? '').trim();
+    let name = (btn.firstChild?.textContent ?? '').trim();
+    if (tpl) {
+      content.append(tpl.content.cloneNode(true));
+      name = content.querySelector('.sp-title')?.textContent?.replace(/\s*↗\s*$/, '').trim() ?? name;
+    } else {
       const h = document.createElement('h2'); h.className = 'sp-title'; h.id = 'sp-title'; h.textContent = name;
       const p = document.createElement('p'); const ph = document.createElement('span'); ph.className = 'ph'; ph.textContent = `[${dlg.dataset.soon}]`; p.append(ph);
       content.append(h, p);
     }
-    opener = btn;
-    dlg.showModal();
+    if (from) { const b = document.createElement('button'); b.type = 'button'; b.className = 'sp-back'; b.dataset.sp = from.slug; b.textContent = `← ${from.name}`; content.prepend(b); }
+    prev = { slug, name };
+    if (!inside) opener = btn;
+    if (!dlg.open) dlg.showModal();
     document.documentElement.classList.add('sp-open');
     content.scrollTop = 0;
     requestAnimationFrame(() => dlg.classList.add('is-open'));
@@ -216,7 +227,7 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
   }
   document.addEventListener('click', (e) => {
     const t = e.target as HTMLElement;
-    const btn = t.closest<HTMLElement>('.sp[data-sp]');
+    const btn = t.closest<HTMLElement>('.sp[data-sp], .sp-back[data-sp]');
     if (btn) { e.preventDefault(); open(btn); return; }
     if (t.closest('.sp-close')) close();
     else if (t === dlg || t.classList.contains('sp-dialog')) close();

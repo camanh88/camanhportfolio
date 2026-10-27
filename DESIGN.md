@@ -347,3 +347,18 @@ Source: note "DIFFERENT KITCHEN R1" and `*Photo/03` (folders Golden gate, L..., 
 - **Different kitchens**: "That's where I started thinking beyond marketing." is a square-bracket placeholder (to be rewritten).
 - **Why Marou**: the story section is white; "as the best chocolate in Asia," is bigger and moved left of the right edge.
 - Backups: `content/*.BEFORE-oct26.md` (taken at the start of round 2).
+
+---
+
+## 19. Overview round 4 (27 Oct 2026, note "TONG QUAN R4", folder `TONG QUAN R4 `)
+
+- **Get to know me**: the Mono Coffee Lab and Golden Gate JSC role lines link to `/in-the-making/#k-mono` and `#k-gg` (dotted underline and an arrow, `.rlink`).
+- **Galleries of "Two living spaces"**: photos in the order the files were added to her folders (`villaOrder`, `aptOrder` in `Ch01.astro`; the villa order starts with the console, the rocking chair and the jar with the hibiscus, as in her sample); big gaps and margins (`--g: clamp(.9rem, 4vw, 4.2rem)`), the grid is at most 84 rem wide.
+- **Side panels**: `{{Name | words shown}}` in `md.ts` (a sidepath whose label differs from its name); `BUILD NOTE: IMAGES END id` puts photos after the last paragraph. About Lam Yen: photo 1 at the top, the last phrase italic, "Cốm Tú Lệ" opens **About Cốm** (her new text, photo 2 at the end). A panel opened from inside another panel keeps the side it opened from and shows a small "← name" link back (`.sp-back`). Mono panel: her new line under the cover. Photos in panels are real buttons that open the blurred viewer.
+- **Names**: product names unified in `ch02` (Cốm Xào Mooncake / Mooncakes, Cốm Milk Tea, Cốm Mochi; only the headline keeps "Mochi"); "Snow Skin Mooncake (Bánh Dẻo Cốm Xào)"; "(seasonal product)" italic. The orange review marks (`DISH_RE`) and `DISH-NAMES.md` are removed.
+- **Lam Yên**: the wall of "Shaping the brand's image" shows its photos one after another (`.rvl`; NOTE: the class `.rv` is taken by the review note, never reuse it); the hand note is moved 2 cm right; the arrows under RESULTS are smaller, sans-serif; more air under "What changed"; the Tết 2025 right-hand text starts level with the grey paragraph (her sketch).
+- **Different kitchens**: 01 On social: photos turn up one after another; the focaccia tile is her new photo (`mono-9`); 02 In the café: clipboard menu photo → Brunch cover (page 1 of her `.ai`, rendered with macOS Quick Look into `scripts/derived/brunch-cover.png`) which opens the viewer, the five menu pages stacked and jumping up in turn, then the four design pictures as a collage with the caption "Creative Direction & Design Refinement" (in `content`, italic); 03: main photo on the right, the nine guest cards as a deck that moves with the scroll (sticky track, `data-deck`); the closing page writes itself in three steps; "Different roles got me thinking beyond marketing." replaces the placeholder.
+- **Off the menu**: "arranging flowers." italic; the "We don't just give a gift…" page: three lines, then three photos, one after another.
+- **Why Marou**: cards 01 and 02 share one frame (883 x 1125 in her units), the third photo of card 03 is cut higher; the contact page has a gift box on wheels that drives from left to right along the hills while the words appear behind it (mask driven by the box; the "Contact" link lands on the finished state, `#contact` is a marker at the end of the track).
+- **Home**: the woman-in-yellow photo `ly-4-2` is out of the "I believe" cloud.
+- Fixed on the way: `:global()` inside the `is:global` style of `Base.astro` (two warnings, rules were ignored).

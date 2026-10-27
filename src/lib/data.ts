@@ -82,20 +82,20 @@ export const intro = (() => {
 })();
 
 // ---- Side pages (sidepath panel) ----
-export interface SidePage { name: string; slug: string; body: string[]; wantsPhoto: boolean; url: string; images: string[]; after: boolean }
+export interface SidePage { name: string; slug: string; body: string[]; wantsPhoto: boolean; url: string; images: string[]; after: boolean; end: boolean }
 export const sidePages: SidePage[] = (() => {
   const out: SidePage[] = [];
   let cur: SidePage | null = null;
   for (const b of blocks(readContent('side-pages.md'))) {
     if (b.t === 'h2') {
       const m = /^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/.exec(b.text);   // a heading can be a link: the panel title then opens that address
-      cur = { name: m ? m[1] : b.text, slug: slug(m ? m[1] : b.text), body: [], wantsPhoto: false, url: m ? m[2] : '', images: [], after: false };
+      cur = { name: m ? m[1] : b.text, slug: slug(m ? m[1] : b.text), body: [], wantsPhoto: false, url: m ? m[2] : '', images: [], after: false, end: false };
       out.push(cur);
     }
     else if (cur && b.t === 'p') cur.body.push(b.text);
     else if (cur && b.t === 'note') {
-      const im = /^BUILD NOTE: IMAGES\s+(AFTER\s+)?(.*)$/.exec(b.text);     // photos of a panel (image ids, in order); "AFTER": photo n comes after paragraph n, otherwise the first photo is on top
-      if (im) { cur.images = im[2].trim().split(/\s+/); cur.after = !!im[1]; }
+      const im = /^BUILD NOTE: IMAGES\s+(AFTER\s+|END\s+)?(.*)$/.exec(b.text);     // photos of a panel (image ids, in order); "AFTER": photo n comes after paragraph n; "END": all photos after the last paragraph; otherwise the first photo is on top
+      if (im) { cur.images = im[2].trim().split(/\s+/); cur.after = /^AFTER/.test(im[1] ?? ''); cur.end = /^END/.test(im[1] ?? ''); }
       else if (/photo/i.test(b.text)) cur.wantsPhoto = true;
     }
   }

@@ -1,7 +1,9 @@
 ---
 import Photo from './Photo.astro';
-import { contents, imageMeta } from '../lib/data';
+import { contents, imageMeta, pages } from '../lib/data';
 import { inline } from '../lib/md';
+// two role lines lead to their project on the In the making page (Cam Anh, Oct 27)
+const projectLink = (t: string) => (/Mono Coffee Lab/.test(t) ? '#k-mono' : /Golden Gate/.test(t) ? '#k-gg' : '');
 // each photo's width as a share of its half of the page (proportions come from the crops themselves)
 const size: Record<string, string> = { 'know-1': '88%', 'know-2-1': '62%', 'know-2-2': '92%', 'know-3': '58%', 'know-4': '70%' };
 // theme colour per entry: [dot / year colour, is it dark enough to colour the year text]
@@ -37,7 +39,9 @@ const nodes = base.map((n, i) => {
             {n.roles.length > 0 && (
               <ul class="roles">
                 {n.roles.map((r) => (
-                  <li>{r.date && <span class="rd">{r.date}</span>}<span class="rt" set:html={inline(r.text)} /></li>
+                  <li>{r.date && <span class="rd">{r.date}</span>}{projectLink(r.text)
+                    ? <a class="rt rlink" href={`${pages.making}${projectLink(r.text)}`}><span set:html={inline(r.text)} /><span class="rgo" aria-hidden="true">→</span></a>
+                    : <span class="rt" set:html={inline(r.text)} />}</li>
                 ))}
               </ul>
             )}
@@ -77,6 +81,10 @@ const nodes = base.map((n, i) => {
   .rd { display: block; font-size: .82rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--oxblood); margin-bottom: .15rem; }
   .rt { display: block; font-size: 1.05rem; line-height: 1.5; }
   .rt :global(strong) { font-weight: 700; }
+  /* a role line that leads to its project: dotted underline and an arrow */
+  .rlink { color: inherit; text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: .28em; }
+  .rlink .rgo { display: inline-block; margin-left: .35em; text-decoration: none; transition: transform .3s var(--ease); }
+  .rlink:hover { color: var(--pink); text-decoration-style: solid; } .rlink:hover .rgo { transform: translateX(.25rem); }
 
   /* reveal one by one */
   :global(.js) .node:not(.in) .pic, :global(.js) .node:not(.in) .txt { opacity: 0; transform: translateY(14px); }

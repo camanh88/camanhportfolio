@@ -54,9 +54,9 @@ const vEnd1 = cut > -1 ? vEnd.slice(0, cut + 1) : vEnd;
 const vEnd2 = cut > -1 ? vEnd.slice(cut + 1).trim() : '';
 // the photo collage on each value card (W1 to W3): the frames and crops follow Cam Anh's layouts, positions are percentages of the frame
 const collages: { ar: string; tiles: [string, string, string][] }[] = [
-  { ar: '883 / 830', tiles: [['w1-a', 'left:0;top:0;width:100%;height:44.9%', '50% 70%'], ['w1-b', 'left:0;top:44.9%;width:100%;height:24.6%', '50% 32%'], ['w1-c', 'left:0;top:69.5%;width:100%;height:30.5%', '50% 78%']] },
-  { ar: '878 / 1125', tiles: [['w2-a', 'left:0;top:0;width:49.8%;height:100%', '15% 50%'], ['w2-b', 'left:50.2%;top:0;width:49.8%;height:100%', '45% 50%']] },
-  { ar: '1532 / 1060', tiles: [['w3-a', 'left:0;top:0;width:100%;height:61%', '50% 32%'], ['w3-b', 'left:0;top:61.2%;width:100%;height:38.8%', '50% 90%']] },
+  { ar: '883 / 1125', tiles: [['w1-a', 'left:0;top:0;width:100%;height:44.9%', '50% 70%'], ['w1-b', 'left:0;top:44.9%;width:100%;height:24.6%', '50% 32%'], ['w1-c', 'left:0;top:69.5%;width:100%;height:30.5%', '50% 78%']] },
+  { ar: '883 / 1125', tiles: [['w2-a', 'left:0;top:0;width:49.8%;height:100%', '15% 50%'], ['w2-b', 'left:50.2%;top:0;width:49.8%;height:100%', '45% 50%']] },
+  { ar: '1532 / 1060', tiles: [['w3-a', 'left:0;top:0;width:100%;height:61%', '50% 32%'], ['w3-b', 'left:0;top:61.2%;width:100%;height:38.8%', '50% 71%']] },
 ];
 const vTail = vm ? inline(vm[3]) : '';
 ---
@@ -173,16 +173,31 @@ const vTail = vm ? inline(vm[3]) : '';
     </div>
   </section>
 
-  <!-- W6: contact -->
-  <section id="contact" class="contact" aria-labelledby="ct-title">
-    <div class="ct-in wrap">
-      <h2 id="ct-title" class="ct-line" set:html={contactHtml} />
-      <p class="ct-label label">{contactLabel}</p>
-      <ul class="ct-list">
-        {contactItems.map((t) => <li set:html={contactRow(t)} />)}
-      </ul>
+  <!-- W6: contact. A gift box on wheels drives across the page from left to right and the words appear behind it -->
+  <section class="contact" aria-labelledby="ct-title">
+    <span id="contact" class="ct-anchor" aria-hidden="true"></span>
+    <div class="ct-track" data-ct>
+      <div class="ct-stage">
+        <div class="ct-in wrap" data-ct-reveal>
+          <h2 id="ct-title" class="ct-line" set:html={contactHtml} />
+          <p class="ct-label label">{contactLabel}</p>
+          <ul class="ct-list">
+            {contactItems.map((t) => <li set:html={contactRow(t)} />)}
+          </ul>
+        </div>
+        <div class="ct-road" aria-hidden="true">
+          <svg class="end-hills" viewBox="0 0 1440 120" preserveAspectRatio="none"><path data-ct-hill d="M0,70 C140,40 260,30 400,58 C560,90 640,86 780,56 C920,26 1050,30 1180,56 C1290,78 1380,74 1440,56 L1440,120 L0,120 Z" /><path class="ct-dash" data-ct-line d="M0,70 C140,40 260,30 400,58 C560,90 640,86 780,56 C920,26 1050,30 1180,56 C1290,78 1380,74 1440,56" /></svg>
+          <svg class="ct-car" data-ct-car viewBox="-52 -64 104 76" width="104" height="76">
+            <rect x="-34" y="-34" width="68" height="26" rx="2" class="cb-base" />
+            <rect x="-40" y="-46" width="80" height="13" rx="2" class="cb-lid" />
+            <rect x="-6" y="-46" width="12" height="38" class="cb-band" />
+            <path d="M0,-46 C-14,-62 -26,-52 -8,-47 M0,-46 C14,-62 26,-52 8,-47" class="cb-bow" />
+            <circle cx="-22" cy="-6" r="7" class="cb-wheel" /><circle cx="22" cy="-6" r="7" class="cb-wheel" />
+            <circle cx="-22" cy="-6" r="2.4" class="cb-hub" /><circle cx="22" cy="-6" r="2.4" class="cb-hub" />
+          </svg>
+        </div>
+      </div>
     </div>
-    <svg class="end-hills" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,70 C140,40 260,30 400,58 C560,90 640,86 780,56 C920,26 1050,30 1180,56 C1290,78 1380,74 1440,56 L1440,120 L0,120 Z" /></svg>
   </section>
 </article>
 
@@ -235,7 +250,7 @@ const vTail = vm ? inline(vm[3]) : '';
   /* a collage of photos on each card: frames sit in a box of fixed proportions, photos are placed in percentages (Cam Anh's layouts, Oct 26) */
   .vcol { position: relative; width: 100%; aspect-ratio: var(--ar); overflow: hidden; }
   .vcol :global(img) { position: absolute; display: block; object-fit: cover; }
-  .vcol1 { --ar-n: 1.0639; } .vcol2 { --ar-n: .7804; } .vcol3 { --ar-n: 1.4453; }
+  .vcol1, .vcol2 { --ar-n: .7849; } .vcol3 { --ar-n: 1.4453; }   /* cards 01 and 02: the same frame, the width of the first and the height of the second (Oct 27) */
   .vt { font-family: var(--display); font-weight: 300; font-size: clamp(2rem, 4.6vw, 4.4rem); line-height: 1; letter-spacing: -.03em; }
   @media (min-width: 900px) {
     .v-in { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; }
@@ -315,8 +330,12 @@ const vTail = vm ? inline(vm[3]) : '';
   @media (prefers-reduced-motion: reduce) { .box-track { height: auto; --p: 1 !important; } .box-stage { position: relative; min-height: 100svh; } }
 
   /* ---------- W6: contact ---------- */
-  .contact { position: relative; background: var(--pink); color: #fff; padding: var(--section) 0 clamp(7rem, 14vw, 11rem); }
-  .ct-in { display: grid; gap: 1.2rem; }
+  .contact { position: relative; background: var(--pink); color: #fff; }
+  .ct-anchor { position: absolute; left: 0; width: 1px; height: 1px; bottom: calc(100svh - 1px); pointer-events: none; }   /* the "Contact" link lands here: the words are already there */
+  .ct-track { height: 230svh; position: relative; --q: 0; }
+  @media (prefers-reduced-motion: reduce) { .ct-track { --q: 1.15; } }
+  .ct-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; align-content: center; padding: 5rem 0 clamp(8rem, 18vw, 14rem); }
+  .ct-in { display: grid; gap: 1.2rem; -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--q) * 100% - 12%), transparent calc(var(--q) * 100%)); mask-image: linear-gradient(90deg, #000 calc(var(--q) * 100% - 12%), transparent calc(var(--q) * 100%)); }
   .ct-line { font-size: clamp(2.8rem, 8.6vw, 8.4rem); line-height: .94; letter-spacing: -.045em; font-weight: 300; max-width: 12em; }
   .ct-line :global(.wink) { color: var(--lime); font-style: italic; }
   .ct-label { margin-top: clamp(2rem, 5vw, 4rem); color: var(--cream); }
@@ -325,8 +344,14 @@ const vTail = vm ? inline(vm[3]) : '';
   .ct-list :global(.ph) { font-size: .9em; }
   .ct-list :global(.ci) { display: inline-grid; place-items: center; width: 1.9em; height: 1.9em; margin-right: .55em; vertical-align: -.35em; border: 1px solid rgb(255 255 255 / .6); border-radius: 50%; font-size: .62em; }
   .ct-list :global(a) { text-decoration-thickness: 1px; text-underline-offset: .2em; }
-  .end-hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: clamp(4rem, 9vw, 7rem); fill: var(--dark); display: block; }
+  .ct-road { position: absolute; left: 0; right: 0; bottom: 0; height: clamp(6rem, 14vw, 10rem); }
+  .end-hills { position: absolute; inset: 0; width: 100%; height: 100%; display: block; fill: var(--dark); }
+  .ct-dash { fill: none; stroke: var(--lime); stroke-width: 2.4; stroke-dasharray: 2 10; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .ct-car { position: absolute; left: 0; top: 0; width: clamp(4.4rem, 7vw, 6.5rem); height: auto; overflow: visible; will-change: transform; transform-origin: 50% 100%; }
+  .ct-car .cb-base { fill: var(--pink); stroke: var(--cream); stroke-width: 1.5; } .ct-car .cb-lid { fill: var(--plum); } .ct-car .cb-band { fill: var(--cream); }
+  .ct-car .cb-bow { fill: none; stroke: var(--cream); stroke-width: 3; stroke-linecap: round; } .ct-car .cb-wheel { fill: var(--dark); stroke: var(--cream); stroke-width: 2; } .ct-car .cb-hub { fill: var(--cream); }
   @media (min-width: 900px) { .ct-in { grid-template-columns: 7fr 5fr; column-gap: 4rem; align-items: end; } .ct-line { grid-row: 1 / 4; } .ct-label { margin-top: 0; } }
+  @media (prefers-reduced-motion: reduce) { .ct-track { height: auto; } .ct-stage { position: relative; height: auto; min-height: 100svh; } .ct-in { -webkit-mask-image: none; mask-image: none; } .ct-anchor { bottom: auto; top: 0; } }
 </style>
 
 <script>
@@ -432,4 +457,37 @@ const vTail = vm ? inline(vm[3]) : '';
   // Vision: appears only after the visitor has scrolled further down
   const late = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); late.unobserve(e.target); } }), { rootMargin: '0px 0px -30% 0px', threshold: 0.2 });
   document.querySelectorAll('[data-late]').forEach((el) => late.observe(el));
+</script>
+
+<script>
+  // Contact: a gift box on wheels drives from the left edge to the right edge along the hills as the page is scrolled; the words appear behind it (left to right)
+  const ct = document.querySelector<HTMLElement>('[data-ct]');
+  const car = document.querySelector<SVGSVGElement>('[data-ct-car]');
+  const roadEl = document.querySelector<HTMLElement>('.ct-road');
+  const hill = document.querySelector<SVGPathElement>('[data-ct-line]');
+  if (ct && car && roadEl && hill) {
+    const L = hill.getTotalLength();
+    const lenAtX = (x: number) => { let lo = 0, hi = L; for (let i = 0; i < 22; i++) { const m = (lo + hi) / 2; if (hill.getPointAtLength(m).x < x) lo = m; else hi = m; } return hi; };
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const place = (q: number) => {
+      const w = roadEl.clientWidth, h = roadEl.clientHeight, cw = car.getBoundingClientRect().width || 90;
+      const vx = Math.min(1440, Math.max(0, q * 1440));
+      const a = hill.getPointAtLength(lenAtX(Math.max(0, vx - 12))), b = hill.getPointAtLength(lenAtX(Math.min(1440, vx + 12))), pt = hill.getPointAtLength(lenAtX(vx));
+      const sx = w / 1440, sy = h / 120;
+      const ang = Math.max(-14, Math.min(14, (Math.atan2((b.y - a.y) * sy, (b.x - a.x) * sx) * 180) / Math.PI));
+      const px = pt.x * sx - cw / 2, py = pt.y * sy - car.getBoundingClientRect().height + 4;
+      car.style.transform = `translate(${px}px, ${py}px) rotate(${ang}deg)`;
+      ct.style.setProperty('--q', String(Math.min(1.15, Math.max(0, (px + cw * 0.5) / w)).toFixed(4)));
+    };
+    const update = () => {
+      const r = ct.getBoundingClientRect();
+      const p = still ? 1 : Math.min(1, Math.max(0, -r.top / ((r.height - innerHeight) * 0.78)));
+      place(-0.06 + p * 1.12);
+      if (p >= 1) ct.style.setProperty('--q', '1.15');
+    };
+    let raf = 0;
+    addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  }
 </script>

@@ -10,9 +10,12 @@ const partLead = (ch01.part?.lead ?? '').replace(/:$/, '');
 const [partSmall, ...partBig] = partLead.split(':').length > 1 ? partLead.split(':').map((x) => x.trim()) : [partLead, ''];
 const partWords = [partSmall, partBig.join(': ')];
 const missionPics = ['p2-1', 'p2-2', 'p2-3'];
+// the order of the photos in each gallery is the order the files were added to Cam Anh's folders (Oct 27: it matches her sample, which starts with the console, the rocking chair, the jar and the hibiscus)
+const villaOrder = ['a1-Nha-c-DA', 'a1-716', 'a1-2606-18', 'a1-2606-7', 'a1-Untitled_Artwork-1-1', 'a1-Untitled_Artwork-2', 'a1-2606-2', 'a1-2606', 'a1-2606-17', 'a1-2606-9', 'a1-2606-6', 'a1-2606-12', 'a1-2606-21', 'a1-2606-15', 'a1-Untitled_Artwork-3', 'a1-Untitled_Artwork-3-1'];
+const aptOrder = ['a2-484509074', 'a2-485176764', 'a2-1M2A4164', 'a2-1M2A4019-2', 'a2-1M2A4038-2', 'a2-1M2A4110-3', 'a2-1M2A4078-3', 'a2-1M2A4120-3', 'a2-1M2A4165', 'a2-1M2A4172', 'a2-1M2A4158'];
 const albums = [
-  { key: 'villa', label: ui['album villa'], ids: Object.keys(imageMeta).filter((k) => k.startsWith('a1-')) },
-  { key: 'apt', label: ui['album apartment'], ids: Object.keys(imageMeta).filter((k) => k.startsWith('a2-')) },
+  { key: 'villa', label: ui['album villa'], ids: villaOrder.filter((k) => imageMeta[k]) },
+  { key: 'apt', label: ui['album apartment'], ids: aptOrder.filter((k) => imageMeta[k]) },
 ];
 const count = (k: string) => albums.find((a) => a.key === k)!.ids.length;
 // the gallery pages (Cam Anh's layout, Oct 23): two columns of photos in their own proportions, small white gaps, filling the page;
@@ -353,7 +356,8 @@ const columns = (ids: string[]) => {
   .gx { width: 3rem; height: 3rem; display: grid; place-items: center; background: transparent; border: 0; cursor: pointer; }
   .gx:hover { color: var(--pink); }
   .gal[data-gallery="villa"] { background: #F9F6EC; } .gal[data-gallery="villa"]::backdrop { background: #F9F6EC; }
-  .gal-grid { --g: clamp(.4rem, .9vw, .8rem); display: grid; grid-template-columns: 1fr 1fr; gap: var(--g); padding: var(--g); align-items: start; }
+  /* wide gaps between the photos so they are not too big, and a margin all round (Cam Anh's sample, Oct 27) */
+  .gal-grid { --g: clamp(.9rem, 4vw, 4.2rem); display: grid; grid-template-columns: 1fr 1fr; gap: var(--g); padding: var(--g); align-items: start; max-width: 84rem; margin-inline: auto; }
   .gal-col { display: grid; gap: var(--g); align-content: start; }
   .gi { appearance: none; border: 0; padding: 0; margin: 0; display: block; width: 100%; overflow: hidden; background: var(--blush); cursor: zoom-in; }
   .gi :global(img) { display: block; width: 100%; height: auto; transition: transform 1.2s var(--ease); }

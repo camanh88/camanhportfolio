@@ -115,14 +115,14 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
     <div class="g5">
       <span class="g5-ribbon" aria-hidden="true"></span>
       <div class="g5-in">
-        <p class="c1">{connect[0]}</p>
-        <p class="c2">{connect[1]}</p>
-        <p class="c3" set:html={stomach} />
+        <p class="c1 sq">{connect[0]}</p>
+        <p class="c2 sq">{connect[1]}</p>
+        <p class="c3 sq" set:html={stomach} />
       </div>
       <div class="g5-photos">
-        <div class="pic" style="--a: 4 / 5"><Photo id="g-hug" sizes="(min-width: 900px) 18rem, 33vw" /></div>
-        <div class="pic" style="--a: 4 / 5"><Photo id="g-choc" sizes="(min-width: 900px) 18rem, 33vw" /></div>
-        <div class="pic" style="--a: 4 / 5"><Photo id="g-team" sizes="(min-width: 900px) 18rem, 33vw" /></div>
+        <div class="pic sq" style="--a: 4 / 5"><Photo id="g-hug" sizes="(min-width: 900px) 18rem, 33vw" /></div>
+        <div class="pic sq" style="--a: 4 / 5"><Photo id="g-choc" sizes="(min-width: 900px) 18rem, 33vw" /></div>
+        <div class="pic sq" style="--a: 4 / 5"><Photo id="g-team" sizes="(min-width: 900px) 18rem, 33vw" /></div>
       </div>
     </div>
   </section>
@@ -219,6 +219,10 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   .g5 .c1, .g5 .c2 { font-weight: 300; font-size: clamp(2.8rem, 9.4vw, 9rem); line-height: .94; letter-spacing: -.045em; }
   .g5 .c2 { font-style: italic; color: var(--cream); padding-left: 1em; }
   .g5 .c3 { font-family: var(--sans); font-size: clamp(1.05rem, 1.6vw, 1.4rem); line-height: 1.55; max-width: 26rem; margin: 2.5rem 0 0 auto; background: var(--pink); padding: .4rem 0; }
+  /* the words and then the photos turn up one after another (script below) */
+  :global(.js) .g5 .sq { opacity: 0; transform: translateY(1.6rem); transition: opacity 1.2s var(--ease), transform 1.2s var(--ease); }
+  :global(.js) .g5 .sq.on { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { :global(.js) .g5 .sq { opacity: 1; transform: none; transition: none; } }
   .g5-photos { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(.5rem, 1.6vw, 1rem); max-width: 56rem; margin: clamp(3rem, 6vw, 5rem) auto 0; }
 
   /* ---------- florist ---------- */
@@ -283,3 +287,16 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
   });
 </script>
 
+<script>
+  // "We don't just give a gift…": the three lines, then the three photos, one after another once the page is reached
+  const sq = [...document.querySelectorAll<HTMLElement>('#off-menu .g5 .sq')];
+  if (sq.length) {
+    const quick = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const gio = new IntersectionObserver((es) => {
+      if (!es.some((e) => e.isIntersecting)) return;
+      gio.disconnect();
+      sq.forEach((el, i) => setTimeout(() => el.classList.add('on'), quick ? 0 : (i < 3 ? i * 1300 : 3900 + (i - 3) * 700)));
+    }, { threshold: 0.3 });
+    gio.observe(document.querySelector('#off-menu .g5-in')!);
+  }
+</script>

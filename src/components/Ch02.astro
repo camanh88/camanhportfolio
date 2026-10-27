@@ -254,7 +254,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   <section class="p4">
     <div class="wall">
       <div class="wr r1">
-        <figure class="a"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-1" sizes="(min-width: 900px) 28vw, 90vw" /></button></figure>
+        <figure class="a rvl"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-1" sizes="(min-width: 900px) 28vw, 90vw" /></button></figure>
         <div class="p4-text">
           <p class="k part part-2">{p4Head.label}</p>
           <h3 class="p4-title">{p4Head.title}</h3>
@@ -262,18 +262,18 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
             {p4Items.map((t, i) => <li class={`i${i + 1}`}><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span set:html={inline(t)} /></li>)}
           </ul>
         </div>
-        <figure class="b"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-2" sizes="(min-width: 900px) 36vw, 45vw" /></button></figure>
-        <figure class="c"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-3" sizes="(min-width: 900px) 36vw, 45vw" /></button></figure>
+        <figure class="b rvl"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-2" sizes="(min-width: 900px) 36vw, 45vw" /></button></figure>
+        <figure class="c rvl"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-3" sizes="(min-width: 900px) 36vw, 45vw" /></button></figure>
       </div>
       <div class="wr r2">
-        <figure><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-4" sizes="(min-width: 900px) 46vw, 45vw" /></button></figure>
-        <figure><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-5" sizes="(min-width: 900px) 30vw, 45vw" /></button></figure>
-        <figure><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-6" sizes="(min-width: 900px) 22vw, 45vw" /></button></figure>
+        <figure class="rvl"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-4" sizes="(min-width: 900px) 46vw, 45vw" /></button></figure>
+        <figure class="rvl"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-5" sizes="(min-width: 900px) 30vw, 45vw" /></button></figure>
+        <figure class="rvl"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-6" sizes="(min-width: 900px) 22vw, 45vw" /></button></figure>
       </div>
       <div class="wr r3">
-        <figure><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-7" sizes="(min-width: 900px) 34vw, 45vw" /></button></figure>
-        <figure><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-8" sizes="(min-width: 900px) 37vw, 45vw" /></button></figure>
-        <figure><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-9" sizes="(min-width: 900px) 28vw, 45vw" /></button></figure>
+        <figure class="rvl"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-7" sizes="(min-width: 900px) 34vw, 45vw" /></button></figure>
+        <figure class="rvl"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-8" sizes="(min-width: 900px) 37vw, 45vw" /></button></figure>
+        <figure class="rvl"><button type="button" class="zb" data-lb-group="p4" aria-label={ui['open album']}><Photo id="ly-4-9" sizes="(min-width: 900px) 28vw, 45vw" /></button></figure>
       </div>
     </div>
   </section>
@@ -622,6 +622,10 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .wr { display: contents; }
   .wall figure { margin: 0; overflow: hidden; aspect-ratio: 4 / 5; min-width: 0; min-height: 0; position: relative; }
   .wall figure :global(img) { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+  /* the photos turn up one after another as the wall scrolls into view (script below) */
+  :global(.js) .wall .rvl { opacity: 0; transform: translateY(2.2rem) scale(.985); transition: opacity 1s var(--ease), transform 1s var(--ease); }
+  :global(.js) .wall .rvl.on { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { :global(.js) .wall .rvl { opacity: 1; transform: none; transition: none; } }
   .zb { position: absolute; inset: 0; padding: 0; border: 0; background: none; cursor: zoom-in; display: block; overflow: hidden; }
   .zb :global(img) { transition: transform 1.2s var(--ease); }
   .zb:hover :global(img) { transform: scale(1.03); }
@@ -732,7 +736,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .vt p { max-width: 32rem; }
   .vsecond { margin-top: 1rem; font-family: var(--display); font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.25; }
   .vsecond :global(.pull) { background: linear-gradient(transparent 58%, rgb(97 33 106 / .55) 58% 92%, transparent 92%); }
-  .vnote { transform: rotate(-4deg); }
+  .vnote { transform: rotate(-4deg); margin-left: min(2cm, 8vw); }   /* moved about 2 cm to the right (Oct 27) */
   .vnote :global(.hand-note) { font-size: clamp(1.8rem, 4vw, 3.4rem); line-height: 1.15; color: var(--cream); transform: none; display: block; max-width: 14ch; }
   @media (min-width: 900px) {
     .voice-in { grid-template-columns: 7fr 5fr; align-items: center; column-gap: 3rem; }
@@ -770,7 +774,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .results { background: var(--cream); padding: 1.6rem; align-self: end; }
   .results .rl { color: var(--plum); margin-bottom: .8rem; }
   .results ul { display: grid; gap: .9rem; font-family: var(--display); font-size: clamp(1.25rem, 1.8vw, 1.6rem); line-height: 1.25; }
-  .results li::before { content: '→ '; color: var(--pink); }
+  .results li::before { content: '→ '; color: var(--pink); font-family: var(--sans); font-size: .62em; font-weight: 500; vertical-align: .18em; margin-right: .2em; }   /* smaller, in the sans font (Oct 27) */
   .gia-band { background: var(--blush); margin-top: clamp(3rem, 6vw, 5rem); padding: clamp(3rem, 7vw, 6rem) 0; }
   .gia { display: grid; gap: 1.5rem; }
   .gh { font-size: clamp(2.2rem, 4.6vw, 4.2rem); line-height: .98; letter-spacing: -.025em; font-weight: 400; }
@@ -791,7 +795,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     .p6-cards { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
     .sc2 { margin-top: 3rem; }
     .mochi { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; align-items: start; }
-    .mo-head { grid-column: 1 / 6; grid-row: 1; } .mo-intro { grid-column: 1 / 6; grid-row: 2; } .mo-p { grid-column: 7 / 13; grid-row: 1 / 3; }
+    .mo-head { grid-column: 1 / 6; grid-row: 1; } .mo-intro { grid-column: 1 / 6; grid-row: 2; } .mo-p { grid-column: 7 / 13; grid-row: 2; }   /* the right-hand text starts level with the grey paragraph, under the heading (Cam Anh's sketch, Oct 27) */
     .phones { grid-column: 1 / 9; grid-row: 3; margin-top: 2rem; } .results { grid-column: 9 / 13; grid-row: 3; margin-top: 2rem; }
     .gia { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; align-items: center; }
     .gpics { grid-column: 1 / 8; } .gt { grid-column: 9 / 13; }
@@ -839,7 +843,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   @media (min-width: 900px) { .panels { grid-template-columns: repeat(3, 1fr); } .y2 { padding-top: calc(clamp(2rem, 4vw, 3.5rem) + 4rem); } .y3 { padding-top: calc(clamp(2rem, 4vw, 3.5rem) + 8rem); } .panel { padding-bottom: 5rem; } }
 
   /* ---------- P8 ---------- */
-  .p8 { background: var(--cream); padding: var(--section) 0 clamp(3rem, 6vw, 5rem); margin-top: 0; }
+  .p8 { background: var(--cream); padding: var(--section) 0 clamp(7rem, 14vw, 12rem); margin-top: 0; }   /* more air between "What changed" and "Day by day…" (Oct 27) */
   .p8-in { display: grid; gap: 3rem; }
   .p8-num { font-family: var(--display); font-weight: 300; font-size: clamp(5rem, 14vw, 12rem); line-height: .75; color: var(--pink); }
   .p8-pre { margin-top: 1rem; color: var(--plum); }
@@ -893,6 +897,19 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
     addEventListener('resize', update);
     update();
+  }
+</script>
+
+<script>
+  // "Shaping the brand's image": the photos of the wall turn up one after another
+  const wallPics = [...document.querySelectorAll<HTMLElement>('#ch-02 .wall .rvl')];
+  if (wallPics.length) {
+    const quick = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const wio = new IntersectionObserver((es) => {
+      const hit = es.filter((e) => e.isIntersecting).map((e) => e.target as HTMLElement).sort((a, b) => wallPics.indexOf(a) - wallPics.indexOf(b));
+      hit.forEach((el, i) => { wio.unobserve(el); setTimeout(() => el.classList.add('on'), quick ? 0 : i * 260); });
+    }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+    wallPics.forEach((el) => wio.observe(el));
   }
 </script>
 
