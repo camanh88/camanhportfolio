@@ -383,3 +383,9 @@ Source: note "DIFFERENT KITCHEN R1" and `*Photo/03` (folders Golden gate, L..., 
 - **Layout of 02** (`Ch03.astro`): heading and list on the left; clipboard photo over the pile of white menu pages, an arrow (lime), the big Brunch cover with a soft glow; the creative process is a cream card (max 52 rem) under them on the left. Caption "Mono Brunch Menu (Draft)" (her words, in `content/ch03-…md`, italic) sits right under the cover.
 - **The Brunch book** (`#bk` dialog, script at the foot of `Ch03.astro`): opens from the cover and turns like a book. Two-page spread on wide screens (the cover alone on the first turn, the last leaf is the back cover), one page at a time under 760 px. 3D leaf flip (`rotateY`, 1 s), buttons, arrow keys, a click on the right or left page, or a swipe; Esc or the cross closes; counter "2–3 / 29". The 29 pages are `mono-cat-01..29` (rendered from her PDF with `scripts/pdf-pages.js`). Pages are built by the script, so the leaf and face CSS uses `:global()` inside `.bk-book`.
 - UI labels added to `ui.md`: previous page, next catalogue page, close catalogue.
+
+---
+
+## 22. 02 In the café, layout R6 (27 Oct 2026, folder `R6`)
+
+The whole section is the menu spread itself: `R6/Screenshot 2026-10-27 at 14.35.28.png` (id `cafe-spread`, full-bleed, `object-position: 50% 80%`, a dark left half and a warmer, dimmer right half, a soft glow behind the book). On wide screens everything sits in her positions, as percentages of a 1604 x 940 stage: heading and the three lines (no dashes) on the photo, the clipboard menu photo and the pile of white menu pages across the seam, the lime arrow, the Brunch cover on the brown page with "Mono Brunch Menu (Draft)" under it (opens the book), and the creative-process pile with its caption lower left on the photo. Phones: the same pieces stacked on the spread, darkened. The cream card is gone.

@@ -224,6 +224,7 @@ export const photos = {
   'cd-figma': [`${R4}/Creative Direction & Design Refinement/1754456225417_2068448480370764465_2068448480370764465_5df402741808d2880693299d70f612c6.jpg`, 'Two menu pages on a dark Figma canvas: a photo of hands on a pasta machine with a handwritten title, and a cream page with a pasta list and a black line drawing of a hand; a comment panel beside them.', { max: 1600 }],
   'cd-notes': [`${R4}/Creative Direction & Design Refinement/1757559124706_2068448480370764465_2068448480370764465_f4bf4b9308c52331ba0f9a78db3a55de.jpg`, 'A handwritten sketch of a menu layout in a notebook: boxes with small drawings and the names of cakes and dishes in green ink.', { max: 1200 }],
   'cd-moodboard': [`${R4}/Creative Direction & Design Refinement/1753931835469_2068448480370764465_2068448480370764465_c66c59541f538e1dd3c339ed165702ed.jpg`, 'A Figma moodboard on a dark canvas covered in small photos of menus, booklets and printed cards in cream and green.', { max: 1600 }],
+  'cafe-spread': ['R6/Screenshot 2026-10-27 at 14.35.28.png', 'A spread of the Mono Brunch menu: on the left a bowl of pasta with mushrooms and green beans and a glass of dark beer on a wooden table by a window; on the right a brown page headed “Fresh Ingredients, Truly Homemade” with a short text in Vietnamese and English.', { hero: true, max: 2200 }],
 };
 
 // The Brunch catalogue (Cam Anh's "Mono Brunch Menu (draft).pdf", 29 pages): every page rendered to a picture with macOS PDFKit (see HANDOFF.md), kept in scripts/derived/catalogue

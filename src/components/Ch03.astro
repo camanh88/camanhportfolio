@@ -190,33 +190,28 @@ const index = [
         </div>
       </div>
     </div>
-    <!-- 02 In the café (Cam Anh's picture, Oct 27): the heading and list on the left; the clipboard photo over the pile of white menu pages, an arrow, and the big Brunch cover (it opens as a book);
-         under them, on the left, a cream card for the creative process. Everything else opens only when clicked. -->
+    <!-- 02 In the café (Cam Anh's layout R6, Oct 27): the section is the spread of the Brunch menu itself (the pasta photo on the left, the brown page on the right).
+         Text on the photo; the clipboard menu photo and the pile of white menu pages on the seam; the Brunch cover (it opens as a book) on the brown page; the creative-process pile on the photo, lower left. -->
     <div class="g-cafe">
-      <div class="cafe-in wrap">
-        <div class="gt"><p class="gk">02</p><h4>{mItems[1]?.lead.replace(/:$/, '')}</h4>
+      <Photo id="cafe-spread" class="cafe-bg" alt="" sizes="100vw" />
+      <div class="cafe-stage">
+        <div class="gt cafe-text"><p class="gk">02</p><h4>{mItems[1]?.lead.replace(/:$/, '')}</h4>
           {cafeParts.length === 3
             ? <ul class="pts">{cafeParts.map((t) => <li set:html={inline(t)} />)}</ul>
             : <p set:html={inline(mItems[1]?.rest ?? '')} />}
         </div>
-        <div class="cafe-menu">
-          <div class="cm-left">
-            <figure class="cm-photo"><Photo id="mono-menu-photo" sizes="(min-width: 900px) 16rem, 80vw" /></figure>
-            <div class="cm-pile" role="group" aria-label={ui['open album']}>
-              {menuPages.map((id, i) => <button type="button" class="cm-pg" data-lb-group="menu" style={`--k:${i}`} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 15rem, 70vw" /></button>)}
-            </div>
-          </div>
-          <span class="cm-arrow" aria-hidden="true">→</span>
-          <div class="cm-bookwrap">
-            <button type="button" class="cm-book" data-book aria-haspopup="dialog" aria-label={ui['open catalogue']}><Photo id="mono-cat-01" sizes="(min-width: 900px) 20rem, 60vw" /></button>
-            {bookCap && <p class="cm-bcap" set:html={inline(bookCap)} />}
-          </div>
+        <figure class="cm-photo"><Photo id="mono-menu-photo" sizes="(min-width: 900px) 20vw, 70vw" /></figure>
+        <div class="cm-pile" role="group" aria-label={ui['open album']}>
+          {menuPages.map((id, i) => <button type="button" class="cm-pg" data-lb-group="menu" style={`--k:${i}`} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 18vw, 70vw" /></button>)}
         </div>
-      </div>
-      <div class="cafe-proc wrap">
-        <div class="proc-card">
+        <span class="cm-arrow" aria-hidden="true">→</span>
+        <div class="cm-bookwrap">
+          <button type="button" class="cm-book" data-book aria-haspopup="dialog" aria-label={ui['open catalogue']}><Photo id="mono-cat-01" sizes="(min-width: 900px) 24vw, 60vw" /></button>
+          {bookCap && <p class="cm-bcap" set:html={inline(bookCap)} />}
+        </div>
+        <div class="cd-wrap">
           <div class="cd-pile" role="group" aria-label={textOf(cdCap)}>
-            {cdPics.map((id, i) => <button type="button" class="cd-pg" data-lb-group="cd" style={`--k:${i}`} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 14rem, 60vw" style="object-position:39% 50%" /></button>)}
+            {cdPics.map((id, i) => <button type="button" class="cd-pg" data-lb-group="cd" style={`--k:${i}`} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 20vw, 60vw" style="object-position:39% 50%" /></button>)}
           </div>
           {cdCap && <p class="cd-cap" set:html={inline(cdCap)} />}
         </div>
@@ -425,39 +420,51 @@ const index = [
   :global(.js) .close-in .wr-in { opacity: 0; transform: translateY(1.4rem); transition: opacity 1.3s var(--ease), transform 1.3s var(--ease); }
   :global(.js) .close-in .wr-in.on { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { :global(.js) .soc-collage .rvl, :global(.js) .close-in .wr-in { opacity: 1; transform: none; transition: none; } }
-  /* 02 In the café (Cam Anh's picture, Oct 27) */
-  .g-cafe { padding-bottom: clamp(3rem, 6vw, 5.5rem); }
-  .cafe-in { align-items: center; padding-bottom: clamp(2rem, 4vw, 3.5rem); }
-  .cafe-menu { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.4rem; justify-items: center; }
-  .cm-left { display: grid; gap: 1.1rem; width: min(100%, 16rem); }
-  .cm-photo { margin: 0; }
-  .cm-photo :global(img) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 45%; box-shadow: 0 .4rem 1.1rem rgb(0 0 0 / .3); }
-  .cm-pile { position: relative; width: 100%; aspect-ratio: 1.3 / 1; }
+  /* 02 In the café (Cam Anh's layout R6): the spread of the menu is the background; everything sits on it in her positions (percent of the stage, wide screens) */
+  .g-cafe { position: relative; overflow: hidden; isolation: isolate; background: #3a271a; color: #fff; }
+  .g-cafe :global(.cafe-bg) { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 50% 80%; z-index: -2; }
+  .g-cafe::before { content: ''; position: absolute; inset: 0; z-index: -1; background: rgb(18 10 5 / .6); pointer-events: none; }
+  .cafe-stage { position: relative; display: grid; justify-items: center; gap: 1.6rem; padding: clamp(3.5rem, 8vw, 5rem) var(--pad) clamp(3rem, 6vw, 4.5rem); }
+  .cafe-text { justify-self: start; width: 100%; }
+  .cafe-text .gk { font-size: clamp(2.6rem, 4vw, 4.4rem); }
+  .cafe-text h4 { font-size: clamp(3rem, 12vw, 6.4rem); line-height: .95; letter-spacing: -.025em; font-weight: 300; margin: .1em 0 .5em; }
+  .cafe-text .pts { gap: 1rem; margin: 0; max-width: none; }
+  .cafe-text .pts li { padding-left: 1.5rem; font-size: 1.1rem; }
+  .cafe-text .pts li::before { display: none; }
+  .cm-photo { margin: 0; width: min(76%, 18rem); }
+  .cm-photo :global(img) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 45%; box-shadow: 0 .4rem 1.1rem rgb(0 0 0 / .35); }
+  .cm-pile { position: relative; width: min(76%, 18rem); aspect-ratio: 1.3 / 1; }
   .cm-pg { appearance: none; border: 0; padding: 0; background: #fff; cursor: zoom-in; position: absolute; width: 90%; left: calc(var(--k) * 2.6%); top: calc(var(--k) * 4.2%); z-index: calc(5 - var(--k)); box-shadow: 0 .3rem .9rem rgb(0 0 0 / .32); transition: transform .5s var(--ease); }
   .cm-pg :global(img) { display: block; width: 100%; height: auto; }
   .cm-pile:hover .cm-pg { transform: translate(calc(var(--k) * .35rem), calc(var(--k) * .3rem)); }
-  .cm-arrow { font-size: clamp(1.8rem, 3vw, 2.6rem); line-height: 1; color: var(--lime); transform: rotate(90deg); }
-  .cm-bookwrap { position: relative; width: min(64%, 18rem); display: grid; gap: .9rem; justify-items: center; }
-  .cm-bookwrap::before { content: ''; position: absolute; inset: -22% -34% -10%; background: radial-gradient(closest-side, rgb(238 205 130 / .42), rgb(238 205 130 / .12) 55%, transparent); pointer-events: none; z-index: 0; }   /* a soft glow behind the book */
+  .cm-arrow { font-size: clamp(2rem, 3.2vw, 3.4rem); line-height: 1; color: var(--lime); transform: rotate(90deg); }
+  .cm-bookwrap { position: relative; width: min(64%, 17rem); display: grid; gap: .9rem; justify-items: center; }
+  .cm-bookwrap::before { content: ''; position: absolute; inset: -26% -46% -12%; background: radial-gradient(closest-side, rgb(238 205 130 / .45), rgb(238 205 130 / .14) 55%, transparent); pointer-events: none; z-index: 0; }   /* a soft glow behind the book */
   .cm-book { position: relative; z-index: 1; appearance: none; border: 0; padding: 0; background: none; cursor: pointer; display: block; width: 100%; border-left: .28rem solid rgb(0 0 0 / .3); border-radius: .12rem .25rem .25rem .12rem; box-shadow: 0 .9rem 2rem rgb(0 0 0 / .45), .3rem 0 0 -.1rem rgb(255 255 255 / .12); transition: transform .6s var(--ease), box-shadow .6s var(--ease); }
   .cm-book:hover, .cm-book:focus-visible { transform: translateY(-.35rem) rotate(-1.2deg); box-shadow: 0 1.3rem 2.4rem rgb(0 0 0 / .5), .3rem 0 0 -.1rem rgb(255 255 255 / .12); }
   .cm-book :global(img) { display: block; width: 100%; height: auto; }
   .cm-bcap { position: relative; z-index: 1; font-family: var(--display); font-style: italic; font-size: .98rem; letter-spacing: .02em; color: var(--blush); text-align: center; }
-  @media (min-width: 900px) {
-    .cafe-in { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
-    .cafe-menu { grid-template-columns: 16rem auto minmax(0, 20rem); justify-content: center; align-items: center; gap: clamp(1.2rem, 2.6vw, 2.8rem); }
-    .cm-left { width: 100%; }
-    .cm-arrow { transform: none; }
-    .cm-bookwrap { width: 100%; }
-  }
-  /* 02 In the café, the creative process: a cream card of its own, on the left, under the product: a closed pile of the design pictures and the caption (click to open) */
-  .cafe-proc { display: block; }
-  .proc-card { background: var(--cream); color: var(--plum); width: min(100%, 52rem); padding: clamp(1.1rem, 2.4vw, 1.8rem) clamp(1.2rem, 3vw, 2.4rem); display: flex; flex-wrap: wrap; align-items: center; gap: 1rem clamp(1.6rem, 4vw, 4rem); }
-  .cd-pile { position: relative; width: min(100%, 13.5rem); aspect-ratio: 16 / 10.4; flex: none; }
-  .cd-pg { appearance: none; border: 0; padding: 0; background: #1b1b1b; cursor: zoom-in; position: absolute; width: 88%; aspect-ratio: 16 / 9.4; left: calc(var(--k) * 4%); top: calc(var(--k) * 5.5%); z-index: calc(4 - var(--k)); box-shadow: 0 .25rem .8rem rgb(0 0 0 / .3); overflow: hidden; transition: transform .5s var(--ease); }
+  .cd-wrap { justify-self: start; width: min(100%, 22rem); }
+  .cd-pile { position: relative; width: min(100%, 15rem); aspect-ratio: 16 / 10.4; }
+  .cd-pg { appearance: none; border: 0; padding: 0; background: #1b1b1b; cursor: zoom-in; position: absolute; width: 88%; aspect-ratio: 16 / 9.4; left: calc(var(--k) * 4%); top: calc(var(--k) * 5.5%); z-index: calc(4 - var(--k)); box-shadow: 0 .25rem .8rem rgb(0 0 0 / .4); overflow: hidden; transition: transform .5s var(--ease); }
   .cd-pg :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
   .cd-pile:hover .cd-pg { transform: translate(calc(var(--k) * .35rem), calc(var(--k) * .28rem)); }
-  .cd-cap { font-family: var(--display); font-style: italic; font-size: clamp(1.3rem, 2.1vw, 1.85rem); line-height: 1.15; max-width: 16em; color: var(--plum); }
+  .cd-cap { margin-top: .9rem; font-family: var(--display); font-style: italic; font-size: clamp(1.2rem, 2vw, 2rem); line-height: 1.15; color: #fff; text-shadow: 0 1px 8px rgb(0 0 0 / .5); }
+  @media (min-width: 900px) {
+    .g-cafe::before { background: linear-gradient(90deg, rgb(10 6 3 / .5), rgb(10 6 3 / .2) 48%, rgb(40 24 12 / .5) 52%, rgb(40 24 12 / .52)), radial-gradient(ellipse 30% 55% at 83% 52%, rgb(240 200 120 / .3), transparent 70%); }
+    .cafe-stage { display: block; aspect-ratio: 1604 / 940; padding: 0; min-height: 34rem; }
+    .cafe-stage > * { position: absolute; margin: 0; }
+    .cafe-text { left: 5.7%; top: 11%; width: 36%; }
+    .cafe-text h4 { font-size: clamp(3.4rem, 5.7vw, 7rem); margin: .08em 0 .55em; }
+    .cafe-text .pts { gap: clamp(.8rem, 1.5vw, 1.5rem); }
+    .cafe-text .pts li { font-size: clamp(1rem, 1.5vw, 1.7rem); padding-left: 1.5rem; }
+    .cm-photo { left: 44.1%; top: 18.9%; width: 17.6%; }
+    .cm-pile { left: 44.6%; top: 49.3%; width: 17.5%; }
+    .cm-arrow { left: 66.4%; top: 43.2%; transform: none; }
+    .cm-bookwrap { left: 72.9%; top: 14.9%; width: 22.3%; }
+    .cd-wrap { left: 4.4%; top: 67.6%; width: 36%; }
+    .cd-pile { width: 55%; }
+  }
   .m-social .ba .label { color: var(--ink-soft); }
   .m-social .ba-cap :global(.xl) { color: var(--plum); }
   .m-social :global(.ph) { background: var(--ph-bg); color: var(--ph-ink); box-shadow: inset 0 0 0 1px rgb(138 75 42 / .25); }
@@ -478,8 +485,6 @@ const index = [
   .pts { display: grid; gap: .55rem; margin-top: .4rem; max-width: 26rem; }
   .pts li { position: relative; padding-left: 1.4rem; line-height: 1.45; }
   .pts li::before { content: ''; position: absolute; left: 0; top: .7em; width: .6rem; height: 1px; background: var(--lime); }
-  .g-cafe { background: var(--plum); }
-  .cafe-in { display: grid; gap: 2rem; padding: clamp(3rem, 6vw, 6rem) 0; }
   .m-close { background: #fff; color: var(--plum); position: relative; --cut: clamp(3rem, 6vw, 6rem); padding: clamp(4rem, 9vw, 8rem) 0 var(--pad); }
   /* the foot of the page before the conclusion: an angled edge (a long shallow V) cut into the dark, like Cam Anh's reference */
   .m-close::before { content: ''; position: absolute; left: 0; right: 0; top: calc(-1 * var(--cut)); height: calc(var(--cut) + 1px); background: #fff; clip-path: polygon(0 21%, 25% 100%, 100% 21%, 100% 100%, 0 100%); pointer-events: none; }
@@ -502,8 +507,7 @@ const index = [
     .soc-collage .mp:nth-child(6) { z-index: 2; }
     .soc-in h4 { margin: .3rem 0 .7rem; }
     .soc-in .gk { font-size: clamp(2.6rem, 5vw, 4.6rem); }
-    .cafe-in { grid-template-columns: 4fr 8fr; column-gap: clamp(2rem, 5vw, 6rem); align-items: start; }
-    .g-brunch { grid-template-columns: 1fr; padding-bottom: 0; }
+      .g-brunch { grid-template-columns: 1fr; padding-bottom: 0; }
     .close-in { grid-template-columns: 6fr 6fr; column-gap: clamp(2rem, 5vw, 6rem); align-items: start; }
     .close-in { grid-template-columns: repeat(12, 1fr); }
     .c-mid { grid-column: 1 / 7; grid-row: 1; } .c-first { grid-column: 1 / 7; grid-row: 2; margin-top: clamp(1.5rem, 3vw, 3rem); }
