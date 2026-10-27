@@ -552,13 +552,13 @@ const index = [
     }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
     soc.forEach((el) => io.observe(el));
   }
-  // the closing page: its lines write themselves in turn
+  // the closing page: the first line, then the other two together
   const lines = [...document.querySelectorAll<HTMLElement>('#k-mono .close-in .wr-in')];
   if (lines.length) {
     const cio = new IntersectionObserver((es) => {
       if (!es.some((e) => e.isIntersecting)) return;
       cio.disconnect();
-      lines.forEach((el, i) => setTimeout(() => el.classList.add('on'), still ? 0 : i * 1500));
+      lines.forEach((el, i) => setTimeout(() => el.classList.add('on'), still ? 0 : (i === 0 ? 0 : 1500)));   // "It’s not just…" first; "Here, a customer…" and "And it showed me…" together
     }, { threshold: 0.35 });
     cio.observe(document.querySelector('#k-mono .close-in')!);
   }
