@@ -422,15 +422,14 @@ const index = [
   @media (prefers-reduced-motion: reduce) { :global(.js) .soc-collage .rvl, :global(.js) .close-in .wr-in { opacity: 1; transform: none; transition: none; } }
   /* 02 In the café (Cam Anh's layout R6): the spread of the menu is the background; everything sits on it in her positions (percent of the stage, wide screens) */
   .g-cafe { position: relative; overflow: hidden; isolation: isolate; background: #3a271a; color: #fff; }
-  .g-cafe :global(.cafe-bg) { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 50% 80%; z-index: -2; }
+  .g-cafe :global(.cafe-bg) { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 50% 80%; z-index: -2; filter: brightness(.7); }   /* 30% darker (Oct 27) */
   .g-cafe::before { content: ''; position: absolute; inset: 0; z-index: -1; background: rgb(18 10 5 / .6); pointer-events: none; }
   .cafe-stage { position: relative; display: grid; justify-items: center; gap: 1.6rem; padding: clamp(3.5rem, 8vw, 5rem) var(--pad) clamp(3rem, 6vw, 4.5rem); }
   .cafe-text { justify-self: start; width: 100%; }
   .cafe-text .gk { font-size: clamp(2.6rem, 4vw, 4.4rem); }
   .cafe-text h4 { font-size: clamp(3rem, 12vw, 6.4rem); line-height: .95; letter-spacing: -.025em; font-weight: 300; margin: .1em 0 .5em; }
-  .cafe-text .pts { gap: 1rem; margin: 0; max-width: none; }
-  .cafe-text .pts li { padding-left: 1.5rem; font-size: 1.1rem; }
-  .cafe-text .pts li::before { display: none; }
+  .cafe-text .pts { gap: .55rem; margin: .4rem 0 0; max-width: none; }
+  .cafe-text .pts li { font-size: 1.0625rem; line-height: 1.45; }   /* same size as the sub text of the other parts */
   .cm-photo { margin: 0; width: min(76%, 18rem); }
   .cm-photo :global(img) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 45%; box-shadow: 0 .4rem 1.1rem rgb(0 0 0 / .35); }
   .cm-pile { position: relative; width: min(76%, 18rem); aspect-ratio: 1.3 / 1; }
@@ -445,25 +444,23 @@ const index = [
   .cm-book :global(img) { display: block; width: 100%; height: auto; }
   .cm-bcap { position: relative; z-index: 1; font-family: var(--display); font-style: italic; font-size: .98rem; letter-spacing: .02em; color: var(--blush); text-align: center; }
   .cd-wrap { justify-self: start; width: min(100%, 22rem); }
-  .cd-pile { position: relative; width: min(100%, 15rem); aspect-ratio: 16 / 10.4; }
+  .cd-pile { position: relative; width: min(100%, 12.75rem); aspect-ratio: 16 / 10.4; }
   .cd-pg { appearance: none; border: 0; padding: 0; background: #1b1b1b; cursor: zoom-in; position: absolute; width: 88%; aspect-ratio: 16 / 9.4; left: calc(var(--k) * 4%); top: calc(var(--k) * 5.5%); z-index: calc(4 - var(--k)); box-shadow: 0 .25rem .8rem rgb(0 0 0 / .4); overflow: hidden; transition: transform .5s var(--ease); }
   .cd-pg :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
   .cd-pile:hover .cd-pg { transform: translate(calc(var(--k) * .35rem), calc(var(--k) * .28rem)); }
-  .cd-cap { margin-top: .9rem; font-family: var(--display); font-style: italic; font-size: clamp(1.2rem, 2vw, 2rem); line-height: 1.15; color: #fff; text-shadow: 0 1px 8px rgb(0 0 0 / .5); }
+  .cd-cap { margin-top: .8rem; font-family: var(--display); font-style: italic; font-size: clamp(1.02rem, 1.7vw, 1.7rem); line-height: 1.15; color: #fff; text-shadow: 0 1px 8px rgb(0 0 0 / .5); }
   @media (min-width: 900px) {
     .g-cafe::before { background: linear-gradient(90deg, rgb(10 6 3 / .5), rgb(10 6 3 / .2) 48%, rgb(40 24 12 / .5) 52%, rgb(40 24 12 / .52)), radial-gradient(ellipse 30% 55% at 83% 52%, rgb(240 200 120 / .3), transparent 70%); }
     .cafe-stage { display: block; aspect-ratio: 1604 / 940; padding: 0; min-height: 34rem; }
     .cafe-stage > * { position: absolute; margin: 0; }
     .cafe-text { left: 5.7%; top: 11%; width: 36%; }
     .cafe-text h4 { font-size: clamp(3.4rem, 5.7vw, 7rem); margin: .08em 0 .55em; }
-    .cafe-text .pts { gap: clamp(.8rem, 1.5vw, 1.5rem); }
-    .cafe-text .pts li { font-size: clamp(1rem, 1.5vw, 1.7rem); padding-left: 1.5rem; }
     .cm-photo { left: 44.1%; top: 18.9%; width: 17.6%; }
     .cm-pile { left: 44.6%; top: 49.3%; width: 17.5%; }
     .cm-arrow { left: 66.4%; top: 43.2%; transform: none; }
     .cm-bookwrap { left: 72.9%; top: 14.9%; width: 22.3%; }
     .cd-wrap { left: 4.4%; top: 67.6%; width: 36%; }
-    .cd-pile { width: 55%; }
+    .cd-pile { width: 46.75%; }
   }
   .m-social .ba .label { color: var(--ink-soft); }
   .m-social .ba-cap :global(.xl) { color: var(--plum); }
