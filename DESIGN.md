@@ -375,3 +375,11 @@ Source: note "DIFFERENT KITCHEN R1" and `*Photo/03` (folders Golden gate, L..., 
 - **03 Summer Brunch launch**: as her input: text and a small **deck of guest cards** on the left, the main photo on the right. The deck is a widget of its own (buttons, swipe or drag, arrow keys when it has focus; no wheel, no scroll tie-in), so the page scroll is never touched. The front card opens the viewer; a click on a card behind brings it forward.
 - **Off the menu**: the last three photos appear at the same time (after the three lines).
 - **Why Marou**: card 01's first photo is a closer, lower crop on the chocolate stacks (`w1-a`, crop in `photos.mjs`); card 03's lower photo is cut a little lower (object-position 80%).
+
+---
+
+## 21. In the café, tuned to Cam Anh's picture, and the Brunch book (27 Oct 2026, third message)
+
+- **Layout of 02** (`Ch03.astro`): heading and list on the left; clipboard photo over the pile of white menu pages, an arrow (lime), the big Brunch cover with a soft glow; the creative process is a cream card (max 52 rem) under them on the left. Caption "Mono Brunch Menu (Draft)" (her words, in `content/ch03-…md`, italic) sits right under the cover.
+- **The Brunch book** (`#bk` dialog, script at the foot of `Ch03.astro`): opens from the cover and turns like a book. Two-page spread on wide screens (the cover alone on the first turn, the last leaf is the back cover), one page at a time under 760 px. 3D leaf flip (`rotateY`, 1 s), buttons, arrow keys, a click on the right or left page, or a swipe; Esc or the cross closes; counter "2–3 / 29". The 29 pages are `mono-cat-01..29` (rendered from her PDF with `scripts/pdf-pages.js`). Pages are built by the script, so the leaf and face CSS uses `:global()` inside `.bk-book`.
+- UI labels added to `ui.md`: previous page, next catalogue page, close catalogue.

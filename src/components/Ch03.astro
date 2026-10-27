@@ -1,6 +1,6 @@
 ---
 import Photo from './Photo.astro';
-import { ch03, ui, splitDate, contents, type Block, pages } from '../lib/data';
+import { ch03, ui, splitDate, contents, type Block, pages, imageMeta } from '../lib/data';
 import { inline, leadSplit, slug, textOf, esc, externalLink, sidepathButton, sentences } from '../lib/md';
 
 const ptxt = (bs: Block[]) => bs.filter((b): b is Extract<Block, { t: 'p' }> => b.t === 'p').map((b) => b.text);
@@ -40,7 +40,8 @@ const intro = mP.slice(2, briefAt);                            // two paragraphs
 const brief = mP[briefAt] ?? '';
 const mItems = (lists(mono.blocks)[0] ?? []).map(leadSplit);
 const cdCap = mP.find((t) => /creative direction/i.test(t)) ?? '';       // the caption under the four design pictures (02 In the café)
-const mClose = mP.slice(briefAt + 1).filter((t) => t !== cdCap);                                    // the closing paragraphs: two phrases (left) and the new conclusion (right)
+const bookCap = mP.find((t) => /mono brunch menu/i.test(t)) ?? '';       // the small caption under the Brunch cover
+const mClose = mP.slice(briefAt + 1).filter((t) => t !== cdCap && t !== bookCap);                                    // the closing paragraphs: two phrases (left) and the new conclusion (right)
 const heartHtml = inline(heart).replace('service', '<em class="svc">service</em>');
 // "In the café": three short points, one per comma-separated part
 const cafeParts = (mItems[1]?.rest ?? '').split(/,\s+/);
@@ -64,6 +65,8 @@ const cbox = ([x, y, w, h]: number[]) => `left:${(((x - CD.x) / CD.w) * 100).toF
 const menuPages = [1, 2, 3, 4, 5].map((n) => `mono-menu-${n}`);   // the five white menu pages, as a pile
 const catPages = Array.from({ length: 29 }, (_, i) => `mono-cat-${String(i + 1).padStart(2, '0')}`);   // the 29 pages of the Brunch catalogue
 const cdPics = cdTiles.map(([id]) => id);
+const siteBase = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const bookPages = catPages.map((id) => ({ src: `${siteBase}img/${id}-960.webp`, alt: imageMeta[id]?.alt ?? '' }));   // the pages of the book (the picture files are made by scripts/optimize-images.mjs)
 const fbIds = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => `mono-fb-${n}`);   // guest opinion cards, a stepped, tilted gallery
 // Golden Gate: the documents and posts she made, overlapping (pixels of her layout)
 const GG = { x: 79, y: 65, w: 911, h: 820 };
@@ -187,8 +190,8 @@ const index = [
         </div>
       </div>
     </div>
-    <!-- 02 In the café: the finished product (clipboard menu, the white menu pages, the Brunch book) on plum; the creative process on its own cream band.
-         Everything else opens only when clicked (Cam Anh, Oct 27, R5) -->
+    <!-- 02 In the café (Cam Anh's picture, Oct 27): the heading and list on the left; the clipboard photo over the pile of white menu pages, an arrow, and the big Brunch cover (it opens as a book);
+         under them, on the left, a cream card for the creative process. Everything else opens only when clicked. -->
     <div class="g-cafe">
       <div class="cafe-in wrap">
         <div class="gt"><p class="gk">02</p><h4>{mItems[1]?.lead.replace(/:$/, '')}</h4>
@@ -197,21 +200,23 @@ const index = [
             : <p set:html={inline(mItems[1]?.rest ?? '')} />}
         </div>
         <div class="cafe-menu">
-          <figure class="cm-photo"><Photo id="mono-menu-photo" sizes="(min-width: 900px) 24rem, 92vw" /></figure>
-          <div class="cm-pile" role="group" aria-label={ui['open album']}>
-            {menuPages.map((id, i) => <button type="button" class="cm-pg" data-lb-group="menu" style={`--k:${i}`} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 16rem, 70vw" /></button>)}
+          <div class="cm-left">
+            <figure class="cm-photo"><Photo id="mono-menu-photo" sizes="(min-width: 900px) 16rem, 80vw" /></figure>
+            <div class="cm-pile" role="group" aria-label={ui['open album']}>
+              {menuPages.map((id, i) => <button type="button" class="cm-pg" data-lb-group="menu" style={`--k:${i}`} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 15rem, 70vw" /></button>)}
+            </div>
           </div>
           <span class="cm-arrow" aria-hidden="true">→</span>
-          <button type="button" class="cm-book" data-lb-group="cat" aria-haspopup="dialog" aria-label={ui['open catalogue']}><Photo id="mono-cat-01" sizes="(min-width: 900px) 12rem, 55vw" /></button>
-          <div class="cat-rest" hidden>
-            {catPages.slice(1).map((id, i) => <button type="button" data-lb-group="cat" tabindex="-1" aria-label={`${ui['open catalogue']} ${i + 2}`}><Photo id={id} sizes="100vw" loading="lazy" /></button>)}
+          <div class="cm-bookwrap">
+            <button type="button" class="cm-book" data-book aria-haspopup="dialog" aria-label={ui['open catalogue']}><Photo id="mono-cat-01" sizes="(min-width: 900px) 20rem, 60vw" /></button>
+            {bookCap && <p class="cm-bcap" set:html={inline(bookCap)} />}
           </div>
         </div>
       </div>
-      <div class="cafe-proc">
-        <div class="proc-in wrap">
+      <div class="cafe-proc wrap">
+        <div class="proc-card">
           <div class="cd-pile" role="group" aria-label={textOf(cdCap)}>
-            {cdPics.map((id, i) => <button type="button" class="cd-pg" data-lb-group="cd" style={`--k:${i}`} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 20rem, 70vw" style="object-position:39% 50%" /></button>)}
+            {cdPics.map((id, i) => <button type="button" class="cd-pg" data-lb-group="cd" style={`--k:${i}`} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 14rem, 60vw" style="object-position:39% 50%" /></button>)}
           </div>
           {cdCap && <p class="cd-cap" set:html={inline(cdCap)} />}
         </div>
@@ -243,6 +248,15 @@ const index = [
     </div>
   </section>
 
+
+  <!-- the Brunch catalogue as a book: pages turn one by one (built by the script below) -->
+  <dialog id="bk" class="bk" aria-label={ui['open catalogue']} data-pages={JSON.stringify(bookPages)}>
+    <button type="button" class="bk-x" aria-label={ui['close catalogue']}><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg></button>
+    <button type="button" class="bk-p" aria-label={ui['previous page']}><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M15 4l-8 8 8 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+    <div class="bk-stage"><div class="bk-book" role="group" aria-roledescription="book"></div></div>
+    <button type="button" class="bk-n" aria-label={ui['next catalogue page']}><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M9 4l8 8-8 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+    <p class="bk-count" aria-live="polite"></p>
+  </dialog>
 </article>
 
 <style>
@@ -411,34 +425,39 @@ const index = [
   :global(.js) .close-in .wr-in { opacity: 0; transform: translateY(1.4rem); transition: opacity 1.3s var(--ease), transform 1.3s var(--ease); }
   :global(.js) .close-in .wr-in.on { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { :global(.js) .soc-collage .rvl, :global(.js) .close-in .wr-in { opacity: 1; transform: none; transition: none; } }
-  /* 02 In the café, the finished product: the clipboard menu, a pile of white menu pages (click to open), an arrow, and the Brunch book (click to open the catalogue) */
-  .cafe-in { align-items: center; }
-  .cafe-menu { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.2rem; justify-items: center; align-items: end; }
-  .cm-photo { margin: 0; width: 100%; }
-  .cm-photo :global(img) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 45%; }
-  .cm-pile { position: relative; width: min(100%, 16rem); aspect-ratio: 1.32 / 1; }
-  .cm-pg { appearance: none; border: 0; padding: 0; background: #fff; cursor: zoom-in; position: absolute; width: 88%; left: calc(var(--k) * 3%); top: calc(var(--k) * 4.5%); z-index: calc(5 - var(--k)); box-shadow: 0 .3rem .9rem rgb(0 0 0 / .35); transition: transform .5s var(--ease); }
+  /* 02 In the café (Cam Anh's picture, Oct 27) */
+  .g-cafe { padding-bottom: clamp(3rem, 6vw, 5.5rem); }
+  .cafe-in { align-items: center; padding-bottom: clamp(2rem, 4vw, 3.5rem); }
+  .cafe-menu { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.4rem; justify-items: center; }
+  .cm-left { display: grid; gap: 1.1rem; width: min(100%, 16rem); }
+  .cm-photo { margin: 0; }
+  .cm-photo :global(img) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 45%; box-shadow: 0 .4rem 1.1rem rgb(0 0 0 / .3); }
+  .cm-pile { position: relative; width: 100%; aspect-ratio: 1.3 / 1; }
+  .cm-pg { appearance: none; border: 0; padding: 0; background: #fff; cursor: zoom-in; position: absolute; width: 90%; left: calc(var(--k) * 2.6%); top: calc(var(--k) * 4.2%); z-index: calc(5 - var(--k)); box-shadow: 0 .3rem .9rem rgb(0 0 0 / .32); transition: transform .5s var(--ease); }
   .cm-pg :global(img) { display: block; width: 100%; height: auto; }
-  .cm-pile:hover .cm-pg { transform: translate(calc(var(--k) * .4rem), calc(var(--k) * .35rem)); }
-  .cm-arrow { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1; color: var(--lime); transform: rotate(90deg); }
-  .cm-book { appearance: none; border: 0; padding: 0; background: none; cursor: zoom-in; display: block; width: min(52%, 11.5rem); border-left: .3rem solid rgb(0 0 0 / .28); border-radius: .15rem .3rem .3rem .15rem; box-shadow: 0 .8rem 1.8rem rgb(0 0 0 / .4), .35rem 0 0 -.1rem rgb(255 255 255 / .14); transition: transform .5s var(--ease); }
-  .cm-book:hover { transform: translateY(-.3rem) rotate(-1.5deg); }
+  .cm-pile:hover .cm-pg { transform: translate(calc(var(--k) * .35rem), calc(var(--k) * .3rem)); }
+  .cm-arrow { font-size: clamp(1.8rem, 3vw, 2.6rem); line-height: 1; color: var(--lime); transform: rotate(90deg); }
+  .cm-bookwrap { position: relative; width: min(64%, 18rem); display: grid; gap: .9rem; justify-items: center; }
+  .cm-bookwrap::before { content: ''; position: absolute; inset: -22% -34% -10%; background: radial-gradient(closest-side, rgb(238 205 130 / .42), rgb(238 205 130 / .12) 55%, transparent); pointer-events: none; z-index: 0; }   /* a soft glow behind the book */
+  .cm-book { position: relative; z-index: 1; appearance: none; border: 0; padding: 0; background: none; cursor: pointer; display: block; width: 100%; border-left: .28rem solid rgb(0 0 0 / .3); border-radius: .12rem .25rem .25rem .12rem; box-shadow: 0 .9rem 2rem rgb(0 0 0 / .45), .3rem 0 0 -.1rem rgb(255 255 255 / .12); transition: transform .6s var(--ease), box-shadow .6s var(--ease); }
+  .cm-book:hover, .cm-book:focus-visible { transform: translateY(-.35rem) rotate(-1.2deg); box-shadow: 0 1.3rem 2.4rem rgb(0 0 0 / .5), .3rem 0 0 -.1rem rgb(255 255 255 / .12); }
   .cm-book :global(img) { display: block; width: 100%; height: auto; }
+  .cm-bcap { position: relative; z-index: 1; font-family: var(--display); font-style: italic; font-size: .98rem; letter-spacing: .02em; color: var(--blush); text-align: center; }
   @media (min-width: 900px) {
-    .cafe-menu { grid-template-columns: minmax(0, 1fr) 15rem auto 11.5rem; gap: 1rem clamp(1rem, 2vw, 2rem); justify-items: stretch; }
-    .cm-photo { width: auto; align-self: center; }
-    .cm-pile { width: 100%; align-self: end; }
-    .cm-arrow { transform: none; align-self: center; justify-self: center; }
-    .cm-book { width: 100%; }
+    .cafe-in { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+    .cafe-menu { grid-template-columns: 16rem auto minmax(0, 20rem); justify-content: center; align-items: center; gap: clamp(1.2rem, 2.6vw, 2.8rem); }
+    .cm-left { width: 100%; }
+    .cm-arrow { transform: none; }
+    .cm-bookwrap { width: 100%; }
   }
-  /* 02 In the café, the creative process: its own cream band, a closed pile of the design pictures and the caption (click to open) */
-  .cafe-proc { background: var(--cream); color: var(--plum); padding: clamp(2.5rem, 5vw, 4.5rem) 0; }
-  .proc-in { display: flex; flex-wrap: wrap; align-items: center; gap: 1.4rem clamp(2rem, 5vw, 5rem); }
-  .cd-pile { position: relative; width: min(100%, 17rem); aspect-ratio: 16 / 10.6; flex: none; }
-  .cd-pg { appearance: none; border: 0; padding: 0; background: #1b1b1b; cursor: zoom-in; position: absolute; width: 88%; aspect-ratio: 16 / 9.4; left: calc(var(--k) * 4%); top: calc(var(--k) * 5.5%); z-index: calc(4 - var(--k)); box-shadow: 0 .3rem .9rem rgb(0 0 0 / .3); overflow: hidden; transition: transform .5s var(--ease); }
+  /* 02 In the café, the creative process: a cream card of its own, on the left, under the product: a closed pile of the design pictures and the caption (click to open) */
+  .cafe-proc { display: block; }
+  .proc-card { background: var(--cream); color: var(--plum); width: min(100%, 52rem); padding: clamp(1.1rem, 2.4vw, 1.8rem) clamp(1.2rem, 3vw, 2.4rem); display: flex; flex-wrap: wrap; align-items: center; gap: 1rem clamp(1.6rem, 4vw, 4rem); }
+  .cd-pile { position: relative; width: min(100%, 13.5rem); aspect-ratio: 16 / 10.4; flex: none; }
+  .cd-pg { appearance: none; border: 0; padding: 0; background: #1b1b1b; cursor: zoom-in; position: absolute; width: 88%; aspect-ratio: 16 / 9.4; left: calc(var(--k) * 4%); top: calc(var(--k) * 5.5%); z-index: calc(4 - var(--k)); box-shadow: 0 .25rem .8rem rgb(0 0 0 / .3); overflow: hidden; transition: transform .5s var(--ease); }
   .cd-pg :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .cd-pile:hover .cd-pg { transform: translate(calc(var(--k) * .4rem), calc(var(--k) * .3rem)); }
-  .cd-cap { font-family: var(--display); font-style: italic; font-size: clamp(1.5rem, 2.6vw, 2.3rem); line-height: 1.15; max-width: 16em; color: var(--plum); }
+  .cd-pile:hover .cd-pg { transform: translate(calc(var(--k) * .35rem), calc(var(--k) * .28rem)); }
+  .cd-cap { font-family: var(--display); font-style: italic; font-size: clamp(1.3rem, 2.1vw, 1.85rem); line-height: 1.15; max-width: 16em; color: var(--plum); }
   .m-social .ba .label { color: var(--ink-soft); }
   .m-social .ba-cap :global(.xl) { color: var(--plum); }
   .m-social :global(.ph) { background: var(--ph-bg); color: var(--ph-ink); box-shadow: inset 0 0 0 1px rgb(138 75 42 / .25); }
@@ -490,6 +509,35 @@ const index = [
     .c-mid { grid-column: 1 / 7; grid-row: 1; } .c-first { grid-column: 1 / 7; grid-row: 2; margin-top: clamp(1.5rem, 3vw, 3rem); }
     .c-end { grid-column: 8 / 13; grid-row: 1 / 3; align-self: center; }
   }
+
+  /* the Brunch catalogue as a book */
+  .bk { border: 0; padding: 0; margin: 0; width: 100%; height: 100%; max-width: none; max-height: none; background: rgb(247 245 240 / .74); color: var(--ink); backdrop-filter: blur(16px) saturate(1.05); -webkit-backdrop-filter: blur(16px) saturate(1.05); overflow: hidden; }
+  .bk::backdrop { background: transparent; }
+  .bk[open] { display: grid; grid-template-columns: 4.5rem 1fr 4.5rem; align-items: center; justify-items: center; animation: bkin .5s var(--ease); }
+  @keyframes bkin { from { opacity: 0; } to { opacity: 1; } }
+  .bk-stage { grid-column: 2; width: 100%; height: 100%; display: grid; place-items: center; perspective: 2600px; --ph: min(84svh, 52rem, calc((100vw - 11rem) / 1.24)); --pw: calc(var(--ph) * .6192); }
+  .bk-p, .bk-n, .bk-x { appearance: none; border: 0; background: transparent; color: inherit; cursor: pointer; display: grid; place-items: center; width: 3.2rem; height: 3.2rem; }
+  .bk-p { grid-column: 1; grid-row: 1; } .bk-n { grid-column: 3; grid-row: 1; }
+  .bk-x { position: absolute; right: .9rem; top: .9rem; z-index: 5; }
+  .bk-p:hover, .bk-n:hover, .bk-x:hover { color: var(--pink); }
+  .bk-p:disabled, .bk-n:disabled { opacity: .22; cursor: default; }
+  .bk-count { position: absolute; left: 0; right: 0; bottom: 1rem; text-align: center; font-size: .78rem; letter-spacing: .16em; color: var(--ink-soft); }
+  .bk-book { position: relative; width: calc(var(--pw) * 2); height: var(--ph); transform-style: preserve-3d; transition: transform .9s var(--ease); cursor: pointer; }
+  .bk-book.single { width: var(--pw); }
+  .bk-book :global(.bk-leaf) { position: absolute; left: 50%; top: 0; width: 50%; height: 100%; transform-origin: left center; transform-style: preserve-3d; transition: transform 1s cubic-bezier(.55, .08, .25, 1); }
+  .bk-book.single :global(.bk-leaf) { left: 0; width: 100%; }
+  .bk-book :global(.bk-leaf.fl) { transform: rotateY(-180deg); }
+  .bk-book :global(.bk-face) { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: #4a3222; overflow: hidden; box-shadow: 0 .6rem 1.8rem rgb(0 0 0 / .28); }
+  .bk-book :global(.bk-face.back) { transform: rotateY(180deg); }
+  .bk-book :global(.bk-face img) { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; -webkit-user-drag: none; }
+  .bk-book :global(.bk-face)::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgb(0 0 0 / .22), transparent 9%); }
+  .bk-book :global(.bk-face.back)::after { background: linear-gradient(270deg, rgb(0 0 0 / .22), transparent 9%); }
+  @media (max-width: 760px) {
+    .bk[open] { grid-template-columns: 2.6rem 1fr 2.6rem; }
+    .bk-p, .bk-n { width: 2.6rem; }
+    .bk-stage { --ph: min(80svh, calc((100vw - 6.5rem) / .6192)); }
+  }
+  @media (prefers-reduced-motion: reduce) { .bk-leaf, .bk-book { transition: none; } .bk[open] { animation: none; } }
 </style>
 
 <script>
@@ -547,5 +595,58 @@ const index = [
     });
     deck.addEventListener('click', (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
     render();
+  }
+
+  // The Brunch catalogue as a book: the cover opens it, the pages turn one by one (buttons, arrow keys, a click on either page, or a swipe).
+  // Wide screens show a spread of two pages; narrow screens show one page at a time.
+  const bk = document.getElementById('bk') as HTMLDialogElement | null;
+  const opener = document.querySelector<HTMLElement>('[data-book]');
+  if (bk && opener) {
+    const pages: { src: string; alt: string }[] = JSON.parse(bk.dataset.pages || '[]');
+    const book = bk.querySelector<HTMLElement>('.bk-book')!;
+    const prevB = bk.querySelector<HTMLButtonElement>('.bk-p')!, nextB = bk.querySelector<HTMLButtonElement>('.bk-n')!, count = bk.querySelector<HTMLElement>('.bk-count')!;
+    let leaves: HTMLElement[] = [], s = 0, single = false;
+    const img = (p: { src: string; alt: string }, eager: boolean) => { const i = document.createElement('img'); i.src = p.src; i.alt = p.alt; i.loading = eager ? 'eager' : 'lazy'; i.decoding = 'async'; i.draggable = false; return i; };
+    const face = (cls: string, p?: { src: string; alt: string }) => { const f = document.createElement('div'); f.className = `bk-face ${cls}`; if (p) f.append(img(p, true)); return f; };
+    const build = () => {
+      single = innerWidth < 760;
+      book.classList.toggle('single', single);
+      book.replaceChildren(); leaves = [];
+      const per = single ? 1 : 2, n = Math.ceil(pages.length / per);
+      for (let i = 0; i < n; i++) {
+        const leaf = document.createElement('div'); leaf.className = 'bk-leaf';
+        leaf.append(face('front', pages[i * per]));
+        if (!single) leaf.append(face('back', pages[i * 2 + 1]));
+        book.append(leaf); leaves.push(leaf);
+      }
+    };
+    const last = () => leaves.length - 1;   // the last leaf never turns
+    const render = (moved = -1) => {
+      leaves.forEach((l, i) => {
+        l.classList.toggle('fl', i < s);
+        l.style.zIndex = String(i === moved ? leaves.length + 5 : (i < s ? i + 1 : leaves.length - i));
+      });
+      if (moved > -1) setTimeout(() => { leaves.forEach((l, i) => { l.style.zIndex = String(i < s ? i + 1 : leaves.length - i); }); }, 1000);
+      book.style.transform = single ? '' : s === 0 ? 'translateX(-25%)' : '';
+      prevB.disabled = s === 0; nextB.disabled = s === last();
+      const total = pages.length;
+      count.textContent = single ? `${s + 1} / ${total}` : s === 0 ? `1 / ${total}` : `${2 * s}–${Math.min(total, 2 * s + 1)} / ${total}`;
+    };
+    const turn = (d: number) => { const to = Math.min(last(), Math.max(0, s + d)); if (to === s) return; const moved = d > 0 ? s : to; s = to; render(moved); };
+    opener.addEventListener('click', () => { build(); s = 0; render(); bk.showModal(); document.documentElement.classList.add('sp-open'); nextB.focus({ preventScroll: true }); });
+    const close = () => { bk.close(); document.documentElement.classList.remove('sp-open'); opener.focus(); };
+    bk.querySelector('.bk-x')!.addEventListener('click', close);
+    prevB.addEventListener('click', () => turn(-1));
+    nextB.addEventListener('click', () => turn(1));
+    bk.addEventListener('cancel', (e) => { e.preventDefault(); close(); });
+    bk.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') turn(1); if (e.key === 'ArrowLeft') turn(-1); });
+    // a click on the right half turns forward, on the left half back; the empty space around the book closes it
+    book.addEventListener('click', (e) => { if (moved) return; const r = book.getBoundingClientRect(); const mid = single ? r.left + r.width / 2 : r.left + r.width / 2; turn(e.clientX >= mid ? 1 : -1); });
+    bk.addEventListener('click', (e) => { const t = e.target as HTMLElement; if (t === bk || t.classList.contains('bk-stage')) close(); });
+    // swipe
+    let x0 = 0, down = false, moved = false;
+    book.addEventListener('pointerdown', (e) => { down = true; moved = false; x0 = (e as PointerEvent).clientX; });
+    addEventListener('pointerup', (e) => { if (!down) return; down = false; const dx = (e as PointerEvent).clientX - x0; if (Math.abs(dx) > 50) { moved = true; turn(dx < 0 ? 1 : -1); setTimeout(() => (moved = false), 50); } });
+    addEventListener('resize', () => { if (bk.open) { const t = s; build(); s = Math.min(t, last()); render(); } });
   }
 </script>
