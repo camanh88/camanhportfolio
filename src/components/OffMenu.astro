@@ -288,14 +288,14 @@ const sectionNum = (k: 'gift' | 'flor') => String(ch04.order.indexOf(k) + 1).pad
 </script>
 
 <script>
-  // "We don't just give a gift…": the three lines, then the three photos, one after another once the page is reached
+  // "We don't just give a gift…": the three lines one after another, then the three photos all at once (Oct 27, R5)
   const sq = [...document.querySelectorAll<HTMLElement>('#off-menu .g5 .sq')];
   if (sq.length) {
     const quick = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const gio = new IntersectionObserver((es) => {
       if (!es.some((e) => e.isIntersecting)) return;
       gio.disconnect();
-      sq.forEach((el, i) => setTimeout(() => el.classList.add('on'), quick ? 0 : (i < 3 ? i * 1300 : 3900 + (i - 3) * 700)));
+      sq.forEach((el, i) => setTimeout(() => el.classList.add('on'), quick ? 0 : (i < 3 ? i * 1300 : 3900)));
     }, { threshold: 0.3 });
     gio.observe(document.querySelector('#off-menu .g5-in')!);
   }

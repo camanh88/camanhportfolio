@@ -61,7 +61,9 @@ const cdTiles: [string, number[], string][] = [
   ['cd-illustrator', [12, 10, 529, 840], '39% 50%'], ['cd-figma', [560, 10, 788, 470], '50% 50%'], ['cd-notes', [569, 517, 189, 333], '50% 32%'], ['cd-moodboard', [797, 517, 551, 333], '50% 50%'],
 ];
 const cbox = ([x, y, w, h]: number[]) => `left:${(((x - CD.x) / CD.w) * 100).toFixed(2)}%;top:${(((y - CD.y) / CD.h) * 100).toFixed(2)}%;width:${((w / CD.w) * 100).toFixed(2)}%;height:${((h / CD.h) * 100).toFixed(2)}%`;
-const menuPages = [1, 2, 3, 4, 5].map((n) => `mono-menu-${n}`);   // the five menu pages, stacked
+const menuPages = [1, 2, 3, 4, 5].map((n) => `mono-menu-${n}`);   // the five white menu pages, as a pile
+const catPages = Array.from({ length: 29 }, (_, i) => `mono-cat-${String(i + 1).padStart(2, '0')}`);   // the 29 pages of the Brunch catalogue
+const cdPics = cdTiles.map(([id]) => id);
 const fbIds = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => `mono-fb-${n}`);   // guest opinion cards, a stepped, tilted gallery
 // Golden Gate: the documents and posts she made, overlapping (pixels of her layout)
 const GG = { x: 79, y: 65, w: 911, h: 820 };
@@ -185,6 +187,8 @@ const index = [
         </div>
       </div>
     </div>
+    <!-- 02 In the café: the finished product (clipboard menu, the white menu pages, the Brunch book) on plum; the creative process on its own cream band.
+         Everything else opens only when clicked (Cam Anh, Oct 27, R5) -->
     <div class="g-cafe">
       <div class="cafe-in wrap">
         <div class="gt"><p class="gk">02</p><h4>{mItems[1]?.lead.replace(/:$/, '')}</h4>
@@ -192,35 +196,42 @@ const index = [
             ? <ul class="pts">{cafeParts.map((t) => <li set:html={inline(t)} />)}</ul>
             : <p set:html={inline(mItems[1]?.rest ?? '')} />}
         </div>
-        <!-- the clipboard menu, then (arrow) the Brunch cover that opens the catalogue; the menu pages are stacked under the photo and jump up one by one -->
         <div class="cafe-menu">
-          <figure class="cm-photo"><Photo id="mono-menu-photo" sizes="(min-width: 900px) 34rem, 92vw" /></figure>
+          <figure class="cm-photo"><Photo id="mono-menu-photo" sizes="(min-width: 900px) 24rem, 92vw" /></figure>
+          <div class="cm-pile" role="group" aria-label={ui['open album']}>
+            {menuPages.map((id, i) => <button type="button" class="cm-pg" data-lb-group="menu" style={`--k:${i}`} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 16rem, 70vw" /></button>)}
+          </div>
           <span class="cm-arrow" aria-hidden="true">→</span>
-          <button type="button" class="cm-cover" data-lb-group="menu" aria-haspopup="dialog" aria-label={ui['open catalogue']}><Photo id="mono-menu-cover" sizes="(min-width: 900px) 22rem, 55vw" /></button>
-          <div class="cm-stack" role="group">
-            {menuPages.map((id, i) => <button type="button" class="cm-pg" data-lb-group="menu" style={`--k:${i}`} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 30rem, 80vw" /></button>)}
+          <button type="button" class="cm-book" data-lb-group="cat" aria-haspopup="dialog" aria-label={ui['open catalogue']}><Photo id="mono-cat-01" sizes="(min-width: 900px) 12rem, 55vw" /></button>
+          <div class="cat-rest" hidden>
+            {catPages.slice(1).map((id, i) => <button type="button" data-lb-group="cat" tabindex="-1" aria-label={`${ui['open catalogue']} ${i + 2}`}><Photo id={id} sizes="100vw" loading="lazy" /></button>)}
           </div>
         </div>
       </div>
-      <div class="cafe-cd wrap">
-        <div class="cd-collage" role="group" aria-label={textOf(cdCap)}>
-          {cdTiles.map(([id, b, pos], i) => <button type="button" class="cd-t" data-lb-group="cd" style={cbox(b)} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 40vw, 90vw" style={`object-position:${pos}`} /></button>)}
+      <div class="cafe-proc">
+        <div class="proc-in wrap">
+          <div class="cd-pile" role="group" aria-label={textOf(cdCap)}>
+            {cdPics.map((id, i) => <button type="button" class="cd-pg" data-lb-group="cd" style={`--k:${i}`} aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 20rem, 70vw" style="object-position:39% 50%" /></button>)}
+          </div>
+          {cdCap && <p class="cd-cap" set:html={inline(cdCap)} />}
         </div>
-        {cdCap && <p class="cd-cap" set:html={inline(cdCap)} />}
       </div>
     </div>
 
-    <div class="m-group g-brunch wrap">
-      <div class="gt"><p class="gk">03</p><h4>{mItems[2]?.lead.replace(/:$/, '')}</h4><p set:html={inline(mItems[2]?.rest ?? '')} /></div>
-    </div>
-    <!-- the guest cards: a deck that moves through the cards as the page scrolls; the main photo stands on the right -->
-    <div class="fb-track" data-deck>
-      <div class="fb-stage wrap">
-        <ul class="fb-deck" role="group" aria-label={mItems[2]?.lead.replace(/:$/, '')}>
-          {fbIds.map((id, i) => <li style={`--i:${i}`}><button type="button" class="mp" data-lb-group="fb" aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 18rem, 60vw" /></button></li>)}
+    <!-- 03 Summer Brunch launch: text, the guest cards as a small deck of its own (buttons, swipe, arrow keys; it never touches the page scroll), and the main photo on the right -->
+    <div class="m-brunch wrap">
+      <div class="gt mb-text"><p class="gk">03</p><h4>{mItems[2]?.lead.replace(/:$/, '')}</h4><p set:html={inline(mItems[2]?.rest ?? '')} /></div>
+      <div class="deck" data-deck tabindex="0" role="group" aria-roledescription="carousel" aria-label={mItems[2]?.lead.replace(/:$/, '')}>
+        <ul class="dk-cards">
+          {fbIds.map((id, i) => <li style={`--i:${i}`}><button type="button" class="mp" data-lb-group="fb" aria-haspopup="dialog" aria-label={`${ui['open album']} ${i + 1}`}><Photo id={id} sizes="(min-width: 900px) 16rem, 60vw" /></button></li>)}
         </ul>
-        <figure class="fb-main"><button type="button" class="mp" data-lb-group="brunch" aria-haspopup="dialog" aria-label={ui['open album']}><Photo id="mono-brunch" sizes="(min-width: 900px) 34rem, 90vw" /></button></figure>
+        <div class="dk-ctl">
+          <button type="button" class="dk-b dk-prev" aria-label={ui['previous photo']}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+          <span class="dk-n" aria-live="polite">1 / {fbIds.length}</span>
+          <button type="button" class="dk-b dk-next" aria-label={ui['next photo']}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+        </div>
       </div>
+      <figure class="fb-main"><button type="button" class="mp" data-lb-group="brunch" aria-haspopup="dialog" aria-label={ui['open album']}><Photo id="mono-brunch" sizes="(min-width: 900px) 34rem, 90vw" /></button></figure>
     </div>
 
     <div class="m-close">
@@ -371,59 +382,63 @@ const index = [
   @media (prefers-reduced-motion: reduce) { .mp :global(img) { transition: none; } .mp:hover :global(img) { transform: none; } }
   /* the guest opinion cards: a file of cards laid in a row, each one slightly over the one before, a little fanned; a gallery, not a showcase:
      every card opens in the viewer. Overlap and size are worked out from the width, so the whole row always fits the page. */
-  /* 03 Summer Brunch launch: the guest cards are a deck that moves through the cards as the page scrolls; the main photo stands on the right (Cam Anh, Oct 27).
-     Wide screens: deck on the left, photo on the right. Phones: the photo, then the deck. The stage stays on screen while the track scrolls. */
-  .fb-track { --n: 9; --p: 0; height: 340svh; position: relative; }
-  .fb-stage { position: sticky; top: 0; height: 100svh; display: grid; grid-template-rows: minmax(0, 32svh) minmax(0, 1fr); gap: 1rem; align-items: center; padding-block: 5.5rem 1.2rem; }
-  .fb-main { margin: 0; grid-row: 1; height: 100%; width: 100%; }
-  .fb-main .mp { margin: 0; height: 100%; box-shadow: 0 .6rem 1.8rem rgb(0 0 0 / .3); }
-  .fb-main .mp :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .fb-deck { grid-row: 2; position: relative; height: 100%; width: 100%; }
-  .fb-deck li { position: absolute; left: 50%; top: 50%; width: min(52%, 12rem, 36svh); z-index: var(--z, 1); opacity: var(--o, 1); transform: translate(-50%, calc(-50% + var(--d, 0) * 16%)) scale(calc(1 - var(--a, 0) * .09)) rotate(calc(var(--d, 0) * 2deg)); transition: transform .35s var(--ease), opacity .35s var(--ease); will-change: transform; }
-  .fb-deck .mp { margin: 0; box-shadow: 0 .5rem 1.4rem rgb(0 0 0 / .4); }
-  .fb-deck .mp :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
+  /* 03 Summer Brunch launch: text, a small deck of guest cards that works on its own (buttons, swipe, arrow keys; the page scroll is never used) and the main photo on the right (Cam Anh's input, Oct 27) */
+  .m-brunch { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem; padding-block: clamp(3rem, 6vw, 6rem) clamp(7rem, 12vw, 11rem); align-items: start; }
+  .mb-text { grid-area: auto; }
+  .deck { position: relative; width: min(100%, 17rem); margin-inline: auto; outline-offset: .6rem; touch-action: pan-y; user-select: none; }
+  .dk-cards { position: relative; aspect-ratio: 3 / 4.45; }
+  .dk-cards li { position: absolute; left: 0; right: 0; top: 0; z-index: var(--z, 1); opacity: var(--o, 1); transform: translateY(var(--y, 0)) translateX(var(--x, 0)) scale(var(--s, 1)) rotate(var(--r, 0deg)); transition: transform .5s var(--ease), opacity .5s var(--ease); pointer-events: var(--pe, auto); }
+  .dk-cards .mp { margin: 0; box-shadow: 0 .5rem 1.4rem rgb(0 0 0 / .4); }
+  .dk-cards .mp :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
+  .dk-ctl { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: .8rem; color: var(--blush); }
+  .dk-b { appearance: none; border: 1px solid rgb(235 219 215 / .5); background: transparent; color: inherit; width: 2.6rem; height: 2.6rem; border-radius: 50%; display: grid; place-items: center; cursor: pointer; transition: background .3s, color .3s; }
+  .dk-b:hover { background: var(--blush); color: var(--dark); }
+  .dk-n { font-size: .78rem; letter-spacing: .14em; min-width: 3.5em; text-align: center; }
+  .fb-main { margin: 0; }
+  .fb-main .mp { margin: 0; box-shadow: 0 .6rem 1.8rem rgb(0 0 0 / .3); }
+  .fb-main .mp :global(img) { aspect-ratio: 3 / 4; object-fit: cover; }
   @media (min-width: 900px) {
-    .fb-stage { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; column-gap: clamp(2rem, 6vw, 7rem); padding-block: 6rem 2rem; }
-    .fb-deck { grid-row: 1; grid-column: 1; }
-    .fb-deck li { width: min(74%, 23rem, 54svh); }
-    .fb-main { grid-row: 1; grid-column: 2; justify-self: end; width: min(100%, 30rem); height: auto; align-self: center; }
-    .fb-main .mp { height: auto; }
-    .fb-main .mp :global(img) { height: auto; aspect-ratio: 3 / 4; max-height: 78svh; }
+    .m-brunch { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(2rem, 6vw, 7rem); grid-template-areas: "text photo" "deck photo"; align-items: start; }
+    .mb-text { grid-area: text; }
+    .deck { grid-area: deck; margin-inline: 0; width: min(100%, 17rem); }
+    .fb-main { grid-area: photo; width: min(100%, 34rem); justify-self: end; }
   }
-  @media (prefers-reduced-motion: reduce) { .fb-track { height: auto; } .fb-stage { position: relative; height: auto; display: flex; flex-wrap: wrap; } .fb-deck { height: auto; display: flex; flex-wrap: wrap; gap: .8rem; } .fb-deck li { position: static; transform: none; width: 8rem; opacity: 1; } .fb-main { width: 100%; } }
+  @media (max-width: 899px) { .fb-main { order: 2; } .deck { order: 3; } }
+  @media (prefers-reduced-motion: reduce) { .dk-cards li { transition: none; } }
   /* reveal helpers: the photos of 01 turn up one after another; the closing lines write themselves in turn */
   :global(.js) .soc-collage .rvl { opacity: 0; transform: translateY(1.8rem) scale(.96); transition: opacity .9s var(--ease), transform .9s var(--ease); }
   :global(.js) .soc-collage .rvl.on { opacity: 1; transform: none; }
   :global(.js) .close-in .wr-in { opacity: 0; transform: translateY(1.4rem); transition: opacity 1.3s var(--ease), transform 1.3s var(--ease); }
   :global(.js) .close-in .wr-in.on { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { :global(.js) .soc-collage .rvl, :global(.js) .close-in .wr-in { opacity: 1; transform: none; transition: none; } }
-  /* 02 In the café: clipboard menu, arrow, Brunch cover that opens the catalogue, the stack of menu pages, then the four design pictures */
-  .cafe-menu { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.2rem; align-items: start; }
-  .cm-photo { margin: 0; }
+  /* 02 In the café, the finished product: the clipboard menu, a pile of white menu pages (click to open), an arrow, and the Brunch book (click to open the catalogue) */
+  .cafe-in { align-items: center; }
+  .cafe-menu { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.2rem; justify-items: center; align-items: end; }
+  .cm-photo { margin: 0; width: 100%; }
   .cm-photo :global(img) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 45%; }
-  .cm-arrow { align-self: center; justify-self: center; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1; color: var(--lime); transform: rotate(90deg); }
-  .cm-cover { justify-self: center; width: min(62%, 15rem); appearance: none; border: 0; padding: 0; background: none; cursor: zoom-in; display: block; box-shadow: 0 .6rem 1.6rem rgb(0 0 0 / .35); transition: transform .5s var(--ease); }
-  .cm-cover:hover { transform: translateY(-.3rem); }
-  .cm-cover :global(img) { display: block; width: 100%; height: auto; }
-  .cm-stack { position: relative; aspect-ratio: 1 / 1; margin-top: .6rem; }
-  @media (min-width: 900px) {
-    .cafe-menu { grid-template-columns: minmax(0, 1fr) auto 17rem; gap: .8rem clamp(1rem, 2vw, 2rem); }
-    .cm-photo { grid-column: 1; grid-row: 1; }
-    .cm-arrow { grid-column: 2; grid-row: 1; transform: none; }
-    .cm-cover { grid-column: 3; grid-row: 1 / 3; width: auto; justify-self: stretch; }
-    .cm-stack { grid-column: 1; grid-row: 2; }
-  }
-  .cm-pg { appearance: none; border: 0; padding: 0; background: #fff; cursor: zoom-in; position: absolute; width: 88%; left: calc(var(--k) * 3%); top: calc(var(--k) * 9%); z-index: calc(5 - var(--k)); box-shadow: 0 .4rem 1.1rem rgb(0 0 0 / .35); }
+  .cm-pile { position: relative; width: min(100%, 16rem); aspect-ratio: 1.32 / 1; }
+  .cm-pg { appearance: none; border: 0; padding: 0; background: #fff; cursor: zoom-in; position: absolute; width: 88%; left: calc(var(--k) * 3%); top: calc(var(--k) * 4.5%); z-index: calc(5 - var(--k)); box-shadow: 0 .3rem .9rem rgb(0 0 0 / .35); transition: transform .5s var(--ease); }
   .cm-pg :global(img) { display: block; width: 100%; height: auto; }
-  :global(.js) .cm-pg { opacity: 0; transform: translateY(2.4rem); }
-  :global(.js) .cm-pg.on { opacity: 1; transform: none; transition: opacity .5s var(--ease), transform .7s cubic-bezier(.3, 1.6, .5, 1); }   /* each page jumps up */
-  @media (prefers-reduced-motion: reduce) { :global(.js) .cm-pg { opacity: 1; transform: none; } }
-  .cafe-cd { padding: 0 0 clamp(3rem, 6vw, 6rem); display: grid; gap: 1rem; justify-items: start; }
-  .cd-collage { position: relative; width: min(100%, 64rem); aspect-ratio: 1336 / 840; }
-  .cd-t { appearance: none; border: 0; padding: 0; background: #1b1b1b; position: absolute; cursor: zoom-in; overflow: hidden; }
-  .cd-t :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
-  .cd-t:hover :global(img) { transform: scale(1.04); }
-  .cd-cap { font-family: var(--display); font-style: italic; font-size: clamp(1.3rem, 2.2vw, 1.9rem); line-height: 1.2; color: var(--blush); }
+  .cm-pile:hover .cm-pg { transform: translate(calc(var(--k) * .4rem), calc(var(--k) * .35rem)); }
+  .cm-arrow { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1; color: var(--lime); transform: rotate(90deg); }
+  .cm-book { appearance: none; border: 0; padding: 0; background: none; cursor: zoom-in; display: block; width: min(52%, 11.5rem); border-left: .3rem solid rgb(0 0 0 / .28); border-radius: .15rem .3rem .3rem .15rem; box-shadow: 0 .8rem 1.8rem rgb(0 0 0 / .4), .35rem 0 0 -.1rem rgb(255 255 255 / .14); transition: transform .5s var(--ease); }
+  .cm-book:hover { transform: translateY(-.3rem) rotate(-1.5deg); }
+  .cm-book :global(img) { display: block; width: 100%; height: auto; }
+  @media (min-width: 900px) {
+    .cafe-menu { grid-template-columns: minmax(0, 1fr) 15rem auto 11.5rem; gap: 1rem clamp(1rem, 2vw, 2rem); justify-items: stretch; }
+    .cm-photo { width: auto; align-self: center; }
+    .cm-pile { width: 100%; align-self: end; }
+    .cm-arrow { transform: none; align-self: center; justify-self: center; }
+    .cm-book { width: 100%; }
+  }
+  /* 02 In the café, the creative process: its own cream band, a closed pile of the design pictures and the caption (click to open) */
+  .cafe-proc { background: var(--cream); color: var(--plum); padding: clamp(2.5rem, 5vw, 4.5rem) 0; }
+  .proc-in { display: flex; flex-wrap: wrap; align-items: center; gap: 1.4rem clamp(2rem, 5vw, 5rem); }
+  .cd-pile { position: relative; width: min(100%, 17rem); aspect-ratio: 16 / 10.6; flex: none; }
+  .cd-pg { appearance: none; border: 0; padding: 0; background: #1b1b1b; cursor: zoom-in; position: absolute; width: 88%; aspect-ratio: 16 / 9.4; left: calc(var(--k) * 4%); top: calc(var(--k) * 5.5%); z-index: calc(4 - var(--k)); box-shadow: 0 .3rem .9rem rgb(0 0 0 / .3); overflow: hidden; transition: transform .5s var(--ease); }
+  .cd-pg :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .cd-pile:hover .cd-pg { transform: translate(calc(var(--k) * .4rem), calc(var(--k) * .3rem)); }
+  .cd-cap { font-family: var(--display); font-style: italic; font-size: clamp(1.5rem, 2.6vw, 2.3rem); line-height: 1.15; max-width: 16em; color: var(--plum); }
   .m-social .ba .label { color: var(--ink-soft); }
   .m-social .ba-cap :global(.xl) { color: var(--plum); }
   .m-social :global(.ph) { background: var(--ph-bg); color: var(--ph-ink); box-shadow: inset 0 0 0 1px rgb(138 75 42 / .25); }
@@ -488,17 +503,6 @@ const index = [
     }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
     soc.forEach((el) => io.observe(el));
   }
-  // the stack of menu pages: each page jumps up in turn once the stack is on screen
-  const stack = document.querySelector<HTMLElement>('#k-mono .cm-stack');
-  if (stack) {
-    const pages = [...stack.querySelectorAll<HTMLElement>('.cm-pg')];
-    const sio = new IntersectionObserver((es) => {
-      if (!es.some((e) => e.isIntersecting)) return;
-      sio.disconnect();
-      pages.slice().reverse().forEach((el, i) => setTimeout(() => el.classList.add('on'), still ? 0 : 150 + i * 320));   // from the last page up to the first
-    }, { threshold: 0.3 });
-    sio.observe(stack);
-  }
   // the closing page: its lines write themselves in turn
   const lines = [...document.querySelectorAll<HTMLElement>('#k-mono .close-in .wr-in')];
   if (lines.length) {
@@ -509,28 +513,39 @@ const index = [
     }, { threshold: 0.35 });
     cio.observe(document.querySelector('#k-mono .close-in')!);
   }
-  // the guest-card deck: the scroll position through the track decides which card is in front; the others fall away above and below
-  const track = document.querySelector<HTMLElement>('[data-deck]');
-  if (track) {
-    const cards = [...track.querySelectorAll<HTMLElement>('.fb-deck li')];
-    const place = (f: number) => cards.forEach((li, i) => {
-      const d = i - f, a = Math.abs(d);
-      li.style.setProperty('--d', d.toFixed(3));
-      li.style.setProperty('--a', a.toFixed(3));
-      li.style.setProperty('--z', String(100 - Math.round(a * 10)));
-      li.style.setProperty('--o', String(Math.max(0, 1 - Math.max(0, a - 1.2) * 0.55).toFixed(2)));
+  // the guest-card deck: a small widget of its own. Buttons, a swipe / drag, or the arrow keys move through the cards; it never uses the page scroll.
+  // The front card opens in the viewer; a click on a card behind it brings that card to the front.
+  const deck = document.querySelector<HTMLElement>('[data-deck]');
+  if (deck) {
+    const cards = [...deck.querySelectorAll<HTMLElement>('.dk-cards li')];
+    const count = deck.querySelector<HTMLElement>('.dk-n');
+    let f = 0;
+    const render = () => {
+      cards.forEach((li, i) => {
+        const d = i - f;
+        if (d < 0) { // already seen: slips away to the left
+          li.style.cssText = `--z:${i};--o:0;--x:-70%;--y:0px;--r:-9deg;--s:.94;--pe:none`;
+        } else {
+          li.style.cssText = `--z:${100 - d};--o:${d > 3 ? 0 : (1 - d * 0.18).toFixed(2)};--x:${d * 3}%;--y:${d * 2.2}rem;--r:${d ? ((i % 2 ? 1 : -1) * d * 1.2).toFixed(1) : 0}deg;--s:${(1 - d * 0.05).toFixed(3)};--pe:${d > 3 ? 'none' : 'auto'}`;
+        }
+      });
+      if (count) count.textContent = `${f + 1} / ${cards.length}`;
+    };
+    const go = (n: number) => { f = Math.min(cards.length - 1, Math.max(0, n)); render(); };
+    deck.querySelector('.dk-next')?.addEventListener('click', () => go(f + 1));
+    deck.querySelector('.dk-prev')?.addEventListener('click', () => go(f - 1));
+    deck.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); go(f + 1); } if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(f - 1); } });
+    // a click on a card behind the front one: bring it forward (capture phase, so the viewer does not open)
+    cards.forEach((li, i) => li.addEventListener('click', (e) => { if (i !== f) { e.stopPropagation(); e.preventDefault(); go(i); } }, true));
+    // swipe / drag sideways
+    let x0 = 0, y0 = 0, moved = false, down = false;
+    deck.querySelector('.dk-cards')!.addEventListener('pointerdown', (e) => { const p = e as PointerEvent; down = true; moved = false; x0 = p.clientX; y0 = p.clientY; });
+    addEventListener('pointerup', (e) => {
+      if (!down) return; down = false;
+      const dx = (e as PointerEvent).clientX - x0, dy = (e as PointerEvent).clientY - y0;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { moved = true; go(f + (dx < 0 ? 1 : -1)); }
     });
-    if (still) place((cards.length - 1) / 2);
-    else {
-      const update = () => {
-        const r = track.getBoundingClientRect();
-        const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
-        place(p * (cards.length - 1));
-      };
-      let raf = 0;
-      addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
-      addEventListener('resize', update);
-      update();
-    }
+    deck.addEventListener('click', (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
+    render();
   }
 </script>

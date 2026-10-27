@@ -40,7 +40,7 @@ const nodes = base.map((n, i) => {
               <ul class="roles">
                 {n.roles.map((r) => (
                   <li>{r.date && <span class="rd">{r.date}</span>}{projectLink(r.text)
-                    ? <a class="rt rlink" href={`${pages.making}${projectLink(r.text)}`}><span set:html={inline(r.text)} /><span class="rgo" aria-hidden="true">→</span></a>
+                    ? <a class="rt rlink" href={`${pages.making}${projectLink(r.text)}`}><span set:html={inline(r.text)} /></a>
                     : <span class="rt" set:html={inline(r.text)} />}</li>
                 ))}
               </ul>
@@ -81,10 +81,9 @@ const nodes = base.map((n, i) => {
   .rd { display: block; font-size: .82rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--oxblood); margin-bottom: .15rem; }
   .rt { display: block; font-size: 1.05rem; line-height: 1.5; }
   .rt :global(strong) { font-weight: 700; }
-  /* a role line that leads to its project: dotted underline and an arrow */
-  .rlink { color: inherit; text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: .28em; }
-  .rlink .rgo { display: inline-block; margin-left: .35em; text-decoration: none; transition: transform .3s var(--ease); }
-  .rlink:hover { color: var(--pink); text-decoration-style: solid; } .rlink:hover .rgo { transform: translateX(.25rem); }
+  /* a role line that leads to its project: no marks, just like the other links (colour change and underline on hover) */
+  .rlink { color: inherit; text-decoration: none; transition: color .3s; }
+  .rlink:hover, .rlink:focus-visible { color: var(--pink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .14em; }
 
   /* reveal one by one */
   :global(.js) .node:not(.in) .pic, :global(.js) .node:not(.in) .txt { opacity: 0; transform: translateY(14px); }

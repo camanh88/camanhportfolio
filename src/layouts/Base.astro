@@ -168,6 +168,9 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
   .sp-title { font-family: var(--display); font-weight: 300; font-size: clamp(2.2rem, 7vw, 3.2rem); line-height: 1.02; letter-spacing: -.02em; margin-bottom: 1.25rem; }
   .sp-content p { margin-bottom: 1rem; max-width: 34rem; }
   .sp-content strong { font-weight: 700; }
+  /* the word that leads from About Lam Yen to About Cốm: dotted underline and a highlight, no arrow */
+  #sp-content .sp[data-sp="about-com"] { background: linear-gradient(transparent 58%, var(--lime) 58% 92%, transparent 92%); padding: 0 .12em; }
+  #sp-content .sp[data-sp="about-com"] .sp-arrow { display: none; }
   .sp-back { appearance: none; border: 0; background: none; padding: 0; margin: 0 0 1.2rem; cursor: pointer; font-family: var(--sans); font-size: .85rem; letter-spacing: .04em; color: var(--ink-soft); }
   .sp-back:hover { color: var(--pink); }
   .sp-fig { margin: 0 0 1.4rem; }

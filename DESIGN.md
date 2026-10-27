@@ -362,3 +362,16 @@ Source: note "DIFFERENT KITCHEN R1" and `*Photo/03` (folders Golden gate, L..., 
 - **Why Marou**: cards 01 and 02 share one frame (883 x 1125 in her units), the third photo of card 03 is cut higher; the contact page has a gift box on wheels that drives from left to right along the hills while the words appear behind it (mask driven by the box; the "Contact" link lands on the finished state, `#contact` is a marker at the end of the track).
 - **Home**: the woman-in-yellow photo `ly-4-2` is out of the "I believe" cloud.
 - Fixed on the way: `:global()` inside the `is:global` style of `Base.astro` (two warnings, rules were ignored).
+
+---
+
+## 20. Overview round 5 (27 Oct 2026, note "TONG QUAN R5", folder `TONG QUAN R5`) and the spelling pass
+
+- **Spelling and punctuation** (all of `content/`, not BUILD NOTE lines): "aming" → "aiming", "its hard" → "it's hard", "that is hard" → "that are hard", "I weren't" → "I wasn't", missing closing quote after "a gift worth owning", "launch/ relaunch" → "launch/relaunch", the trailing full stop of "Organise the Acculturation exhibitions" removed (the other bullets have none), US spellings in her new text unified to British (savour, flavours), "Full-stack Marketer" → "Full Stack Marketer" in `contents.md`, "..." → "…", a spaced hyphen → en dash in the Mono line. Straight apostrophes and quotes (Off the menu, Why Marou, nav, contents, a few lines elsewhere) became curly (’ “ ”). Left as she asked: "không bứ", "U.S. Embassy in Vietnam", and the text inside the catalogue pictures.
+- **Get to know me**: the two role lines that lead to the projects have no dotted line or arrow; colour change and underline on hover, like the other links.
+- **About Lam Yen**: only the word "Cốm" is the link to About Cốm: dotted underline, lime highlight, no arrow (`#sp-content .sp[data-sp="about-com"]` in `Base.astro`).
+- **Lam Yên**: "How a traditional gift became a daily sweet treat" is a small italic line under the Lam Yên picture (page 2); results 02 and 03 are set in the sans-serif.
+- **Different kitchens, 02 In the café**: split into the finished product on plum (clipboard menu photo, a closed pile of the five white menu pages, an arrow, the Brunch book) and the creative process on its own cream band (a closed pile of the four design pictures + the caption). Everything else opens only on click. The **Brunch book opens the whole catalogue**: Cam Anh's `Mono Brunch Menu (draft).pdf` (29 pages) rendered with macOS PDFKit (`scripts/pdf-pages.js`) into `scripts/derived/catalogue/cat-NN.jpg`, ids `mono-cat-01..29`, group `cat` in the blurred viewer (pages 2–29 are hidden buttons in `.cat-rest`).
+- **03 Summer Brunch launch**: as her input: text and a small **deck of guest cards** on the left, the main photo on the right. The deck is a widget of its own (buttons, swipe or drag, arrow keys when it has focus; no wheel, no scroll tie-in), so the page scroll is never touched. The front card opens the viewer; a click on a card behind brings it forward.
+- **Off the menu**: the last three photos appear at the same time (after the three lines).
+- **Why Marou**: card 01's first photo is a closer, lower crop on the chocolate stacks (`w1-a`, crop in `photos.mjs`); card 03's lower photo is cut a little lower (object-position 80%).

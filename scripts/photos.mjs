@@ -203,7 +203,7 @@ export const photos = {
   'k-l3': [`${R2}/L3.png`, 'A still from the 123 Restaurant TikTok: a plate of grilled ribs and rice with the cartoon logo girl and a bowl of noodles, and the words “30 năm không đổi”.', { max: 960 }],
   'mono-hero': [`${R2}/M1.jpg`, 'Inside Mono Coffee Lab at night: a barista in a striped apron leans over the counter, a small girl drawing behind it, shelves of coffee bags and a glowing arch in the wall.', { max: 1600 }],
   'mono-brunch': [`${R2}/Ảnh thêm 03 Summer Brunch launch.jpg`, 'Seen from above, six team members in a café courtyard lean over a wooden table of brunch plates, one of them filming the dishes on a phone.', { max: 1600 }],
-  'w1-a': [`${R2}/W1/484387717_1039650551519545_7090228925732454808_n.jpg`, 'Bakers in green uniforms and hairnets packing stacks of orange-and-red chocolate bars into white boxes at a long wooden table.', { max: 1600 }],
+  'w1-a': [`${R2}/W1/484387717_1039650551519545_7090228925732454808_n.jpg`, 'Tall stacks of orange-and-red chocolate bars piled up on a long wooden table in the workshop, a white box open at the top right.', { max: 1600, crop: { aspect: 1.75, zoom: 1.45, x: 0.92, y: 0.88 } }],
   'w1-b': [`${R2}/W1/IMG_7801 copy.heic`, 'A parcel wrapped in kraft paper with a wide cream satin ribbon and an illustrated card.', { max: 1600 }],
   'w1-c': [`${R2}/W1/536526591_17902819758239314_7393842382358610209_n.jpg`, 'A hand holding a stack of red Lam Yên gift boxes with cream edges, in front of a shop window.', { max: 1600 }],
   'w2-a': [`${R2}/W2/753733563_1437407331743863_9196938523612368725_n.jpg`, 'A hand above a metal mould filled with rows of small round chocolates, in warm, hazy light.', { max: 1600 }],
@@ -215,7 +215,6 @@ export const photos = {
 
   // ---- Round TONG QUAN R4 ----
   'mono-menu-photo': [`${R4}/1756946673859_261632638277001380_2068448480370764465_fc120119b23ce62bc49fbebd93293fd1.jpg`, 'A printed Mono Coffee Lab menu on a wooden clipboard: “home-lab brunch 8AM - 8PM” and a drawing of a cook in an apron and cap tossing a pan over flames, dishes along the right edge.', { max: 1600 }],
-  'mono-menu-cover': ['site/scripts/derived/brunch-cover.png', 'The cover of the Brunch menu: a dark brown page with a pale leaf-vein pattern across the top and the word “BRUNCH” in white brush letters near the foot.', { max: 1400 }],
   'mono-menu-1': [`${R4}/Menu/1.jpg`, 'A menu spread, “home-lab brunch 8AM - 8PM”, with the cook drawing and photographed dishes: salads, fries, pasta, focaccia.', { max: 1600 }],
   'mono-menu-2': [`${R4}/Menu/2.jpg`, 'A menu spread of brunch dishes: sourdough, sandwiches, poke bowls and pasta, with prices.', { max: 1600 }],
   'mono-menu-3': [`${R4}/Menu/3.jpg`, 'A menu spread, “home-lab pastry”, with a drawing of a baker and photographed cakes, buns and croissants.', { max: 1600 }],
@@ -226,3 +225,10 @@ export const photos = {
   'cd-notes': [`${R4}/Creative Direction & Design Refinement/1757559124706_2068448480370764465_2068448480370764465_f4bf4b9308c52331ba0f9a78db3a55de.jpg`, 'A handwritten sketch of a menu layout in a notebook: boxes with small drawings and the names of cakes and dishes in green ink.', { max: 1200 }],
   'cd-moodboard': [`${R4}/Creative Direction & Design Refinement/1753931835469_2068448480370764465_2068448480370764465_c66c59541f538e1dd3c339ed165702ed.jpg`, 'A Figma moodboard on a dark canvas covered in small photos of menus, booklets and printed cards in cream and green.', { max: 1600 }],
 };
+
+// The Brunch catalogue (Cam Anh's "Mono Brunch Menu (draft).pdf", 29 pages): every page rendered to a picture with macOS PDFKit (see HANDOFF.md), kept in scripts/derived/catalogue
+for (let n = 1; n <= 29; n++) {
+  const k = String(n).padStart(2, '0');
+  photos[`mono-cat-${k}`] = [`site/scripts/derived/catalogue/cat-${k}.jpg`, n === 1 ? 'The cover of the Brunch menu: a dark brown page with a pale leaf-vein pattern across the top and the word “BRUNCH” in white brush letters near the foot.' : `Page ${n} of the Mono Brunch menu (draft).`, { max: 1100 }];
+}
+

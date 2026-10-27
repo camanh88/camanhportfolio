@@ -1711,13 +1711,13 @@
   ]
  },
  "w1-a": {
-  "alt": "Bakers in green uniforms and hairnets packing stacks of orange-and-red chocolate bars into white boxes at a long wooden table.",
-  "width": 1600,
-  "height": 1200,
+  "alt": "Tall stacks of orange-and-red chocolate bars piled up on a long wooden table in the workshop, a white box open at the top right.",
+  "width": 1103,
+  "height": 630,
   "widths": [
    480,
    960,
-   1600
+   1103
   ]
  },
  "w1-b": {
@@ -1810,16 +1810,6 @@
    1600
   ]
  },
- "mono-menu-cover": {
-  "alt": "The cover of the Brunch menu: a dark brown page with a pale leaf-vein pattern across the top and the word “BRUNCH” in white brush letters near the foot.",
-  "width": 1364,
-  "height": 2200,
-  "widths": [
-   480,
-   960,
-   1364
-  ]
- },
  "mono-menu-1": {
   "alt": "A menu spread, “home-lab brunch 8AM - 8PM”, with the cook drawing and photographed dishes: salads, fries, pasta, focaccia.",
   "width": 1600,
@@ -1907,6 +1897,296 @@
    480,
    960,
    1600
+  ]
+ },
+ "mono-cat-01": {
+  "alt": "The cover of the Brunch menu: a dark brown page with a pale leaf-vein pattern across the top and the word “BRUNCH” in white brush letters near the foot.",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-02": {
+  "alt": "Page 2 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-03": {
+  "alt": "Page 3 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-04": {
+  "alt": "Page 4 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-05": {
+  "alt": "Page 5 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-06": {
+  "alt": "Page 6 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-07": {
+  "alt": "Page 7 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-08": {
+  "alt": "Page 8 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-09": {
+  "alt": "Page 9 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-10": {
+  "alt": "Page 10 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-11": {
+  "alt": "Page 11 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-12": {
+  "alt": "Page 12 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-13": {
+  "alt": "Page 13 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-14": {
+  "alt": "Page 14 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-15": {
+  "alt": "Page 15 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-16": {
+  "alt": "Page 16 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-17": {
+  "alt": "Page 17 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-18": {
+  "alt": "Page 18 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-19": {
+  "alt": "Page 19 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-20": {
+  "alt": "Page 20 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-21": {
+  "alt": "Page 21 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-22": {
+  "alt": "Page 22 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-23": {
+  "alt": "Page 23 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-24": {
+  "alt": "Page 24 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-25": {
+  "alt": "Page 25 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-26": {
+  "alt": "Page 26 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-27": {
+  "alt": "Page 27 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-28": {
+  "alt": "Page 28 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
+  ]
+ },
+ "mono-cat-29": {
+  "alt": "Page 29 of the Mono Brunch menu (draft).",
+  "width": 1100,
+  "height": 1774,
+  "widths": [
+   480,
+   960,
+   1100
   ]
  }
 }

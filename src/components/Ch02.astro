@@ -166,10 +166,10 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         <Photo id="ly-2-1" sizes="(min-width: 900px) 40vw, 90vw" />
         <span class="sp-more" aria-hidden="true">→</span>
       </button>
+      <p class="p2-sub" set:html={inline(p2Sub)} />
     </div>
     <div class="p2-brief">
       <h3 class="p2-h">{p2BriefH}</h3>
-      <p class="p2-sub" set:html={inline(p2Sub)} />
       <p class="p2-intro" set:html={inline(p2Intro)} />
       <ol class="p2-items">
         {p2Items.map((it) => (
@@ -524,7 +524,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .p2-about .k { font-size: .85rem; }
   .p2-brief { padding: clamp(3rem, 6vw, 6rem) var(--pad); }
   .p2-h { font-size: clamp(3rem, 8vw, 7rem); line-height: .92; letter-spacing: -.035em; font-weight: 300; }
-  .p2-sub { margin-top: 1.4rem; font-family: var(--display); font-style: italic; font-weight: 400; font-size: clamp(1.4rem, 2.4vw, 2.1rem); line-height: 1.12; max-width: 24ch; }
+  /* the sub head sits under the Lam Yên picture: small, italic, as wide as the picture (Oct 27) */
+  .p2-sub { font-family: var(--display); font-style: italic; font-weight: 400; font-size: clamp(1.1rem, 1.5vw, 1.35rem); line-height: 1.25; color: var(--cream); max-width: 22em; margin: -.4rem 0 0; }
   .p2-intro { margin-top: 1.4rem; max-width: 30rem; font-size: 1.05rem; }
   /* the photo opens an (empty for now) side panel from the left */
   .p2-about .sp-photo { display: grid; gap: 1.6rem; width: 100%; text-decoration: none; color: inherit; text-align: left; position: relative; }
@@ -774,6 +775,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .results { background: var(--cream); padding: 1.6rem; align-self: end; }
   .results .rl { color: var(--plum); margin-bottom: .8rem; }
   .results ul { display: grid; gap: .9rem; font-family: var(--display); font-size: clamp(1.25rem, 1.8vw, 1.6rem); line-height: 1.25; }
+  .results li:nth-child(n+2) { font-family: var(--sans); font-size: .82em; line-height: 1.5; }   /* the two lines after the first result: sans-serif (Oct 27, R5) */
   .results li::before { content: '→ '; color: var(--pink); font-family: var(--sans); font-size: .62em; font-weight: 500; vertical-align: .18em; margin-right: .2em; }   /* smaller, in the sans font (Oct 27) */
   .gia-band { background: var(--blush); margin-top: clamp(3rem, 6vw, 5rem); padding: clamp(3rem, 7vw, 6rem) 0; }
   .gia { display: grid; gap: 1.5rem; }

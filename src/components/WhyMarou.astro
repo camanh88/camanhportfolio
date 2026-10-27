@@ -54,9 +54,9 @@ const vEnd1 = cut > -1 ? vEnd.slice(0, cut + 1) : vEnd;
 const vEnd2 = cut > -1 ? vEnd.slice(cut + 1).trim() : '';
 // the photo collage on each value card (W1 to W3): the frames and crops follow Cam Anh's layouts, positions are percentages of the frame
 const collages: { ar: string; tiles: [string, string, string][] }[] = [
-  { ar: '883 / 1125', tiles: [['w1-a', 'left:0;top:0;width:100%;height:44.9%', '50% 70%'], ['w1-b', 'left:0;top:44.9%;width:100%;height:24.6%', '50% 32%'], ['w1-c', 'left:0;top:69.5%;width:100%;height:30.5%', '50% 78%']] },
+  { ar: '883 / 1125', tiles: [['w1-a', 'left:0;top:0;width:100%;height:44.9%', '50% 60%'], ['w1-b', 'left:0;top:44.9%;width:100%;height:24.6%', '50% 32%'], ['w1-c', 'left:0;top:69.5%;width:100%;height:30.5%', '50% 78%']] },
   { ar: '883 / 1125', tiles: [['w2-a', 'left:0;top:0;width:49.8%;height:100%', '15% 50%'], ['w2-b', 'left:50.2%;top:0;width:49.8%;height:100%', '45% 50%']] },
-  { ar: '1532 / 1060', tiles: [['w3-a', 'left:0;top:0;width:100%;height:61%', '50% 32%'], ['w3-b', 'left:0;top:61.2%;width:100%;height:38.8%', '50% 71%']] },
+  { ar: '1532 / 1060', tiles: [['w3-a', 'left:0;top:0;width:100%;height:61%', '50% 32%'], ['w3-b', 'left:0;top:61.2%;width:100%;height:38.8%', '50% 80%']] },
 ];
 const vTail = vm ? inline(vm[3]) : '';
 ---
