@@ -43,7 +43,6 @@ import '../styles/base.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Photo from '../components/Photo.astro';
-import ReviewNote from '../components/ReviewNote.astro';
 import Music from '../components/Music.astro';
 import { cover, sidePages, ui, nav, pages, imageMeta } from '../lib/data';
 import { inline, textOf } from '../lib/md';
@@ -85,7 +84,6 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
     )}
     <Footer />
     <Music />
-    <ReviewNote />
 
     <dialog id="sp" class="sp-dialog" aria-labelledby="sp-title" data-soon={ui['coming soon']}>
       <div class="sp-sheet">
@@ -193,6 +191,19 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
 </style>
 
 <script>
+  // "Contact" (header, footer, menu) goes straight to the closing page: no smooth scroll through everything above it
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href$="#contact"]');
+    const target = document.getElementById('contact');
+    if (!a || !target || new URL(a.href, location.href).pathname !== location.pathname) return;
+    e.preventDefault();
+    const root = document.documentElement;
+    root.style.scrollBehavior = 'auto';
+    target.scrollIntoView({ block: 'start' });
+    history.replaceState(null, '', '#contact');
+    requestAnimationFrame(() => { root.style.scrollBehavior = ''; });
+  });
+
   // Sidepath panel: one native <dialog> (focus trap + Esc), content cloned from <template>s.
   const dlg = document.getElementById('sp') as HTMLDialogElement;
   const content = document.getElementById('sp-content')!;

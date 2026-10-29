@@ -1,12 +1,12 @@
 ---
 // TEMPORARY review tool: a blank sticky note that floats in a corner of every page, so
 // Cam Anh can read the site full-screen and type her comments as she goes.
-// It exists only while reviewing: it renders in `npm run dev` (or a build made with PUBLIC_REVIEW=1)
+// It exists only while reviewing: it renders only when PUBLIC_REVIEW=1 (and only if <ReviewNote /> is in Base.astro; it was taken out on Oct 29)
 // and never in a normal `npm run build`. It holds no site copy; the only text on it is what she types.
 //
 // TO REMOVE WHEN REVIEW IS DONE: delete the <ReviewNote /> line (and its import) in src/layouts/Base.astro,
 // then delete this file. Nothing else depends on it.
-const on = import.meta.env.DEV || import.meta.env.PUBLIC_REVIEW === '1';
+const on = import.meta.env.PUBLIC_REVIEW === '1';   // off by default since Oct 29: to bring the note back, add <ReviewNote /> to Base.astro and run with PUBLIC_REVIEW=1
 ---
 {on && (
   <>

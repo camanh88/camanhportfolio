@@ -401,3 +401,11 @@ The whole section is the menu spread itself: `R6/Screenshot 2026-10-27 at 14.35.
 - **Music source (29 Oct)**: Cam Anh chose a YouTube video ("a quiet playlist for a quiet heart (calm/relax piano)", Little Thing, id `BBz7-F9mdUE`, `content/ui.md` key `music youtube`). It is not copied or downloaded: the same button starts YouTube's own embedded player (nocookie host, loaded only on the first press), shown as a small 200 x 200 card above the button while the music plays (YouTube's rules do not allow hiding its player). If a file `public/audio/music.mp3` exists it takes over and the card is not used. Not Cam Anh's track: its use depends on YouTube and on the owner keeping embedding on.
 - Results lines 02 and 03 of the Mochi block are another 30% smaller (`.574em`, arrows kept readable).
 - The review note is saved in the browser (`localStorage` key `port26-review-note`) and, from the dev server, in `site/review-note.md` (git-ignored). A copy of the file is in `Review notes archive/` at the project root.
+
+---
+
+## 24. Music behaviour, review note, Contact (29 Oct 2026)
+
+- **Review note removed from the site** (`<ReviewNote />` is no longer in `Base.astro`; the component file stays, it only renders with `PUBLIC_REVIEW=1` and the line added back). Her notes: `site/review-note.md` and `Review notes archive/`.
+- **Music** (`Music.astro`): the track starts by itself when a page opens (muted, because browsers refuse sound before a gesture) and turns audible at the first click, tap or key press anywhere (a click on the music button itself also does it). Button at the bottom right: pressed while playing = fade out (0.9 s) and stop, the note icon shows a diagonal slash; pressed again = fade in and continue. No YouTube picture is visible any more (the player is kept transparent in the corner: this goes against YouTube's own rules for its player, Cam Anh's choice). "Off" is remembered on the other pages; the position of the track too.
+- **Contact** (header, footer, menu): on the Why Marou page it jumps straight to the closing page (instant scroll, no run through the whole page); from the other pages the link opens Why Marou at the closing page.
