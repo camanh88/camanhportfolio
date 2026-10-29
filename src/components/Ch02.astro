@@ -775,7 +775,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   .results { background: var(--cream); padding: 1.6rem; align-self: end; }
   .results .rl { color: var(--plum); margin-bottom: .8rem; }
   .results ul { display: grid; gap: .9rem; font-family: var(--display); font-size: clamp(1.25rem, 1.8vw, 1.6rem); line-height: 1.25; }
-  .results li:nth-child(n+2) { font-family: var(--sans); font-size: .82em; line-height: 1.5; }   /* the two lines after the first result: sans-serif (Oct 27, R5) */
+  .results li:nth-child(n+2) { font-family: var(--sans); font-size: .574em; line-height: 1.55; }   /* a further 30% smaller (Oct 29) */   /* the two lines after the first result: sans-serif (Oct 27, R5) */
+  .results li:nth-child(n+2)::before { font-size: 1.1em; vertical-align: baseline; }
   .results li::before { content: '→ '; color: var(--pink); font-family: var(--sans); font-size: .62em; font-weight: 500; vertical-align: .18em; margin-right: .2em; }   /* smaller, in the sans font (Oct 27) */
   .gia-band { background: var(--blush); margin-top: clamp(3rem, 6vw, 5rem); padding: clamp(3rem, 7vw, 6rem) 0; }
   .gia { display: grid; gap: 1.5rem; }
