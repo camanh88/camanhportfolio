@@ -1,5 +1,13 @@
 # Deploying PORT 26 to Hostinger
 
+## Quick start (29 Oct 2026): going live in 10 minutes
+A ready-made zip is in `PORT 26/Upload to Hostinger/port26-website.zip` (the built site: pages, photos, videos, `.htaccess`).
+1. hPanel → **Websites → Manage → File Manager → public_html**. Delete Hostinger's default files (`default.php`, `index.php`…).
+2. **Upload** the zip into `public_html`, right-click it → **Extract** here. Check that `index.html` and `.htaccess` sit directly in `public_html` (not inside a sub-folder). Delete the zip.
+3. Open the domain; open the four pages and the "Contact" button; test the music button and the Brunch book on your phone.
+4. To update later: edit `content/` or the site, run `npm run build` in `site/`, zip the **contents** of `dist/` again and repeat.
+
+
 The build is a plain static folder: `dist/`. Nothing runs on a server. Either route below works.
 
 Before anything: `npm install` once, then `npm run build`. The result is `site/dist/`.
