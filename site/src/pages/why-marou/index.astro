@@ -1,0 +1,8 @@
+---
+import Base from '../../layouts/Base.astro';
+import WhyMarou from '../../components/WhyMarou.astro';
+import { nav } from '../../lib/data';
+---
+<Base current="marou" title={nav.marou.label}>
+  <main><WhyMarou /></main>
+</Base>

@@ -1,0 +1,493 @@
+---
+import Photo from './Photo.astro';
+import { ch05 } from '../lib/data';
+import { inline } from '../lib/md';
+
+const values = ch05.ul('values');
+const intro = ch05.ps('values')[0] ?? '';
+const story = ch05.ps('story');
+const vision = ch05.ps('vision');
+const box = ch05.ps('gift box')[0] ?? '';
+const contactP = ch05.ps('contact');
+const contactLine = contactP[0] ?? '';
+const contactLabel = contactP[1] ?? '';
+const contactItems = ch05.ul('contact');
+// the three values: the part that changes, in a different colour per card
+const valueTone = ['pink', 'plum', 'lime'] as const;
+// "It's easy to say I love chocolate. I do! ..." sentence by sentence for the big statement
+const sentences = intro.match(/[^.!?]+[.!?]+(?:\s|$)/g)?.map((x) => x.trim()) ?? [intro];
+const statement = inline(sentences.slice(0, 2).join(' ')).replace('I do!', '<span class="nw pk">I do!</span>');
+const turn = sentences[2] ?? '';
+const belong = sentences.slice(3).join(' ');
+// "(to apply to Marou)" stays as written; the story is shown in two beats
+// words that are bold in Cam Anh's text are shown highlighted
+// Emphasis (Cam Anh's bold words) is shown by colour and by deliberate line breaks, as in her reference: the coloured phrase
+// sits on its own line, indented, and the last lines of the vision step to the right. Only the layout changes, never the words.
+const accent = (t: string) => inline(t).replace(/<strong>/g, '<span class="ac ac-block">').replace(/<\/strong>/g, '</span>');
+const storyHtml = story.map(accent);
+// gift box sentence: TASTING GOOD / CONNECTING GOOD get colour
+// gift box: TASTING GOOD and CONNECTING GOOD each on one line, big and parallel; the words around them smaller
+const bm = /^(.*?)(TASTING GOOD[,.]?)\s*(.*?)(CONNECTING GOOD[,.]?)\s*$/.exec(box);
+const boxParts = bm ? { pre: bm[1].trim(), a: bm[2], mid: bm[3].trim(), b: bm[4] } : null;
+const contactHtml = inline(contactLine).replace(';)', '<span class="wink">;)</span>');
+// e-mail and phone become links
+const icons: Record<string, string> = {
+  mail: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="1.5"/><path d="M3.5 7l8.5 6.2L20.5 7"/></svg>',
+  phone: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 3.5h3l1.6 4-2 1.3a11 11 0 005.1 5.1l1.3-2 4 1.6v3a2 2 0 01-2.2 2A15.5 15.5 0 013.5 5.7 2 2 0 015.5 3.5z"/></svg>',
+};
+// "Gmail: ..." / "Phone: ..." -> a fine line symbol instead of the word (the word stays for screen readers)
+const contactRow = (t: string) => {
+  const m = /^([^:]+):\s*(.*)$/.exec(t);
+  const kind = m && /mail/i.test(m[1]) ? 'mail' : m && /phone|tel/i.test(m[1]) ? 'phone' : '';
+  if (!m || !kind) return linkContact(t);
+  return `<span class="ci">${icons[kind]}</span><span class="sr-only">${m[1]}: </span>${linkContact(m[2])}`;
+};
+const linkContact = (t: string) => inline(t).replace(/[\w.+-]+@[\w-]+\.[\w.]+/, (m) => `<a href="mailto:${m}">${m}</a>`).replace(/\+\d[\d ]{7,}\d/, (m) => `<a href="tel:${m.replace(/ /g, '')}">${m}</a>`);
+// vision: lead text, the big pink 360°, more lead text, then the bold ending on two stepped lines
+const vRaw = (vision[0] ?? '').replace('**360°**', '§');
+const [vA, vRest = ''] = vRaw.split('§');
+const vm = /^([\s\S]*?)\*\*(.+?)\*\*([\s\S]*)$/.exec(vRest);
+const vLead = inline(vA) + (vRaw.includes('§') ? '<span class="deg">360°</span>' : '') + inline(vm ? vm[1] : vRest);
+const vEnd = vm ? vm[2] : '';
+const cut = vEnd.search(/,\s+and\s/);
+const vEnd1 = cut > -1 ? vEnd.slice(0, cut + 1) : vEnd;
+const vEnd2 = cut > -1 ? vEnd.slice(cut + 1).trim() : '';
+// the photo collage on each value card (W1 to W3): the frames and crops follow Cam Anh's layouts, positions are percentages of the frame
+const collages: { ar: string; tiles: [string, string, string][] }[] = [
+  { ar: '883 / 1125', tiles: [['w1-a', 'left:0;top:0;width:100%;height:44.9%', '50% 60%'], ['w1-b', 'left:0;top:44.9%;width:100%;height:24.6%', '50% 32%'], ['w1-c', 'left:0;top:69.5%;width:100%;height:30.5%', '50% 78%']] },
+  { ar: '883 / 1125', tiles: [['w2-a', 'left:0;top:0;width:49.8%;height:100%', '15% 50%'], ['w2-b', 'left:50.2%;top:0;width:49.8%;height:100%', '45% 50%']] },
+  { ar: '1532 / 1060', tiles: [['w3-a', 'left:0;top:0;width:100%;height:61%', '50% 32%'], ['w3-b', 'left:0;top:61.2%;width:100%;height:38.8%', '50% 80%']] },
+];
+const vTail = vm ? inline(vm[3]) : '';
+---
+<article id="why-marou" class="wm" aria-labelledby="wm-title">
+
+  <!-- W1: the road. A jeep drives along the hills as the page is scrolled -->
+  <section class="road-track" data-road>
+    <div class="road-stage">
+      <h1 id="wm-title" class="r-title">{ch05.title}</h1>
+      <svg class="hills" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+        <path class="hill-back" d="M0,190 C160,140 300,130 440,165 C580,200 660,190 800,150 C940,110 1060,100 1180,128 C1290,154 1380,150 1440,130 L1440,300 L0,300 Z" />
+        <path class="hill-front" d="M0,215 C140,190 260,180 400,205 C560,235 640,230 780,200 C920,170 1050,175 1180,200 C1290,220 1380,215 1440,198 L1440,300 L0,300 Z" />
+        <defs>
+          <linearGradient id="reveal-fade" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff" /><stop offset="1" stop-color="#000" /></linearGradient>
+          <mask id="reveal" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="300">
+            <rect data-m1 x="0" y="0" width="0" height="300" fill="#fff" />
+            <rect data-m2 x="0" y="0" width="0" height="300" fill="url(#reveal-fade)" />
+          </mask>
+        </defs>
+        <path id="text-line" data-tl d="M0,215 C140,190 260,180 400,205 C560,235 640,230 780,200 C920,170 1050,175 1180,200 C1290,220 1380,215 1440,198" fill="none" stroke="none" />
+        <path id="road-line" class="road-line" d="M0,215 C140,190 260,180 400,205 C560,235 640,230 780,200 C920,170 1050,175 1180,200 C1290,220 1380,215 1440,198" />
+        <!-- a car that reads the same in both directions: mirror-symmetric, lights at both ends -->
+        <text class="r-text" mask="url(#reveal)"><textPath href="#text-line" data-tp startOffset="0">{ch05.hint}</textPath></text>
+        <g class="jeep" data-jeep>
+          <!-- long, low, boxy wagon (proportions from Cam Anh's reference picture); mirror-symmetric so it reads both ways, no letter on it -->
+          <rect x="-60" y="-26" width="120" height="17" rx="3" class="j-body" />
+          <path d="M-46,-26 L-41,-45 H41 L46,-26 Z" class="j-top" />
+          <path d="M-40,-28 L-36,-42 H-5 V-28 Z" class="j-win" /><path d="M40,-28 L36,-42 H5 V-28 Z" class="j-win" />
+          <rect x="-2.2" y="-42" width="4.4" height="14" class="j-pillar" />
+          <rect x="-26" y="-49" width="52" height="3" rx="1.5" class="j-rack" />
+          <rect x="-60" y="-19" width="5" height="4" rx="1" class="j-lamp" /><rect x="55" y="-19" width="5" height="4" rx="1" class="j-lamp" />
+          <circle cx="-38" cy="-9" r="9.5" class="j-wheel" /><circle cx="38" cy="-9" r="9.5" class="j-wheel" />
+          <circle cx="-38" cy="-9" r="3.2" class="j-hub" /><circle cx="38" cy="-9" r="3.2" class="j-hub" />
+        </g>
+      </svg>
+      <p class="sr-only">{ch05.hint}</p>
+    </div>
+  </section>
+
+  <!-- W2: values -->
+  <section class="values">
+    <!-- the statement: each sentence turns up in turn as the page is scrolled -->
+    <div class="v-seq" data-seq>
+      <div class="v-stage">
+        <div class="v-in wrap">
+          <p class="v-lead st" data-s set:html={statement} />
+          <p class="v-turn st" data-s>{turn}</p>
+          <p class="v-state st" data-s>{belong}</p>
+        </div>
+      </div>
+    </div>
+    <!-- the three values: 01, then 02, then 03 -->
+    <div class="v-seq v-seq-cards" data-seq>
+      <div class="v-stage">
+        <ul class="v-cards">
+          {values.map((v, i) => (
+            <li class={`vc vc${i + 1} st`} data-s style={`--c:var(--${valueTone[i]})`}>
+              <span class="vn" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <p class="vt" set:html={inline(v)} />
+              <div class={`vcol vcol${i + 1}`} style={`--ar:${collages[i].ar}`}>
+                {collages[i].tiles.map(([id, box, pos]) => <Photo id={id} style={`${box};object-position:${pos}`} sizes="(min-width: 900px) 30vw, 90vw" />)}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- W3: the story. A die-cut photo and a winding road -->
+  <section class="story">
+    <svg class="wind" viewBox="0 0 400 900" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <mask id="wind-reveal" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="900">
+          <path data-wm pathLength="1" d="M340,0 C340,120 60,140 80,300 C100,460 360,440 330,620 C300,780 120,760 100,900" fill="none" stroke="#fff" stroke-width="40" stroke-dasharray="1" stroke-dashoffset="1" />
+        </mask>
+      </defs>
+      <path mask="url(#wind-reveal)" d="M340,0 C340,120 60,140 80,300 C100,460 360,440 330,620 C300,780 120,760 100,900" />
+    </svg>
+    <div class="story-in wrap">
+      <div class="story-text">{storyHtml.map((h) => <p set:html={h} />)}</div>
+      <figure class="story-photo"><Photo id="w4" sizes="(min-width: 900px) 38vw, 90vw" /></figure>
+    </div>
+  </section>
+
+  <!-- W4: the vision -->
+  <section class="vision">
+    <Photo id="w5" class="vis-bg" alt="" sizes="100vw" />
+    <div class="vis-in wrap">
+      <p class="vis2">
+        <span class="vis-lead" data-late set:html={vLead} />
+        <span class="ac ac1" data-late>{vEnd1}</span>
+        {vEnd2 && <span class="ac ac2" data-late>{vEnd2}</span>}
+        {vTail && <span set:html={vTail} />}
+      </p>
+    </div>
+  </section>
+
+  <!-- W5: the gift box opens -->
+  <section class="box-track" data-box>
+    <div class="box-stage">
+      <p class="bx-text">
+        {boxParts ? (<>
+          <span class="bx-s">{boxParts.pre}</span>
+          <span class="bx-b tg">{boxParts.a}</span>
+          <span class="bx-s">{boxParts.mid}</span>
+          <span class="bx-b cg">{boxParts.b}</span>
+        </>) : box}
+      </p>
+      <div class="giftbox" aria-hidden="true">
+        <div class="lid"><span class="band"></span></div>
+        <div class="base"><span class="band"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- W6: contact. A gift box on wheels drives across the page from left to right and the words appear behind it -->
+  <section class="contact" aria-labelledby="ct-title">
+    <span id="contact" class="ct-anchor" aria-hidden="true"></span>
+    <div class="ct-track" data-ct>
+      <div class="ct-stage">
+        <div class="ct-in wrap" data-ct-reveal>
+          <h2 id="ct-title" class="ct-line" set:html={contactHtml} />
+          <p class="ct-label label">{contactLabel}</p>
+          <ul class="ct-list">
+            {contactItems.map((t) => <li set:html={contactRow(t)} />)}
+          </ul>
+        </div>
+        <div class="ct-road" aria-hidden="true">
+          <svg class="end-hills" viewBox="0 0 1440 120" preserveAspectRatio="none"><path data-ct-hill d="M0,70 C140,40 260,30 400,58 C560,90 640,86 780,56 C920,26 1050,30 1180,56 C1290,78 1380,74 1440,56 L1440,120 L0,120 Z" /><path class="ct-dash" data-ct-line d="M0,70 C140,40 260,30 400,58 C560,90 640,86 780,56 C920,26 1050,30 1180,56 C1290,78 1380,74 1440,56" /></svg>
+          <svg class="ct-car" data-ct-car viewBox="-52 -64 104 76" width="104" height="76">
+            <rect x="-34" y="-34" width="68" height="26" rx="2" class="cb-base" />
+            <rect x="-40" y="-46" width="80" height="13" rx="2" class="cb-lid" />
+            <rect x="-6" y="-46" width="12" height="38" class="cb-band" />
+            <path d="M0,-46 C-14,-62 -26,-52 -8,-47 M0,-46 C14,-62 26,-52 8,-47" class="cb-bow" />
+            <circle cx="-22" cy="-6" r="7" class="cb-wheel" /><circle cx="22" cy="-6" r="7" class="cb-wheel" />
+            <circle cx="-22" cy="-6" r="2.4" class="cb-hub" /><circle cx="22" cy="-6" r="2.4" class="cb-hub" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+</article>
+
+<style>
+  .wm { background: var(--paper); --pad: clamp(1.25rem, 4vw, 4rem); overflow-x: clip; }
+  .wrap { width: min(100% - 2 * var(--pad), 88rem); margin-inline: auto; }
+  .label { font-family: var(--sans); }
+
+  /* ---------- W1 ---------- */
+  .road-track { height: 230svh; position: relative; background: var(--dark); color: #fff; --p: 0; }
+  .road-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; align-content: start; justify-items: center; text-align: center; padding: clamp(4rem, 12svh, 8rem) var(--pad) 0; }
+  .r-num { color: var(--lime); letter-spacing: .2em; }
+  .r-title { font-size: clamp(4.4rem, 17vw, 16rem); line-height: .82; letter-spacing: -.05em; font-weight: 300; margin-top: .4rem; }
+  /* the line lies along the road and is revealed softly as the car passes (mask edge follows the car) */
+  .r-text { font-family: var(--display); font-style: italic; font-weight: 300; fill: var(--blush); letter-spacing: .16em; text-transform: uppercase; font-style: normal; font-weight: 400; }
+  .hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: min(46svh, 26rem); }
+  @media (max-width: 700px) { .hills { height: min(30svh, 15rem); } }
+  .hill-back { fill: #3f1a47; }
+  .hill-front { fill: var(--plum); }
+  .road-line { fill: none; stroke: var(--lime); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 11; }
+  .jeep .j-body { fill: var(--cream); } .jeep .j-top { fill: var(--pink); } .jeep .j-rack { fill: var(--lime); } .jeep .j-win { fill: var(--dark); } .jeep .j-pillar { fill: var(--pink); } .jeep .j-lamp { fill: var(--lime); }
+  .jeep .j-wheel { fill: var(--dark); stroke: var(--cream); stroke-width: 2.4; } .jeep .j-hub { fill: var(--cream); }
+  @media (prefers-reduced-motion: reduce) { .road-track { height: auto; } .road-stage { position: relative; } }
+
+  /* ---------- W2 ---------- */
+  .values { background: var(--cream); padding: 0 0 clamp(4rem, 8vw, 7rem); }
+  /* scenes where the next line / card turns up as the visitor scrolls (phones: each one turns up when it reaches the screen) */
+  .v-seq { padding: clamp(4rem, 9vw, 7rem) 0 0; }
+  .st { opacity: 0; transform: perspective(1100px) rotateX(-34deg) translateY(1.6rem); transform-origin: 50% 0; transition: opacity .9s var(--ease), transform .9s var(--ease); }
+  .st.on { opacity: 1; transform: none; }
+  :global(html:not(.js)) .st { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .st { opacity: 1; transform: none; transition: none; } }
+  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+    .v-seq { height: 320svh; padding: 0; }
+    .v-seq-cards { height: 340svh; }
+    .v-stage { position: sticky; top: 0; height: 100svh; display: grid; align-content: center; }
+    .v-seq-cards .v-stage { align-content: stretch; }
+    .v-seq-cards .v-cards { margin-top: 0; height: 100%; align-items: stretch; }
+    .v-seq-cards .vc { min-height: 0; }
+  }
+  .v-in { display: grid; gap: 1.4rem; }
+  .v-state { font-family: var(--display); font-weight: 300; font-size: clamp(2.04rem, 5.44vw, 5.27rem); line-height: .98; letter-spacing: -.035em; max-width: 14em; }
+  .v-lead { font-family: var(--sans); font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.6; max-width: 36rem; }
+  .v-lead :global(.nw) { white-space: nowrap; } .v-lead :global(.pk) { color: var(--pink); }
+  .v-turn { font-family: var(--display); font-style: italic; font-size: clamp(1.8rem, 4vw, 3.6rem); line-height: 1.04; letter-spacing: -.02em; color: var(--pink); max-width: 18em; }
+  .v-cards { margin-top: clamp(1rem, 3vw, 2rem); display: grid; gap: 0; }
+  .vc { background: var(--c); color: #fff; padding: clamp(2rem, 5vw, 4.5rem) var(--pad); display: grid; gap: 1.2rem; align-content: start; }
+  .vc2 { color: #fff; } .vc3 { color: var(--ink); }
+  .vn { font-family: var(--display); font-weight: 300; font-size: clamp(4rem, 9vw, 8rem); line-height: .8; opacity: .8; }
+  /* a collage of photos on each card: frames sit in a box of fixed proportions, photos are placed in percentages (Cam Anh's layouts, Oct 26) */
+  .vcol { position: relative; width: 100%; aspect-ratio: var(--ar); overflow: hidden; }
+  .vcol :global(img) { position: absolute; display: block; object-fit: cover; }
+  .vcol1, .vcol2 { --ar-n: .7849; } .vcol3 { --ar-n: 1.4453; }   /* cards 01 and 02: the same frame, the width of the first and the height of the second (Oct 27) */
+  .vt { font-family: var(--display); font-weight: 300; font-size: clamp(2rem, 4.6vw, 4.4rem); line-height: 1; letter-spacing: -.03em; }
+  @media (min-width: 900px) {
+    .v-in { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; }
+    .v-lead { grid-column: 1 / 8; } .v-turn { grid-column: 4 / 13; } .v-state { grid-column: 1 / 11; }
+    .v-cards { grid-template-columns: repeat(3, 1fr); }
+    .vc { min-height: 80svh; grid-template-rows: auto 1fr auto; }
+    .vcol { align-self: end; justify-self: start; width: min(100%, calc((100svh - 30rem) * var(--ar-n, 1))); }
+    .vt { font-size: clamp(1.8rem, 3.3vw, 3.3rem); }
+    .vn { font-size: clamp(3.2rem, 6vw, 5.4rem); }
+    .vc2 { padding-top: calc(clamp(2rem, 5vw, 4.5rem) + 4rem); } .vc3 { padding-top: calc(clamp(2rem, 5vw, 4.5rem) + 8rem); }
+  }
+
+  /* ---------- W3 ---------- */
+  .story { position: relative; background: #fff; padding: var(--section) 0; overflow: hidden; }
+  .wind { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .wind > path { fill: none; stroke: var(--plum); stroke-width: 3; stroke-dasharray: 3 14; stroke-linecap: round; opacity: .55; vector-effect: non-scaling-stroke; }
+  .story-in { position: relative; display: grid; gap: 2.5rem; align-items: center; }
+  .story-text { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3.3vw, 3.1rem); line-height: 1.14; letter-spacing: -.015em; max-width: 24em; }
+  .story-text { display: grid; gap: 1.2em; }
+  .story-text :global(p:first-child) { font-size: .74em; line-height: 1.2; }
+  .story-text :global(.ac) { color: var(--pink); font-style: italic; }
+  .vis2 .ac { color: var(--pink); }
+  .story-text :global(.ac-block) { display: block; padding-left: min(1.6em, 7vw); margin: .12em 0; }
+  .vis2 .ac { display: block; margin-top: .1em; }
+  .vis2 .ac1 { padding-left: min(1.6em, 6vw); }
+  .vis2 .ac2 { padding-left: min(3.1em, 12vw); font-style: italic; color: var(--plum); font-size: 1.12em; }
+  .vis2 :global(.deg) { font-style: italic; font-size: 1.2em; line-height: .8; color: var(--pink); padding: 0 .06em; }
+  /* the photo stands to the right of the text, a plain rectangle; the dotted road runs over both (Cam Anh's layout, Oct 26) */
+  .story-photo { margin: 0; width: min(100%, 24rem); justify-self: center; }
+  .story-photo :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 762 / 1035; object-fit: cover; object-position: 68% 50%; }
+  .wind { z-index: 2; }
+  @media (max-width: 899px) { .wind > path { opacity: .32; } }
+  @media (min-width: 900px) {
+    .story-in { grid-template-columns: 6fr 5fr; column-gap: clamp(2rem, 6vw, 7rem); }
+    .story-photo { width: 100%; justify-self: end; max-width: 34rem; }
+  }
+
+  /* ---------- W4 ---------- */
+  /* the big sentence is set over the cacao photo, as in Cam Anh's layout; each part turns up as the page is scrolled to it */
+  .vision { position: relative; background: #1b1209; color: #fff; overflow: hidden; min-height: 100svh; display: grid; }
+  .vision::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(rgb(0 0 0 / .66), rgb(0 0 0 / .3) 45%, rgb(0 0 0 / .45)); pointer-events: none; }
+  @media (min-width: 900px) { .vision::before { background: linear-gradient(rgb(0 0 0 / .55), rgb(0 0 0 / .1) 42%, rgb(0 0 0 / .3)); } }
+  :global(.vis-bg) { position: absolute; left: 50%; top: 0; transform: translateX(-50%); min-width: 100%; min-height: 120%; width: auto; height: auto; max-width: none; object-position: 50% 0; }
+  .vis-in { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: space-between; gap: clamp(4rem, 18svh, 10rem); padding-block: clamp(4rem, 10svh, 6rem); }
+  .vis2 { display: contents; font-family: var(--display); font-weight: 300; letter-spacing: -.01em; }
+  :global(.js) [data-late] { opacity: 0; transform: translateY(2rem); transition: opacity 1.2s var(--ease), transform 1.2s var(--ease); }
+  :global(.js) [data-late].in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { :global(.js) [data-late] { opacity: 1; transform: none; transition: none; } }
+  .vis-lead { display: block; font-size: clamp(1.6rem, 6.2vw, 2.3rem); line-height: 1.28; max-width: 24em; }
+  .vis2 :global(.deg) { font-style: italic; font-size: 1.15em; line-height: .8; color: var(--lime); padding: 0 .06em; }
+  .vis2 .ac { display: block; font-style: italic; font-weight: 400; color: #fff; }
+  .vis2 .ac1 { color: var(--lime); font-size: clamp(1.6rem, 6.4vw, 2.4rem); padding-left: min(3.5rem, 18vw); }
+  .vis2 .ac2 { font-size: clamp(1.8rem, 7.4vw, 2.7rem); line-height: 1.15; max-width: 14em; margin-top: -.5rem; }
+  @media (min-width: 900px) {
+    .vision { aspect-ratio: 1550 / 1150; min-height: 0; max-height: 135svh; display: block; }
+    .vis-in { display: block; position: static; padding: 0; width: 100%; max-width: none; margin: 0; }
+    .vis2 .ac, .vis-lead { position: absolute; z-index: 2; }
+    .vis-lead { left: 12.6%; top: 9.5%; width: 72%; max-width: none; font-size: clamp(1.7rem, 2.65vw, 3.4rem); line-height: 1.4; }
+    .vis2 .ac1 { left: 58%; top: 57%; padding: 0; font-size: clamp(1.8rem, 3.3vw, 4.2rem); white-space: nowrap; }
+    .vis2 .ac2 { left: 6.4%; top: 82.6%; width: 66%; max-width: none; margin: 0; font-size: clamp(1.8rem, 3.3vw, 4.2rem); line-height: 1.12; }
+  }
+  .vis-lead[data-late] { transition-delay: 0s; } .ac1[data-late] { transition-delay: .1s; } .ac2[data-late] { transition-delay: .2s; }
+
+  /* ---------- W5: the gift box ---------- */
+  .box-track { height: 300svh; position: relative; background: var(--dark); color: #fff; --p: 0; }
+  .box-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; place-items: center; }
+  .bx-text { position: absolute; z-index: 1; left: 0; right: 0; top: 38%; transform: translateY(calc(-50% + (1 - min(1, max(0, (var(--p) - .25) * 2))) * 18vh)); text-align: center; padding: 0 var(--pad); font-family: var(--display); font-weight: 300; line-height: 1; margin: 0 auto; display: grid; justify-items: center; gap: .2em; opacity: min(1, max(0, calc((var(--p) - .25) * 2.4))); }
+  .bx-s { font-size: clamp(1.21rem, 2.31vw, 2.2rem); letter-spacing: .01em; color: var(--blush); white-space: nowrap; }
+  .bx-b { font-size: clamp(2rem, 7.2vw, 7rem); letter-spacing: -.035em; font-style: italic; white-space: nowrap; line-height: .95; }
+  .bx-text .tg { color: var(--lime); }
+  .bx-text .cg { color: var(--pink); }
+  .giftbox { --w: min(54vw, 24rem); position: absolute; left: 50%; bottom: 5svh; width: var(--w); height: calc(var(--w) * .9); transform: translateX(-50%) translateY(calc(var(--p) * 9svh)); z-index: 2; }
+  .base { position: absolute; left: 0; right: 0; bottom: 0; height: 74%; background: var(--pink); }
+  .lid { position: absolute; left: -4%; right: -4%; top: 0; height: 28%; background: var(--plum); transform-origin: 0 100%; transform: translateY(calc(var(--p) * -70svh)) rotate(calc(var(--p) * -24deg)); opacity: calc(1 - var(--p) * .6); box-shadow: 0 10px 30px rgb(0 0 0 / .35); }
+  .band { position: absolute; left: 50%; top: 0; bottom: 0; width: 18%; transform: translateX(-50%); background: var(--cream); }
+  .giftbox::before { content: ''; position: absolute; left: 6%; right: 6%; top: 24%; height: 12%; background: radial-gradient(closest-side, var(--lime), transparent); filter: blur(14px); opacity: calc(var(--p) * 1.4); }
+  @media (prefers-reduced-motion: reduce) { .box-track { height: auto; --p: 1 !important; } .box-stage { position: relative; min-height: 100svh; } }
+
+  /* ---------- W6: contact ---------- */
+  .contact { position: relative; background: var(--pink); color: #fff; }
+  .ct-anchor { position: absolute; left: 0; width: 1px; height: 1px; bottom: calc(100svh - 1px); pointer-events: none; }   /* the "Contact" link lands here: the words are already there */
+  .ct-track { height: 230svh; position: relative; --q: 0; }
+  @media (prefers-reduced-motion: reduce) { .ct-track { --q: 1.15; } }
+  .ct-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; align-content: center; padding: 5rem 0 clamp(8rem, 18vw, 14rem); }
+  .ct-in { display: grid; gap: 1.2rem; -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--q) * 100% - 12%), transparent calc(var(--q) * 100%)); mask-image: linear-gradient(90deg, #000 calc(var(--q) * 100% - 12%), transparent calc(var(--q) * 100%)); }
+  .ct-line { font-size: clamp(2.8rem, 8.6vw, 8.4rem); line-height: .94; letter-spacing: -.045em; font-weight: 300; max-width: 12em; }
+  .ct-line :global(.wink) { color: var(--lime); font-style: italic; }
+  .ct-label { margin-top: clamp(2rem, 5vw, 4rem); color: var(--cream); }
+  .ct-list { display: grid; gap: .9rem; }
+  .ct-list li { font-family: var(--display); font-size: clamp(1.53rem, 3.06vw, 2.72rem); line-height: 1.1; padding-bottom: .9rem; border-bottom: 1px solid rgb(255 255 255 / .5); }
+  .ct-list :global(.ph) { font-size: .9em; }
+  .ct-list :global(.ci) { display: inline-grid; place-items: center; width: 1.9em; height: 1.9em; margin-right: .55em; vertical-align: -.35em; border: 1px solid rgb(255 255 255 / .6); border-radius: 50%; font-size: .62em; }
+  .ct-list :global(a) { text-decoration-thickness: 1px; text-underline-offset: .2em; }
+  .ct-road { position: absolute; left: 0; right: 0; bottom: 0; height: clamp(6rem, 14vw, 10rem); }
+  .end-hills { position: absolute; inset: 0; width: 100%; height: 100%; display: block; fill: var(--dark); }
+  .ct-dash { fill: none; stroke: var(--lime); stroke-width: 2.4; stroke-dasharray: 2 10; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .ct-car { position: absolute; left: 0; top: 0; width: clamp(4.4rem, 7vw, 6.5rem); height: auto; overflow: visible; will-change: transform; transform-origin: 50% 100%; }
+  .ct-car .cb-base { fill: var(--pink); stroke: var(--cream); stroke-width: 1.5; } .ct-car .cb-lid { fill: var(--plum); } .ct-car .cb-band { fill: var(--cream); }
+  .ct-car .cb-bow { fill: none; stroke: var(--cream); stroke-width: 3; stroke-linecap: round; } .ct-car .cb-wheel { fill: var(--dark); stroke: var(--cream); stroke-width: 2; } .ct-car .cb-hub { fill: var(--cream); }
+  @media (min-width: 900px) { .ct-in { grid-template-columns: 7fr 5fr; column-gap: 4rem; align-items: end; } .ct-line { grid-row: 1 / 4; } .ct-label { margin-top: 0; } }
+  @media (prefers-reduced-motion: reduce) { .ct-track { height: auto; } .ct-stage { position: relative; height: auto; min-height: 100svh; } .ct-in { -webkit-mask-image: none; mask-image: none; } .ct-anchor { bottom: auto; top: 0; } }
+</style>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // scroll progress through a sticky track (0..1) -> --p on the track
+  const progress = (track: HTMLElement, hold = 0.85) => {
+    const r = track.getBoundingClientRect();
+    return Math.min(1, Math.max(0, -r.top / ((r.height - innerHeight) * hold)));
+  };
+  const road = document.querySelector<HTMLElement>('[data-road]');
+  const box = document.querySelector<HTMLElement>('[data-box]');
+  const svg = document.querySelector<SVGSVGElement>('.hills');
+  const jeep = document.querySelector<SVGGElement>('[data-jeep]');
+  const txt = document.querySelector<SVGTextElement>('.r-text');
+  const tp = document.querySelector<SVGTextPathElement>('[data-tp]');
+  const m1 = document.querySelector<SVGRectElement>('[data-m1]');
+  const m2 = document.querySelector<SVGRectElement>('[data-m2]');
+  const line = document.getElementById('road-line') as unknown as SVGPathElement | null;
+  const L = line?.getTotalLength() ?? 0;
+  // The scene keeps its proportions at every width: the viewBox shows as much of the 1440-wide road as fits the box.
+  let vw = 1440, x0 = 0, k = 1;
+  const lenAtX = (x: number) => {
+    let lo = 0, hi = L;
+    for (let i = 0; i < 22; i++) { const mid = (lo + hi) / 2; if (line!.getPointAtLength(mid).x < x) lo = mid; else hi = mid; }
+    return hi;
+  };
+  const fit = () => {
+    if (!svg || !line) return;
+    const r = svg.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    vw = Math.min(1440, (300 * r.width) / r.height); x0 = (1440 - vw) / 2; k = r.width / vw;
+    svg.setAttribute('viewBox', `${x0} 0 ${vw} 300`);
+    // the line of text lies along the road, a little above it, starting a fifth into the picture
+    const px = Math.min(31, Math.max(16.8, innerWidth * 0.024));
+    txt?.setAttribute('font-size', String(px / k));
+    document.querySelector('[data-tl]')?.setAttribute('transform', `translate(0,${-(px * 1.7) / k})`);
+    tp?.setAttribute('startOffset', String(lenAtX(x0 + vw * 0.2)));
+  };
+  // p = 0..1: the car drives in from the left edge and stops near the right; the text appears softly behind it
+  const place = (p: number) => {
+    if (!jeep || !line || !svg) return;
+    const carPx = Math.min(150, Math.max(75, innerWidth * 0.085));
+    const s = carPx / (120 * k);
+    const xs = Math.min(1438, Math.max(2, (x0 - 60 * s) + p * (vw * 0.86 + 60 * s)));
+    const a = lenAtX(xs - 12), b = lenAtX(xs + 12);
+    const pa = line.getPointAtLength(a), pb = line.getPointAtLength(b), pt = line.getPointAtLength(lenAtX(xs));
+    const ang = Math.max(-14, Math.min(14, (Math.atan2(pb.y - pa.y, pb.x - pa.x) * 180) / Math.PI));
+    jeep.setAttribute('transform', `translate(${pt.x},${pt.y}) rotate(${ang}) scale(${s})`);
+    // reveal everything behind the car, with a soft edge
+    const edge = pt.x - 30 * s, feather = 70 / Math.max(.5, k);
+    m1?.setAttribute('width', String(Math.max(0, edge - feather)));
+    m2?.setAttribute('x', String(Math.max(0, edge - feather)));
+    m2?.setAttribute('width', String(feather));
+  };
+  fit();
+  if (reduce) { place(0.62); box?.style.setProperty('--p', '1'); addEventListener('resize', () => { fit(); place(0.62); }); }
+  else {
+    const update = () => {
+      if (road) { const p = progress(road); road.style.setProperty('--p', p.toFixed(4)); place(p); }
+      if (box) box.style.setProperty('--p', progress(box, 0.8).toFixed(4));
+    };
+    let raf = 0;
+    addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+    addEventListener('resize', () => { fit(); update(); });
+    update();
+  }
+</script>
+
+<script>
+  // Values: the statement and the three cards turn up one after another.
+  // Wide screens: a tall scene with a sticky stage; the scroll position decides how many have turned up. Phones: each one turns up when it reaches the screen.
+  const reduce2 = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wide = matchMedia('(min-width: 900px)');
+  document.querySelectorAll<HTMLElement>('[data-seq]').forEach((track) => {
+    const items = [...track.querySelectorAll<HTMLElement>('[data-s]')];
+    if (reduce2) { items.forEach((i) => i.classList.add('on')); return; }
+    const update = () => {
+      if (!wide.matches) return;
+      const r = track.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
+      items.forEach((it, i) => it.classList.toggle('on', p >= 0.08 + i * (0.72 / items.length)));
+    };
+    let raf = 0;
+    addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+    addEventListener('resize', update);
+    update();
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting && !wide.matches) { e.target.classList.add('on'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -16% 0px', threshold: 0.12 });
+    items.forEach((i) => io.observe(i));
+  });
+
+  // Story: the dotted road is drawn downwards as the section scrolls past
+  const wm = document.querySelector<SVGPathElement>('[data-wm]');
+  const story = document.querySelector<HTMLElement>('.story');
+  if (wm && story) {
+    const draw = () => {
+      const r = story.getBoundingClientRect();
+      const p = reduce2 ? 1 : Math.min(1, Math.max(0, (innerHeight * 0.7 - r.top) / (r.height * 0.85)));
+      wm.style.strokeDashoffset = String(1 - p);
+    };
+    addEventListener('scroll', draw, { passive: true }); addEventListener('resize', draw); draw();
+  }
+
+  // Vision: appears only after the visitor has scrolled further down
+  const late = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); late.unobserve(e.target); } }), { rootMargin: '0px 0px -30% 0px', threshold: 0.2 });
+  document.querySelectorAll('[data-late]').forEach((el) => late.observe(el));
+</script>
+
+<script>
+  // Contact: a gift box on wheels drives from the left edge to the right edge along the hills as the page is scrolled; the words appear behind it (left to right)
+  const ct = document.querySelector<HTMLElement>('[data-ct]');
+  const car = document.querySelector<SVGSVGElement>('[data-ct-car]');
+  const roadEl = document.querySelector<HTMLElement>('.ct-road');
+  const hill = document.querySelector<SVGPathElement>('[data-ct-line]');
+  if (ct && car && roadEl && hill) {
+    const L = hill.getTotalLength();
+    const lenAtX = (x: number) => { let lo = 0, hi = L; for (let i = 0; i < 22; i++) { const m = (lo + hi) / 2; if (hill.getPointAtLength(m).x < x) lo = m; else hi = m; } return hi; };
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const place = (q: number) => {
+      const w = roadEl.clientWidth, h = roadEl.clientHeight, cw = car.getBoundingClientRect().width || 90;
+      const vx = Math.min(1440, Math.max(0, q * 1440));
+      const a = hill.getPointAtLength(lenAtX(Math.max(0, vx - 12))), b = hill.getPointAtLength(lenAtX(Math.min(1440, vx + 12))), pt = hill.getPointAtLength(lenAtX(vx));
+      const sx = w / 1440, sy = h / 120;
+      const ang = Math.max(-14, Math.min(14, (Math.atan2((b.y - a.y) * sy, (b.x - a.x) * sx) * 180) / Math.PI));
+      const px = pt.x * sx - cw / 2, py = pt.y * sy - car.getBoundingClientRect().height + 4;
+      car.style.transform = `translate(${px}px, ${py}px) rotate(${ang}deg)`;
+      ct.style.setProperty('--q', String(Math.min(1.15, Math.max(0, (px + cw * 0.5) / w)).toFixed(4)));
+    };
+    const update = () => {
+      const r = ct.getBoundingClientRect();
+      const p = still ? 1 : Math.min(1, Math.max(0, -r.top / ((r.height - innerHeight) * 0.78)));
+      place(-0.06 + p * 1.12);
+      if (p >= 1) ct.style.setProperty('--q', '1.15');
+    };
+    let raf = 0;
+    addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  }
+</script>

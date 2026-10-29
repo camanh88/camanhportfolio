@@ -1,0 +1,34 @@
+:root {
+  --paper: #FFFFFF;
+  --paper-2: #F6F5F2;
+  --ink: #141312;
+  --ink-soft: #57524B;
+  /* theme colours: "Girly Shimmer" scheme, Design Style/girly-shimmer-color-scheme.jpg */
+  --pink: #F33F71;
+  --blush: #EBDBD7;
+  --cream: #FCEFDB;
+  --lime: #BDCC30;
+  --plum: #61216A;
+  --green: #2F5D3A;
+  --dark: #2B1030;        /* plum, darkened: photo shade and deep blocks */
+  --accent: var(--plum);
+  /* older names used by components built earlier, now pointing at the new scheme */
+  --tomato: var(--pink);
+  --oxblood: var(--plum);
+  --mustard: var(--lime);
+  --teal: var(--plum);
+  --forest: var(--plum);
+  /* placeholder [ ... ] */
+  --ph-bg: #F6EDE6;
+  --ph-ink: #8A4B2A;
+
+  --display: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --hand: 'Mynerve', cursive; /* only for {{vi: ...}} notes */
+  --script: 'Allura', 'Mynerve', cursive; /* signature hand: cover */
+
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --wide: 84rem;
+  --section: clamp(6rem, 14vw, 13rem);
+  --ease: cubic-bezier(.22, .7, .2, 1);
+}
