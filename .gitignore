@@ -1,0 +1,11 @@
+# The repository is the working folder of PORT 26 without the heavy originals:
+# only the text (content/), the website (site/) and the two project notes are kept.
+/*
+!/.gitignore
+!/content/
+!/site/
+!/CLAUDE.md
+!/HANDOFF.md
+# old backups of the content files are not part of the project
+/content/*.BEFORE-*.md
+.DS_Store
