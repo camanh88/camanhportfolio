@@ -46,6 +46,7 @@ import Photo from '../components/Photo.astro';
 import Music from '../components/Music.astro';
 import { cover, sidePages, ui, nav, pages, imageMeta } from '../lib/data';
 import { inline, textOf } from '../lib/md';
+import { SITE_URL, INDEXABLE } from '../lib/site';
 // the foot of every page points to the next page (the last one leads back to the start)
 const order = [['home', pages.home], ['making', pages.making], ['menu', pages.menu], ['marou', pages.marou]] as const;
 const at = order.findIndex(([k]) => k === Astro.props.current);
@@ -67,6 +68,15 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
     <title>{title}</title>
     <meta name="description" content={textOf(cover.sub)} />
     <meta name="theme-color" content="#1C2A23" />
+    {!INDEXABLE && <meta name="robots" content="noindex, nofollow, noarchive" />}
+    <link rel="canonical" href={new URL(Astro.url.pathname, SITE_URL).href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={cover.hero} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={textOf(cover.sub)} />
+    <meta property="og:url" content={new URL(Astro.url.pathname, SITE_URL).href} />
+    <meta property="og:image" content={`${SITE_URL}/og.jpg`} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%237A1F26'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F5F1EA' font-family='Georgia' font-style='italic'%3EC%3C/text%3E%3C/svg%3E" />
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>

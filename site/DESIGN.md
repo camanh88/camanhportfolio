@@ -418,3 +418,9 @@ The whole section is the menu spread itself: `R6/Screenshot 2026-10-27 at 14.35.
 - **Music**: it no longer starts by itself. The first press of the button plays the track from the beginning (fade in); the button is off (slash) until then. A quiet hint, italic grey in a pale pill, "For a better experience ↘" (text in `ui.md`, key `music hint`), shows once (about 14 s) near the button until it is pressed; it is not shown again on other pages. If the button was left on, the next page tries to carry on from the same place; if the browser refuses, the button stays off.
 - **My contact / My CV** (Why Marou, closing page): "Contact:" is "My contact:", and under the list a "My CV" link opens `site/public/cv/CV_Nguyen_Cam_Anh.pdf` (her `CV_Nguyen Cam Anh.pdf`) in a new tab. To change the CV, replace that file.
 - **Golden Gate**: the collage keeps its size and is moved down (`margin-top: clamp(3.5rem, 9vw, 8.5rem)` on `.gg-collage`), so the top of the cluster no longer sits above the heading. (A first try that made it smaller was wrong.)
+
+---
+
+## 26. Not listed by search engines, and the domain (30 Oct 2026)
+
+`src/lib/site.ts`: `SITE_URL = https://camanhportfolio.online` and `INDEXABLE = false`. With false every page carries `<meta name="robots" content="noindex, nofollow, noarchive">`; only people with the link find the site. It can be changed any time: set `INDEXABLE = true`, `npm run build`, deploy (Google needs days to weeks to list or forget a site). Also added: canonical address, `og:` and `twitter:` tags with the domain and the picture `public/og.jpg` (1200 x 630, from the cover) for link previews, `site:` in `astro.config.mjs`, and `public/robots.txt` (Allow, so the noindex tag can be read).

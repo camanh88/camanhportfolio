@@ -24,6 +24,7 @@ const reviewNote = {
 };
 
 export default defineConfig({
+  site: 'https://camanhportfolio.online',
   output: 'static',
   devToolbar: { enabled: false },
   vite: { plugins: [reviewNote] },
