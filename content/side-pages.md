@@ -64,7 +64,7 @@ BUILD NOTE: Cam Anh (Oct 27, note "TONG QUAN R4"): this panel follows "About Lam
 
 ## Store Opening
 
-After four years of selling online and one year of marketing efforts, Lam Yên opened its first physical store in Hanoi.
+Four years of selling online, a year of brand building, and one team pulling together: Lam Yên opened its first physical store in Hanoi.
 
 BUILD NOTE: Cam Anh (Oct 21): no longer a sidepath. Its sentence is the caption of the 7.2 gallery (Lam Yên chapter, page 7); the gallery shows the store photos.
 

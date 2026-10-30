@@ -12,6 +12,8 @@ const contactP = ch05.ps('contact');
 const contactLine = contactP[0] ?? '';
 const contactLabel = contactP[1] ?? '';
 const contactItems = ch05.ul('contact');
+const cvLabel = contactP[2] ?? '';                      // "My CV": a link that opens the PDF
+const cvUrl = `${import.meta.env.BASE_URL.replace(/\/?$/, '/')}cv/CV_Nguyen_Cam_Anh.pdf`;
 // the three values: the part that changes, in a different colour per card
 const valueTone = ['pink', 'plum', 'lime'] as const;
 // "It's easy to say I love chocolate. I do! ..." sentence by sentence for the big statement
@@ -184,6 +186,7 @@ const vTail = vm ? inline(vm[3]) : '';
           <ul class="ct-list">
             {contactItems.map((t) => <li set:html={contactRow(t)} />)}
           </ul>
+          {cvLabel && <a class="ct-cv label" href={cvUrl} target="_blank" rel="noopener noreferrer">{cvLabel}<span class="ct-cv-go" aria-hidden="true">↗</span></a>}
         </div>
         <div class="ct-road" aria-hidden="true">
           <svg class="end-hills" viewBox="0 0 1440 120" preserveAspectRatio="none"><path data-ct-hill d="M0,70 C140,40 260,30 400,58 C560,90 640,86 780,56 C920,26 1050,30 1180,56 C1290,78 1380,74 1440,56 L1440,120 L0,120 Z" /><path class="ct-dash" data-ct-line d="M0,70 C140,40 260,30 400,58 C560,90 640,86 780,56 C920,26 1050,30 1180,56 C1290,78 1380,74 1440,56" /></svg>
@@ -341,6 +344,10 @@ const vTail = vm ? inline(vm[3]) : '';
   .ct-label { margin-top: clamp(2rem, 5vw, 4rem); color: var(--cream); }
   .ct-list { display: grid; gap: .9rem; }
   .ct-list li { font-family: var(--display); font-size: clamp(1.53rem, 3.06vw, 2.72rem); line-height: 1.1; padding-bottom: .9rem; border-bottom: 1px solid rgb(255 255 255 / .5); }
+  /* My CV: sits right under the contact list; the label is a link to the PDF */
+  .ct-cv { justify-self: start; margin-top: clamp(1.6rem, 3vw, 2.6rem); color: var(--cream); text-decoration: none; display: inline-flex; align-items: baseline; gap: .5em; padding-bottom: .35em; border-bottom: 1px solid rgb(255 255 255 / .55); font-size: .85rem; transition: color .3s, border-color .3s; }
+  .ct-cv:hover, .ct-cv:focus-visible { color: var(--lime); border-color: var(--lime); }
+  .ct-cv-go { font-size: 1.1em; transition: transform .3s var(--ease); } .ct-cv:hover .ct-cv-go { transform: translate(.15rem, -.15rem); }
   .ct-list :global(.ph) { font-size: .9em; }
   .ct-list :global(.ci) { display: inline-grid; place-items: center; width: 1.9em; height: 1.9em; margin-right: .55em; vertical-align: -.35em; border: 1px solid rgb(255 255 255 / .6); border-radius: 50%; font-size: .62em; }
   .ct-list :global(a) { text-decoration-thickness: 1px; text-underline-offset: .2em; }

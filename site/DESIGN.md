@@ -409,3 +409,12 @@ The whole section is the menu spread itself: `R6/Screenshot 2026-10-27 at 14.35.
 - **Review note removed from the site** (`<ReviewNote />` is no longer in `Base.astro`; the component file stays, it only renders with `PUBLIC_REVIEW=1` and the line added back). Her notes: `site/review-note.md` and `Review notes archive/`.
 - **Music** (`Music.astro`): the track starts by itself when a page opens (muted, because browsers refuse sound before a gesture) and turns audible at the first click, tap or key press anywhere (a click on the music button itself also does it). Button at the bottom right: pressed while playing = fade out (0.9 s) and stop, the note icon shows a diagonal slash; pressed again = fade in and continue. No YouTube picture is visible any more (the player is kept transparent in the corner: this goes against YouTube's own rules for its player, Cam Anh's choice). "Off" is remembered on the other pages; the position of the track too.
 - **Contact** (header, footer, menu): on the Why Marou page it jumps straight to the closing page (instant scroll, no run through the whole page); from the other pages the link opens Why Marou at the closing page.
+
+---
+
+## 25. Overview R6 (30 Oct 2026, folder `TONG QUAN R6`)
+
+- **Store Opening line** (gallery 2025): "Four years of selling online, a year of brand building, and one team pulling together: Lam Yên opened its first physical store in Hanoi." (`side-pages.md`); one photo added to that gallery (`ly-72-i`, the "Cốm xào vảy vàng" card, end of the second column).
+- **Music**: it no longer starts by itself. The first press of the button plays the track from the beginning (fade in); the button is off (slash) until then. A quiet hint, italic grey in a pale pill, "For a better experience ↘" (text in `ui.md`, key `music hint`), shows once (about 14 s) near the button until it is pressed; it is not shown again on other pages. If the button was left on, the next page tries to carry on from the same place; if the browser refuses, the button stays off.
+- **My contact / My CV** (Why Marou, closing page): "Contact:" is "My contact:", and under the list a "My CV" link opens `site/public/cv/CV_Nguyen_Cam_Anh.pdf` (her `CV_Nguyen Cam Anh.pdf`) in a new tab. To change the CV, replace that file.
+- **Golden Gate**: the collage is at most 64% of the screen height (`.gg-collage`), so the whole cluster stays in view.

@@ -28,10 +28,12 @@ By gifting a gift that’s TASTING GOOD, we can be CONNECTING GOOD.
 
 Let’s share “a chocolate meal” with the world ;)
 
-Contact:
+My contact:
 
 - Gmail: camanhn88@gmail.com
 - Phone: +84 822 508 018
+
+My CV
 
 BUILD NOTE: Copied word for word from "05 · Why Marou?" in "[W] 26. MAROU APPLYING.docx" (Oct 2026). This is its own page ("Why Marou" in the header) and it also holds the Contact. "Values / Story / Vision / Gift box / Contact" are labels for the builder, not rendered.
 BUILD NOTE: (Oct 16 draft) the first Story text had "(to apply to Marou)", "move to Sai Gon" and "myside"; they are gone since her Oct 17 rewrite.
@@ -40,3 +42,4 @@ BUILD NOTE: Cam Anh's design notes in green in the Word file (translated): she i
 BUILD NOTE: Cam Anh (Oct 17): Story, the second Vision paragraph, the contact lines (Gmail, Phone; no LinkedIn) were replaced with her new Word text (she sent screenshots). Words in **bold** are shown highlighted. The gift-box line is unchanged; her comment asks for TASTING GOOD on one line and CONNECTING GOOD on one line, shown symmetrically and big, the rest smaller.
 BUILD NOTE: Cam Anh (Oct 17, second round): the Vision paragraph "The deeper I dig … region by region." was removed on purpose. Bold words are shown with one plain highlight (no italic, no change of size, font or colour).
 BUILD NOTE: Cam Anh (Oct 26, note "TONG QUAN R2"): the first sentences are now "It's easy to say I love chocolate. I do!" (the words "eating it, smelling it, crafting it and gifting it" are removed). W1 to W3 are the three photo collages on the value cards (W1 gifting: the packing, the wrapped parcel, the red boxes; W2 quality: the chocolate mould and the cốm filling; W3 adventure: the jeep on the bridge and the motorbike). W4 is the photo beside the "When the opportunity at Lam Yên came" story; W5 is the cacao photo behind the "Marou has already built…" vision (the big sentence is laid out over it as in her layout).
+BUILD NOTE: Cam Anh (Oct 30, note "TONG QUAN R6"): the label "Contact:" is now "My contact:" and a new line "My CV" sits under the contact list; it is a link that opens her CV (CV_Nguyen Cam Anh.pdf, copied to site/public/cv/CV_Nguyen_Cam_Anh.pdf) in a new tab. If her CV changes, replace that file.

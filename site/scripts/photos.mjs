@@ -135,6 +135,7 @@ export const photos = {
   'ly-72-f': [`${L}/Photo/7.2.../558328554_866827132339819_2160378109658628847_n.jpg`, 'Woven baskets of festival lanterns and toys on a counter under a green shelf.', { max: 1200 }],
   'ly-72-g': [`${L}/Photo/7.2.../1M2A6891 copy.jpg`, 'A shop assistant in a pink shirt arranging flowers on a wooden counter in the green shop.', { max: 1200 }],
   'ly-72-h': [`${L}/Photo/7.2.../1M2A6725 copy.jpg`, 'Plants and flowers in the shop window, with a framed photo of baked mooncakes.', { max: 1200 }],
+  'ly-72-i': ['TONG QUAN R6/Thêm vào Gallery 2025.jpg', 'A hand holding a small printed card, “Cốm xào vảy vàng”, on a green shelf in the Lam Yên store, with a pink display panel and tall cream boxes behind.', { max: 1200 }],
   'ly-73-a': [`${L}/Photo/7.3.../1M2A2295.jpg`, 'An open box of Cốm Đặc Sản beside a closed one and a mooncake on a small stand, next to a vase of white lotus buds, against a dusty-pink wall.', { max: 1200 }],
   'ly-73-b': [`${L}/Photo/7.3.../1M2A2113.jpg`, 'Close-up of the Cốm Đặc Sản box: a phoenix with outspread pastel wings among clouds.', { max: 1200 }],
   'ly-73-c': [`${L}/Photo/7.3.../1M2A2116.jpg`, 'Close-up of the title “Cốm Đặc Sản” on the yellow lid of the box.', { max: 1200 }],
