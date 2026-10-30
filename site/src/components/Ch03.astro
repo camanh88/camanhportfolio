@@ -319,7 +319,7 @@ const index = [
   @media (min-width: 900px) {
     .gg { grid-template-columns: repeat(12, 1fr); column-gap: 2rem; row-gap: 3rem; align-items: start; min-height: 100svh; }
     .gg-main { grid-column: 1 / 6; grid-row: 1; }
-    .gg-collage { grid-column: 6 / 13; grid-row: 1 / 4; margin-left: clamp(0rem, 2vw, 2rem); align-self: start; width: min(100%, calc(64svh * 911 / 820)); }   /* not taller than the screen, so the whole cluster is in view (Cam Anh, Oct 30) */
+    .gg-collage { grid-column: 6 / 13; grid-row: 1 / 4; margin-left: clamp(0rem, 2vw, 2rem); align-self: start; margin-top: clamp(3.5rem, 9vw, 8.5rem); }   /* same size, moved further down so its top is not above the heading (Cam Anh, Oct 30) */
     .gg-list { grid-column: 1 / 6; grid-row: 2; align-self: start; }
     .gg-learn { grid-column: 1 / 6; grid-row: 3; align-self: start; }
     .gg-close { grid-column: 4 / 13; grid-row: 4; }
