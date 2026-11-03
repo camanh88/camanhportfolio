@@ -93,7 +93,7 @@ const title = Astro.props.title ? `${Astro.props.title} · ${cover.hero}` : `${c
       </div>
     )}
     <Footer />
-    <Music />
+    <Music current={Astro.props.current} />
 
     <dialog id="sp" class="sp-dialog" aria-labelledby="sp-title" data-soon={ui['coming soon']}>
       <div class="sp-sheet">

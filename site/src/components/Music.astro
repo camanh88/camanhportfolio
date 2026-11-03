@@ -7,7 +7,9 @@ import { ui } from '../lib/data';
 const file = ['music.mp3', 'music.m4a'].find((f) => existsSync(path.resolve(process.cwd(), 'public', 'audio', f)));
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 // no file yet: Cam Anh's chosen track plays through YouTube's own embedded player (content/ui.md, key "music youtube")
-const yt = file ? '' : (ui['music youtube'] ?? '').trim();
+// the Why Marou page has its own track (Cam Anh, Nov 3): content/ui.md, key "music youtube marou"
+const { current } = Astro.props;
+const yt = file ? '' : ((current === 'marou' && ui['music youtube marou']) || ui['music youtube'] || '').trim();
 ---
 {(file || yt) && (
   <button type="button" class="mu" data-music data-src={file ? `${base}audio/${file}` : ''} data-yt={yt} data-play={ui['music play']} data-pause={ui['music pause']} aria-pressed="false" aria-label={ui['music play']} title={ui['music play']}>
@@ -48,7 +50,8 @@ const yt = file ? '' : (ui['music youtube'] ?? '').trim();
   // Pressed on one page: the next page tries to carry on from the same place (if the browser refuses, the button simply stays off).
   const btn = document.querySelector<HTMLButtonElement>('[data-music]');
   if (btn) {
-    const KEY = 'port26-music', HINT = 'port26-music-hint';
+    const track = btn.dataset.yt || 'file';   // each track keeps its own place and its own hint, so a different track on another page starts from the beginning
+    const KEY = `port26-music-${track}`, HINT = `port26-music-hint-${track}`;
     type Engine = { start(): Promise<boolean>; pause(): void; resume(): void; vol(v?: number): number; time(): number };
     const read = (): { on?: boolean; t?: number } => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { return {}; } };
     const resumeAt = read().on ? (read().t || 0) : 0;   // a track that was left playing on the previous page goes on; otherwise it starts from the beginning
