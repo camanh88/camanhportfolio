@@ -9,6 +9,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 // no file yet: Cam Anh's chosen track plays through YouTube's own embedded player (content/ui.md, key "music youtube")
 // the Why Marou page has its own track (Cam Anh, Nov 3): content/ui.md, key "music youtube marou"
 const { current } = Astro.props;
+const hintText = (current === 'marou' && ui['music hint marou']) || ui['music hint'];
 const yt = file ? '' : ((current === 'marou' && ui['music youtube marou']) || ui['music youtube'] || '').trim();
 ---
 {(file || yt) && (
@@ -17,7 +18,7 @@ const yt = file ? '' : ((current === 'marou' && ui['music youtube marou']) || ui
     <svg class="mu-off" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 18V6l10-2v12M9 18a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm10-2a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /><path class="mu-slash" d="M3.5 3.5l17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>
   </button>
 )}
-{(file || yt) && <p class="mu-hint" id="mu-hint" aria-hidden="true"><span>{ui['music hint']}</span><i>↘</i></p>}
+{(file || yt) && <p class="mu-hint" id="mu-hint" aria-hidden="true"><span>{hintText}</span><i>↘</i></p>}
 {yt && <div class="mu-card" id="mu-card" aria-hidden="true"><div id="mu-yt"></div></div>}
 
 <style is:global>
@@ -33,7 +34,7 @@ const yt = file ? '' : ((current === 'marou' && ui['music youtube marou']) || ui
   .mu[aria-pressed="false"] .mu-off { display: block; }
   .sp-open .mu, .sp-open .mu-hint { display: none; }
   /* a quiet hint, shown once, until the visitor presses the music button */
-  .mu-hint { position: fixed; z-index: 59; right: 1.1rem; bottom: 4.5rem; margin: 0; display: flex; align-items: flex-end; gap: .35rem; padding: .3rem .85rem .35rem; border-radius: 999px; background: rgb(255 255 255 / .86); color: #8a857e; font-family: var(--display); font-style: italic; font-size: .98rem; line-height: 1.2; pointer-events: none; opacity: 0; transform: translateY(.4rem); transition: opacity 1s var(--ease), transform 1s var(--ease); }
+  .mu-hint { position: fixed; z-index: 59; right: 1.1rem; bottom: 4.5rem; margin: 0; display: flex; align-items: flex-end; gap: .35rem; padding: .3rem .85rem .35rem; max-width: calc(100vw - 2.2rem); border-radius: 999px; background: rgb(255 255 255 / .86); color: #8a857e; font-family: var(--display); font-style: italic; font-size: .98rem; line-height: 1.2; pointer-events: none; opacity: 0; transform: translateY(.4rem); transition: opacity 1s var(--ease), transform 1s var(--ease); }
   .mu-hint.on { opacity: 1; transform: none; }
   .mu-hint i { font-style: normal; font-family: var(--sans); font-size: 1.05rem; line-height: 1; }
   /* YouTube's player is kept out of sight: it only carries the sound (Cam Anh's choice) */
@@ -70,7 +71,7 @@ const yt = file ? '' : ((current === 'marou' && ui['music youtube marou']) || ui
     const hint = document.getElementById('mu-hint');
     const seen = () => { try { return !!localStorage.getItem(HINT); } catch { return false; } };
     const markSeen = () => { try { localStorage.setItem(HINT, '1'); } catch { /* ignore */ } hint?.classList.remove('on'); };
-    if (hint && !seen() && !read().on) { setTimeout(() => hint.classList.add('on'), 1800); setTimeout(markSeen, 14000); }
+    if (hint && !seen() && !read().on) { requestAnimationFrame(() => requestAnimationFrame(() => hint.classList.add('on'))); setTimeout(markSeen, 14000); }   // the hint shows as soon as the page opens
 
     // ---- engine 1: a sound file ----
     const fileEngine = (src: string): Engine => {
