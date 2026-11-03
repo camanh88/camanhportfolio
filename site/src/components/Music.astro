@@ -46,13 +46,13 @@ const yt = file ? '' : ((current === 'marou' && ui['music youtube marou']) || ui
 <script>
   // Background music (Cam Anh): it plays only when the visitor presses the music button, from the start of the track, with a fade in.
   // Pressed while playing: fade out and stop, the button shows a slash. Pressed again: it fades back in and goes on.
-  // A quiet hint ("For a better experience" and an arrow) shows once, until the button is pressed.
+  // A quiet hint ("For a better experience" and an arrow) shows on every visit to a page, until the button is pressed (or after a while).
   // Source: a sound file public/audio/music.mp3 if there is one, otherwise YouTube's embedded player kept out of sight.
   // Pressed on one page: the next page tries to carry on from the same place (if the browser refuses, the button simply stays off).
   const btn = document.querySelector<HTMLButtonElement>('[data-music]');
   if (btn) {
     const track = btn.dataset.yt || 'file';   // each track keeps its own place and its own hint, so a different track on another page starts from the beginning
-    const KEY = `port26-music-${track}`, HINT = `port26-music-hint-${track}`;
+    const KEY = `port26-music-${track}`;
     type Engine = { start(): Promise<boolean>; pause(): void; resume(): void; vol(v?: number): number; time(): number };
     const read = (): { on?: boolean; t?: number } => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { return {}; } };
     const resumeAt = read().on ? (read().t || 0) : 0;   // a track that was left playing on the previous page goes on; otherwise it starts from the beginning
@@ -69,9 +69,8 @@ const yt = file ? '' : ((current === 'marou' && ui['music youtube marou']) || ui
 
     // ---- the hint ----
     const hint = document.getElementById('mu-hint');
-    const seen = () => { try { return !!localStorage.getItem(HINT); } catch { return false; } };
-    const markSeen = () => { try { localStorage.setItem(HINT, '1'); } catch { /* ignore */ } hint?.classList.remove('on'); };
-    if (hint && !seen() && !read().on) { requestAnimationFrame(() => requestAnimationFrame(() => hint.classList.add('on'))); setTimeout(markSeen, 14000); }   // the hint shows as soon as the page opens
+    const markSeen = () => hint?.classList.remove('on');
+    if (hint && !read().on) { requestAnimationFrame(() => requestAnimationFrame(() => hint.classList.add('on'))); setTimeout(markSeen, 14000); }   // the hint shows as soon as the page opens
 
     // ---- engine 1: a sound file ----
     const fileEngine = (src: string): Engine => {
