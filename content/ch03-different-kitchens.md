@@ -12,8 +12,8 @@ Grand Opening Campaign for [Sakura Yakiniku](https://www.facebook.com/sakurayaki
 - Built brand strategy frameworks and launch/relaunch campaign plans.
 - Produced video content, and wrote editing guidelines for the team.
 
-- Learned to plan and allocate a large campaign budget.
-- Learned to coordinate with the Northern and Southern regional teams, keeping brand voice and visuals consistent across markets.
+- Supported the planning and allocation of a large campaign budget.
+- Coordinated with the Northern and Southern regional teams, keeping brand voice and visuals consistent across markets.
 
 At this scale, the job is less about shaping a brand and more about keeping it in line with the budget, targets, and overall scale.
 
