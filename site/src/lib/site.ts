@@ -3,3 +3,5 @@ export const SITE_URL = 'https://camanhportfolio.online';
 // false = search engines are asked not to list the site (only people with the link find it).
 // To let Google list it one day: set true, run `npm run build` and deploy. (robots.txt stays "Allow": the "noindex" tag on every page is what keeps the site out of the results; blocking in robots.txt as well would stop Google from reading that tag.)
 export const INDEXABLE = false;
+// Visitor counting: Cloudflare Web Analytics (no cookies). Paste the token from Cloudflare (the value after "token" in its snippet) between the quotes; empty = nothing is loaded.
+export const CF_BEACON_TOKEN = '7ca1959a6af84bb181f62bd529c724fe';
